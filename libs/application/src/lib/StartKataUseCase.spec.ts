@@ -1,6 +1,6 @@
 import { mock, mockReset } from 'jest-mock-extended';
 
-import { Kata, IKataRepository, IKataProps } from '@codebarker/domain';
+import { Kata, IKataRepository, KataProps } from '@codebarker/domain';
 import { ValidationException } from '@codebarker/shared';
 
 import { StartKataUseCase } from './StartKataUseCase';
@@ -15,7 +15,7 @@ const inputData = [
   [10, true],
 ] as any[][];
 
-function makeKata(props?: Partial<IKataProps>): Kata {
+function makeKata(props?: Partial<KataProps>): Kata {
   return Kata.make({
     id: 'kataId',
     completedAt: null,

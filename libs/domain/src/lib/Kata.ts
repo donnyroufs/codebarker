@@ -1,23 +1,19 @@
-import { IEntity, NullOr } from '@codebarker/shared';
+import { ExcludeMethods, IEntity, NullOr } from '@codebarker/shared';
 
-export interface IKataProps {
-  id: string;
-  content: string;
-  completedAt: NullOr<Date>;
-}
-
-export class Kata implements IEntity, IKataProps {
+export class Kata implements IEntity {
   public readonly id: string;
   public readonly content: string;
   public readonly completedAt: NullOr<Date>;
 
-  private constructor(props: IKataProps) {
+  private constructor(props: KataProps) {
     this.id = props.id;
     this.completedAt = props.completedAt;
     this.content = props.content;
   }
 
-  public static make(props: IKataProps) {
+  public static make(props: KataProps) {
     return new Kata(props);
   }
 }
+
+export type KataProps = ExcludeMethods<Kata>;
