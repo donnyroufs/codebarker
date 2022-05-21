@@ -1,4 +1,4 @@
-# Start Investigation
+# Start Kata
 
 ## Data
 
@@ -6,12 +6,11 @@
 
 - mode
 - userId
-- filterFinishedCases
+- excludeCompletedKatas
 
 ### Output
 
-- investigationId
-- case
+- kata
   - id
   - snippet
 
@@ -25,7 +24,7 @@
 
 ## Primary Course
 
-- User orders start investigation command with input data
+- User orders start Kata command with input data
 - System validates the input data
 - System picks a case based on the filter option
 - System returns output data
@@ -35,10 +34,12 @@
 ## Exception Course
 
 - Validation
-- No available cases
+- No available katas
 
 ---
 
 ## Actor
+
+User
 
 ---

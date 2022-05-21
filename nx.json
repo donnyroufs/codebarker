@@ -40,6 +40,9 @@
     },
     "domain": {
       "tags": []
+    },
+    "shared": {
+      "tags": []
     }
   },
   "cli": {
