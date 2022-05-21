@@ -12,9 +12,10 @@
   },
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
+      "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
+        "accessToken": "Mzg4MzQ5MzgtZmUyOS00OTc0LWJjZmQtY2IwYTJhZGRlNGM5fHJlYWQtd3JpdGU="
       }
     }
   },
@@ -27,12 +28,35 @@
     ]
   },
   "projects": {
+    "application": {
+      "tags": []
+    },
     "codebarker": {
       "tags": []
     },
     "codebarker-e2e": {
       "tags": [],
       "implicitDependencies": ["codebarker"]
+    },
+    "domain": {
+      "tags": []
     }
-  }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/next"
+  },
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "babel": true
+      }
+    },
+    "@nrwl/next": {
+      "application": {
+        "style": "css",
+        "linter": "eslint"
+      }
+    }
+  },
+  "defaultProject": "codebarker"
 }
