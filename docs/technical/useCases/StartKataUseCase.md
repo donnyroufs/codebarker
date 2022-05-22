@@ -24,7 +24,7 @@
 
 ## Primary Course
 
-- User orders start Kata command with input data
+- User orders start Kata query with input data
 - System validates the input data
 - System picks a case based on the filter option
 - System returns output data
