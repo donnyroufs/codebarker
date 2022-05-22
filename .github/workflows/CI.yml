@@ -2,7 +2,7 @@ name: CI
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 
 env:
@@ -14,7 +14,7 @@ jobs:
     if: ${{ github.event_name != 'pull_request' }}
     steps:
       - uses: actions/checkout@v2
-        name: Checkout [master]
+        name: Checkout [main]
         with:
           fetch-depth: 0
       - name: Derive appropriate SHAs for base and head for `nx affected` commands
@@ -22,7 +22,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '16'
-          main-branch-name: 'master'
       - run: npm install
       - run: npx nx-cloud start-ci-run
       - run: npx nx affected --target=build --parallel --max-parallel=3
@@ -41,7 +40,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '16'
-          main-branch-name: 'master'
       - run: npm install
       - run: npx nx-cloud start-ci-run
       - run: npx nx affected --target=build --parallel --max-parallel=3
