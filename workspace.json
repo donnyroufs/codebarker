@@ -21,10 +21,11 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "codebarker": {
-      "root": "apps/codebarker",
+      "root": "app/codebarker",
       "sourceRoot": "apps/codebarker",
       "projectType": "application",
       "targets": {
@@ -73,10 +74,11 @@
             "lintFilePatterns": ["apps/codebarker/**/*.{ts,tsx,js,jsx}"]
           }
         }
-      }
+      },
+      "tags": []
     },
     "codebarker-e2e": {
-      "root": "apps/codebarker-e2e",
+      "root": "app/codebarker-e2e",
       "sourceRoot": "apps/codebarker-e2e/src",
       "projectType": "application",
       "targets": {
@@ -100,7 +102,9 @@
             "lintFilePatterns": ["apps/codebarker-e2e/**/*.{js,ts}"]
           }
         }
-      }
+      },
+      "tags": [],
+      "implicitDependencies": ["codebarker"]
     },
     "domain": {
       "root": "libs/domain",
@@ -122,7 +126,8 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "shared": {
       "root": "libs/shared",
@@ -144,7 +149,8 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     }
   }
 }

@@ -27,24 +27,6 @@
       }
     ]
   },
-  "projects": {
-    "application": {
-      "tags": []
-    },
-    "codebarker": {
-      "tags": []
-    },
-    "codebarker-e2e": {
-      "tags": [],
-      "implicitDependencies": ["codebarker"]
-    },
-    "domain": {
-      "tags": []
-    },
-    "shared": {
-      "tags": []
-    }
-  },
   "cli": {
     "defaultCollection": "@nrwl/next"
   },
