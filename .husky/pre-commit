@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+
+tsc -p tsconfig.base.json --noEmit
+nx affected:lint --fix
+nx run-many --target=test --all
