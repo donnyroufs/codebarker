@@ -4,6 +4,7 @@
   "projects": {
     "application": "libs/application",
     "domain": "libs/domain",
+    "infrastructure": "libs/infrastructure",
     "shared": "libs/shared"
   }
 }
