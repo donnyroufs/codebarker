@@ -1,6 +1,6 @@
 import { Validator } from '@codebarker/shared';
-import { Smell } from './Smell';
 
+import { Smell } from './Smell';
 import { SolutionProps } from './Solution';
 
 export class SolutionValidator extends Validator<SolutionProps> {
