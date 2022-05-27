@@ -1,7 +1,12 @@
 import { inject, injectable } from 'inversify';
 
 import { isNull, IUseCase } from '@codebarker/shared';
-import { IKataRepository, Kata, KataRepositoryToken } from '@codebarker/domain';
+import {
+  Answer,
+  IKataRepository,
+  Kata,
+  KataRepositoryToken,
+} from '@codebarker/domain';
 
 import { ISubmitKataRequest } from './ISubmitKataRequest';
 import { SubmitKataResponse } from './SubmitKataResponse';
@@ -26,6 +31,15 @@ export class SubmitKataUseCase
     const kata = await this.getKataOrThrowAsync(input);
 
     const isCorrect = kata.isCorrectAnswer(input.answerId);
+
+    const answer = Answer.make({
+      id: this._kataRepository.generateId(),
+      kataId: input.kataId,
+      userId: input.userId,
+    });
+
+    // TODO: Do not count rank points when already given an answer
+    kata.addAnswer(answer);
 
     await this._kataRepository.saveAsync(kata);
 

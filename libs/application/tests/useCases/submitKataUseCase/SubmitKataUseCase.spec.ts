@@ -4,7 +4,7 @@ import { mock, mockReset } from 'jest-mock-extended';
 import { IKataRepository, KataRepositoryToken } from '@codebarker/domain';
 import { TestingFactory, ValidationException } from '@codebarker/shared';
 
-import { KataFactory } from '../../utils/KataFactory';
+import { KataFactory, AnswerFactory, SolutionFactory } from '../../utils';
 
 import {
   SubmitKataUseCase,
@@ -27,6 +27,7 @@ describe('Submit kata', () => {
 
   beforeEach(() => {
     mockReset(mockedRepo);
+    mockedRepo.generateId.mockReturnValue('generatedId');
     sut = container.get(SubmitKataUseCase);
   });
 
@@ -38,7 +39,9 @@ describe('Submit kata', () => {
     };
 
     const kata = KataFactory.make({
-      solutionId: request.answerId,
+      solution: SolutionFactory.make({
+        id: request.answerId,
+      }),
     });
 
     mockedRepo.getByIdAsync.mockResolvedValueOnce(kata);
@@ -56,7 +59,9 @@ describe('Submit kata', () => {
     };
 
     const kata = KataFactory.make({
-      solutionId: 'wrongAnswer',
+      solution: SolutionFactory.make({
+        id: 'wrong',
+      }),
     });
 
     mockedRepo.getByIdAsync.mockResolvedValueOnce(kata);
@@ -102,15 +107,30 @@ describe('Submit kata', () => {
       userId: 'userId',
     };
 
+    const solution = SolutionFactory.make({
+      id: request.answerId,
+    });
+
     const kata = KataFactory.make({
-      solutionId: request.answerId,
+      solution,
+    });
+
+    const answer = AnswerFactory.make({
+      id: 'generatedId',
+      kataId: request.kataId,
+      userId: request.userId,
+    });
+
+    const kataToBePersisted = KataFactory.make({
+      solution,
+      answers: [answer],
     });
 
     mockedRepo.getByIdAsync.mockResolvedValueOnce(kata);
 
     await sut.execute(request);
 
-    expect(mockedRepo.saveAsync).toHaveBeenCalledWith(kata);
+    expect(mockedRepo.saveAsync).toHaveBeenCalledWith(kataToBePersisted);
   });
 });
 

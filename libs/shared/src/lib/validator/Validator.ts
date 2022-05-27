@@ -80,5 +80,14 @@ export abstract class Validator<T> {
     public boolean(value: any): value is boolean {
       return typeof value === 'boolean';
     }
+
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    public instance<T extends Function>(value: any, type: T): value is T {
+      return value instanceof type;
+    }
+
+    public enum<T>(value: any, enumType: T): value is T {
+      return Object.values(enumType).includes(value);
+    }
   })();
 }
