@@ -1,5 +1,4 @@
 import { Container } from 'inversify';
-import { None, Some } from 'ts-results';
 import { mock, mockReset } from 'jest-mock-extended';
 
 import { IKataRepository, KataRepositoryToken } from '@codebarker/domain';
@@ -56,7 +55,7 @@ describe('start kata', () => {
       const completedAt = excludeCompletedKatas ? null : new Date();
       const kataId = 'kataId';
       const kata = KataFactory.make({ id: kataId, completedAt });
-      mockedRepo.getAsync.mockResolvedValueOnce(Some(kata));
+      mockedRepo.getAsync.mockResolvedValueOnce(kata);
       const expectedResponse = StartKataResponse.from(kata);
 
       const response = await sut.execute(request);
@@ -75,7 +74,7 @@ describe('start kata', () => {
       excludeCompletedKatas: true,
     };
 
-    mockedRepo.getAsync.mockResolvedValueOnce(None);
+    mockedRepo.getAsync.mockResolvedValueOnce(null);
 
     const act = (): Promise<StartKataResponse> => sut.execute(request);
 

@@ -9,3 +9,5 @@ export * from './lib/types';
 
 export * from './lib/inversify';
 export * from './lib/validator';
+
+export * from './lib/Utils';

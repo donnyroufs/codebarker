@@ -1,19 +1,22 @@
-import { Some } from 'ts-results';
+import { inject, injectable } from 'inversify';
 
-import { IUseCase } from '@codebarker/shared';
-import { IKataRepository, Kata } from '@codebarker/domain';
+import { isNull, IUseCase } from '@codebarker/shared';
+import { IKataRepository, Kata, KataRepositoryToken } from '@codebarker/domain';
 
 import { ISubmitKataRequest } from './ISubmitKataRequest';
 import { SubmitKataResponse } from './SubmitKataResponse';
 import { UnknownKataException } from './UnknownKataException';
 import { SubmitKataRequestValidator } from './SubmitKataRequestValidator';
 
+@injectable()
 export class SubmitKataUseCase
   implements IUseCase<ISubmitKataRequest, SubmitKataResponse>
 {
   private readonly _kataRepository: IKataRepository;
 
-  public constructor(kataRepository: IKataRepository) {
+  public constructor(
+    @inject(KataRepositoryToken) kataRepository: IKataRepository
+  ) {
     this._kataRepository = kataRepository;
   }
 
@@ -22,19 +25,17 @@ export class SubmitKataUseCase
 
     const kata = await this.getKataOrThrowAsync(input);
 
-    const isCorrect = kata.val.isCorrectAnswer(input.answerId);
+    const isCorrect = kata.isCorrectAnswer(input.answerId);
 
-    await this._kataRepository.saveAsync(kata.val);
+    await this._kataRepository.saveAsync(kata);
 
     return SubmitKataResponse.from(isCorrect);
   }
 
-  private async getKataOrThrowAsync(
-    input: ISubmitKataRequest
-  ): Promise<Some<Kata>> {
+  private async getKataOrThrowAsync(input: ISubmitKataRequest): Promise<Kata> {
     const kata = await this._kataRepository.getByIdAsync(input.kataId);
 
-    if (kata.none) {
+    if (isNull(kata)) {
       throw new UnknownKataException(input.kataId);
     }
 

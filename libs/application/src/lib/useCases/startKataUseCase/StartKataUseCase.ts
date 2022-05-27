@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 
 import { IKataRepository, Kata, KataRepositoryToken } from '@codebarker/domain';
-import { IUseCase } from '@codebarker/shared';
+import { isNull, IUseCase } from '@codebarker/shared';
 
 import { IStartKataRequest } from './IStartKataRequest';
 import { NoAvailableKatasException } from './NoAvailableKatasException';
@@ -21,7 +21,7 @@ export class StartKataUseCase
   }
 
   public async execute(input: IStartKataRequest): Promise<StartKataResponse> {
-    this.throwWhenInvalidInput(input);
+    this.validateOrThrow(input);
 
     const kata = await this.getKataOrThrowAsync(input);
 
@@ -29,20 +29,20 @@ export class StartKataUseCase
   }
 
   private async getKataOrThrowAsync(input: IStartKataRequest): Promise<Kata> {
-    this.throwWhenInvalidInput(input);
+    this.validateOrThrow(input);
 
     const kata = await this._caseRepository.getAsync(
       input.excludeCompletedKatas
     );
 
-    if (kata.none) {
+    if (isNull(kata)) {
       throw new NoAvailableKatasException();
     }
 
-    return kata.val;
+    return kata;
   }
 
-  private throwWhenInvalidInput(input: IStartKataRequest): void {
-    new StartKataRequestValidator(input).validateOrThrow().unwrap();
+  private validateOrThrow(input: IStartKataRequest): void {
+    new StartKataRequestValidator(input).validateOrThrow();
   }
 }

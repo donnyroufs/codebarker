@@ -1,7 +1,6 @@
-import { Err, Ok, Result } from 'ts-results';
-
 import { ValidationException } from '../exceptions/ValidationException';
-import { ExcludeMethods } from '../types';
+import { ExcludeMethods, NullOr } from '../types';
+import { isNull } from '../Utils';
 import { Rule } from './Rule';
 import { ValidationResult } from './ValidationResult';
 
@@ -28,29 +27,28 @@ export abstract class Validator<T> {
     });
   }
 
-  public validate(): Result<void, ValidationResult[]> {
+  public validate(): NullOr<ValidationResult[]> {
     const result = this.makeResult();
 
-    if (result.length > 0) {
-      return Err(result);
+    if (result.length === 0) {
+      return null;
     }
 
-    return Ok(void 0);
+    return result;
   }
 
-  /**
-   * @note
-   * If the result returns an Err this method will handle it for you by
-   * throwing a validation exception.
-   */
-  public validateOrThrow(): Result<void, never> {
+  public validateOrThrow(): this {
     const result = this.validate();
 
-    if (result.err) {
-      throw ValidationException.fromValidationResults(result.val);
+    if (!isNull(result)) {
+      throw ValidationException.fromValidationResults(result);
     }
 
-    return Ok(void 0);
+    return this;
+  }
+
+  public andThen<T>(cb: () => T): T {
+    return cb();
   }
 
   private makeResult(): ValidationResult[] {

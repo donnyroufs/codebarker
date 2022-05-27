@@ -1,8 +1,8 @@
+import { Container } from 'inversify';
 import { mock, mockReset } from 'jest-mock-extended';
-import { None, Some } from 'ts-results';
 
-import { IKataRepository } from '@codebarker/domain';
-import { ValidationException } from '@codebarker/shared';
+import { IKataRepository, KataRepositoryToken } from '@codebarker/domain';
+import { TestingFactory, ValidationException } from '@codebarker/shared';
 
 import { KataFactory } from '../../utils/KataFactory';
 
@@ -12,14 +12,22 @@ import {
   SubmitKataResponse,
   UnknownKataException,
 } from '../../../src/lib/useCases/submitKataUsecase';
+import { ApplicationModule } from '../../../src/lib/ApplicationModule';
 
 describe('Submit kata', () => {
+  const mockedRepo = mock<IKataRepository>();
+
   let sut: SubmitKataUseCase;
-  const repoMock = mock<IKataRepository>();
+  let container: Container;
 
   beforeAll(() => {
-    mockReset(repoMock);
-    sut = new SubmitKataUseCase(repoMock);
+    container = TestingFactory.createContainer(ApplicationModule);
+    container.bind(KataRepositoryToken).toConstantValue(mockedRepo);
+  });
+
+  beforeEach(() => {
+    mockReset(mockedRepo);
+    sut = container.get(SubmitKataUseCase);
   });
 
   test('returns that it was a success if the answer was correct', async () => {
@@ -33,7 +41,7 @@ describe('Submit kata', () => {
       solutionId: request.answerId,
     });
 
-    repoMock.getByIdAsync.mockResolvedValueOnce(Some(kata));
+    mockedRepo.getByIdAsync.mockResolvedValueOnce(kata);
 
     const result = await sut.execute(request);
 
@@ -51,7 +59,7 @@ describe('Submit kata', () => {
       solutionId: 'wrongAnswer',
     });
 
-    repoMock.getByIdAsync.mockResolvedValueOnce(Some(kata));
+    mockedRepo.getByIdAsync.mockResolvedValueOnce(kata);
 
     const result = await sut.execute(request);
 
@@ -65,7 +73,7 @@ describe('Submit kata', () => {
       userId: 'userId',
     };
 
-    repoMock.getByIdAsync.mockResolvedValueOnce(None);
+    mockedRepo.getByIdAsync.mockResolvedValueOnce(null);
 
     const act = (): Promise<SubmitKataResponse> => sut.execute(request);
 
@@ -98,9 +106,11 @@ describe('Submit kata', () => {
       solutionId: request.answerId,
     });
 
-    repoMock.getByIdAsync.mockResolvedValueOnce(Some(kata));
+    mockedRepo.getByIdAsync.mockResolvedValueOnce(kata);
 
-    expect(repoMock.saveAsync).toHaveBeenCalledWith(kata);
+    await sut.execute(request);
+
+    expect(mockedRepo.saveAsync).toHaveBeenCalledWith(kata);
   });
 });
 

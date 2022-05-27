@@ -7,6 +7,7 @@ export class Kata implements IEntity {
   public readonly content: string;
   public readonly completedAt: NullOr<Date>;
   public readonly solutionId: string;
+  // TODO: Add answers
 
   private constructor(props: KataProps) {
     this.id = props.id;
@@ -22,8 +23,7 @@ export class Kata implements IEntity {
   public static make(props: KataProps): Kata {
     return new KataValidator(props)
       .validateOrThrow()
-      .map(() => new Kata(props))
-      .unwrap();
+      .andThen(() => new Kata(props));
   }
 }
 

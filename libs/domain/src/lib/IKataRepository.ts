@@ -1,10 +1,10 @@
-import { AsyncOption } from '@codebarker/shared';
+import { NullOrAsync } from '@codebarker/shared';
 
 import { Kata } from './Kata';
 
 export interface IKataRepository {
-  getAsync(excludeFinishedCases?: boolean): AsyncOption<Kata>;
-  getByIdAsync(id: string): AsyncOption<Kata>;
+  getAsync(excludeFinishedCases?: boolean): NullOrAsync<Kata>;
+  getByIdAsync(id: string): NullOrAsync<Kata>;
   saveAsync(kata: Kata): Promise<void>;
 }
 

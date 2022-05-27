@@ -1,7 +1,7 @@
 import { Option, Result } from 'ts-results';
 
 export type NullOr<T> = T | null;
-export type AsyncNullOr<T> = Promise<NullOr<T>>;
+export type NullOrAsync<T> = Promise<NullOr<T>>;
 
 export type ExcludeMethods<TClass> = Pick<
   TClass,

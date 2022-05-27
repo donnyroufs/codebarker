@@ -20,7 +20,7 @@ describe('Validator', () => {
     const validator = new PersonValidator(person);
     const result = validator.validate();
 
-    expect(result.ok).toBe(true);
+    expect(result).toBe(null);
   });
 
   test('does return validation errors when invalid', () => {
@@ -31,7 +31,7 @@ describe('Validator', () => {
 
     const result = validator.validate();
 
-    expect(result.err).toBe(true);
+    expect(result).toHaveLength(1);
   });
 
   test('throws a validation exception', () => {
@@ -40,7 +40,7 @@ describe('Validator', () => {
     person.age = 12;
     const validator = new PersonValidator(person);
 
-    const act = (): void => validator.validateOrThrow().unwrap();
+    const act = (): PersonValidator => validator.validateOrThrow();
 
     expect(act).toThrowError(ValidationException);
   });
