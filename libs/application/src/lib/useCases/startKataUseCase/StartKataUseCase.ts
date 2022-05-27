@@ -12,12 +12,12 @@ import { StartKataRequestValidator } from './StartKataRequestValidator';
 export class StartKataUseCase
   implements IUseCase<IStartKataRequest, StartKataResponse>
 {
-  private readonly _caseRepository: IKataRepository;
+  private readonly _kataRepository: IKataRepository;
 
   public constructor(
-    @inject(KataRepositoryToken) investigatorRepository: IKataRepository
+    @inject(KataRepositoryToken) kataRepository: IKataRepository
   ) {
-    this._caseRepository = investigatorRepository;
+    this._kataRepository = kataRepository;
   }
 
   public async execute(input: IStartKataRequest): Promise<StartKataResponse> {
@@ -31,7 +31,7 @@ export class StartKataUseCase
   private async getKataOrThrowAsync(input: IStartKataRequest): Promise<Kata> {
     this.validateOrThrow(input);
 
-    const kata = await this._caseRepository.getAsync(
+    const kata = await this._kataRepository.getAsync(
       input.excludeCompletedKatas
     );
 
