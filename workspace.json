@@ -5,6 +5,8 @@
     "application": "libs/application",
     "domain": "libs/domain",
     "infrastructure": "libs/infrastructure",
-    "shared": "libs/shared"
+    "shared": "libs/shared",
+    "web": "apps/web",
+    "web-e2e": "apps/web-e2e"
   }
 }
