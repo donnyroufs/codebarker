@@ -2,7 +2,7 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { ChakraProvider } from '@chakra-ui/react';
 
-import { theme } from '../Theme';
+import { theme } from '@codebarker/components';
 
 function CustomApp({ Component, pageProps }: AppProps): JSX.Element {
   return (

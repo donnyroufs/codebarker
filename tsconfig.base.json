@@ -17,6 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@codebarker/application": ["libs/application/src/index.ts"],
+      "@codebarker/components": ["libs/components/src/index.ts"],
       "@codebarker/domain": ["libs/domain/src/index.ts"],
       "@codebarker/infrastructure": ["libs/infrastructure/src/index.ts"],
       "@codebarker/shared": ["libs/shared/src/index.ts"]
