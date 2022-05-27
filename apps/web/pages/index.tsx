@@ -1,5 +1,12 @@
+import { Container, Heading, Text } from '@chakra-ui/react';
+
 export function Index(): JSX.Element {
-  return <p>hello world</p>;
+  return (
+    <Container>
+      <Heading>Hey</Heading>
+      <Text>You!</Text>
+    </Container>
+  );
 }
 
 export default Index;
