@@ -7,7 +7,8 @@
     "build": "nx build",
     "test": "nx test",
     "prepare": "husky install",
-    "gen:tokens": "npx @chakra-ui/cli tokens ./libs/components/src/lib/Theme.ts"
+    "gen:tokens": "npx @chakra-ui/cli tokens ./libs/components/src/lib/Theme.ts",
+    "db:seed": "ts-node prisma/seeds.ts"
   },
   "private": true,
   "dependencies": {
@@ -16,6 +17,7 @@
     "@emotion/styled": "^11",
     "@fontsource/karla": "^4.5.8",
     "@nrwl/next": "^14.1.9",
+    "@prisma/client": "^3.14.0",
     "core-js": "^3.6.5",
     "framer-motion": "^6",
     "inversify": "^6.0.1",
@@ -71,6 +73,7 @@
     "jest": "27.5.1",
     "nx": "14.1.9",
     "prettier": "^2.5.1",
+    "prisma": "^3.14.0",
     "react-test-renderer": "18.1.0",
     "ts-jest": "27.1.4",
     "ts-node": "9.1.1",
