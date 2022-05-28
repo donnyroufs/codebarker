@@ -6,13 +6,15 @@
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "gen:tokens": "npx @chakra-ui/cli tokens ./libs/components/src/lib/Theme.ts"
   },
   "private": true,
   "dependencies": {
     "@chakra-ui/react": "^2.1.2",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11",
+    "@fontsource/karla": "^4.5.8",
     "@nrwl/next": "^14.1.9",
     "core-js": "^3.6.5",
     "framer-motion": "^6",
@@ -21,9 +23,9 @@
     "next": "12.1.5",
     "react": "18.1.0",
     "react-dom": "18.1.0",
+    "react-icons": "^4.3.1",
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "0.13.7",
-    "ts-results": "^3.3.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {

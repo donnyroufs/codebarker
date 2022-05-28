@@ -1,0 +1,21 @@
+/**
+  Should move this to the theme later on
+**/
+
+html,
+body {
+  margin: 0;
+}
+
+body {
+  background: linear-gradient(
+    178.51deg,
+    #272443 74.65%,
+    hsl(243, 19%, 38%) 133.87%
+  ) !important;
+  min-height: 100vh !important;
+}
+
+.app {
+  min-height: 100%;
+}

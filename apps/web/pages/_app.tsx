@@ -1,3 +1,5 @@
+import '../global.css';
+
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { ChakraProvider } from '@chakra-ui/react';
@@ -8,7 +10,7 @@ function CustomApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <>
       <Head>
-        <title>Welcome to web!</title>
+        <title>Codebarker</title>
       </Head>
       <main className="app">
         <ChakraProvider theme={theme}>
