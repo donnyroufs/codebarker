@@ -52,15 +52,15 @@ describe('start kata', () => {
         userId: 'userId',
         excludeCompletedKatas,
       };
-      const completedAt = excludeCompletedKatas ? null : new Date();
       const kataId = 'kataId';
-      const kata = KataFactory.make({ id: kataId, completedAt });
+      const kata = KataFactory.make({ id: kataId });
       mockedRepo.getAsync.mockResolvedValueOnce(kata);
       const expectedResponse = StartKataResponse.from(kata);
 
       const response = await sut.execute(request);
 
       expect(mockedRepo.getAsync).toHaveBeenCalledWith(
+        request.userId,
         request.excludeCompletedKatas
       );
 

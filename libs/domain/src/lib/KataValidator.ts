@@ -12,11 +12,6 @@ export class KataValidator extends Validator<KataProps> {
       'Content has to be of type String'
     );
     this.ruleFor(
-      'completedAt',
-      (val) => val === null || Validator.is.date(val),
-      'CompletedAt has to be of type Null or Date'
-    );
-    this.ruleFor(
       'solution',
       (value) => Validator.is.instance(value, Solution),
       'The solution id should be of type String'

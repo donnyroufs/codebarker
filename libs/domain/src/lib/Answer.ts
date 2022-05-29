@@ -2,6 +2,7 @@ import { ExcludeMethods, IEntity } from '@codebarker/shared';
 
 import { AnswerValidator } from './AnswerValidator';
 
+// TODO: Use id as given answer id? probalby not.
 export class Answer implements IEntity {
   public readonly id: string;
   public readonly kataId: string;

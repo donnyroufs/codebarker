@@ -32,6 +32,7 @@ export class StartKataUseCase
     this.validateOrThrow(input);
 
     const kata = await this._kataRepository.getAsync(
+      input.userId,
       input.excludeCompletedKatas
     );
 
