@@ -1,4 +1,0 @@
-branch ?= main
-
-pscale-up:
-	pscale connect codebarker $(branch) --port 3309
