@@ -1,7 +1,11 @@
 import { Container } from 'inversify';
 import { mock, mockReset } from 'jest-mock-extended';
 
-import { IKataRepository, KataRepositoryToken } from '@codebarker/domain';
+import {
+  IKataRepository,
+  KataRepositoryToken,
+  Smell,
+} from '@codebarker/domain';
 import { TestingFactory, ValidationException } from '@codebarker/shared';
 
 import { KataFactory, AnswerFactory, SolutionFactory } from '../../utils';
@@ -36,11 +40,13 @@ describe('Submit kata', () => {
       answerId: 'answerId',
       kataId: 'kataId',
       userId: 'userId',
+      smell: Smell.DataClump,
     };
 
     const kata = KataFactory.make({
       solution: SolutionFactory.make({
         id: request.answerId,
+        type: request.smell,
       }),
     });
 
@@ -56,6 +62,7 @@ describe('Submit kata', () => {
       answerId: 'answerId',
       kataId: 'kataId',
       userId: 'userId',
+      smell: Smell.DataClump,
     };
 
     const kata = KataFactory.make({
@@ -76,6 +83,7 @@ describe('Submit kata', () => {
       answerId: 'answerId',
       kataId: 'kataId',
       userId: 'userId',
+      smell: Smell.DataClump,
     };
 
     mockedRepo.getByIdAsync.mockResolvedValueOnce(null);
@@ -92,6 +100,7 @@ describe('Submit kata', () => {
         answerId,
         kataId,
         userId,
+        smell: Smell.DataClump,
       };
 
       const act = (): Promise<SubmitKataResponse> => sut.execute(request);
@@ -105,6 +114,7 @@ describe('Submit kata', () => {
       answerId: 'answerId',
       kataId: 'kataId',
       userId: 'userId',
+      smell: Smell.DataClump,
     };
 
     const solution = SolutionFactory.make({

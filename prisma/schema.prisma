@@ -28,6 +28,8 @@ model Kata {
 model Answer {
   id String @id
 
+  smell Int // Smell enum in domain
+
   kata   Kata   @relation(fields: [kataId], references: [id])
   kataId String
   user   User   @relation(fields: [userId], references: [id])

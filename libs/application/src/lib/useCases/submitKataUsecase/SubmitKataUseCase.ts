@@ -30,12 +30,13 @@ export class SubmitKataUseCase
 
     const kata = await this.getKataOrThrowAsync(input);
 
-    const isCorrect = kata.isCorrectAnswer(input.answerId);
+    const isCorrect = kata.isCorrectAnswer(input.smell);
 
     const answer = Answer.make({
       id: this._kataRepository.generateId(),
       kataId: input.kataId,
       userId: input.userId,
+      smell: input.smell,
     });
 
     // TODO: Do not count rank points when already given an answer

@@ -8,6 +8,7 @@ export class AnswerMapper {
       id: model.id,
       kataId: model.kataId,
       userId: model.userId,
+      smell: model.smell,
     });
   }
 
@@ -20,6 +21,7 @@ export class AnswerMapper {
       id: entity.id,
       kataId: entity.kataId,
       userId: entity.userId,
+      smell: entity.smell,
     };
   }
 

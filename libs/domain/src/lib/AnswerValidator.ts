@@ -1,6 +1,7 @@
 import { Validator } from '@codebarker/shared';
 
 import { AnswerProps } from './Answer';
+import { Smell } from './Smell';
 
 export class AnswerValidator extends Validator<AnswerProps> {
   protected defineRules(): void {
@@ -15,5 +16,6 @@ export class AnswerValidator extends Validator<AnswerProps> {
       Validator.is.string,
       'userId has to be of type String'
     );
+    this.ruleFor('smell', (val) => Validator.is.enum(val, Smell));
   }
 }

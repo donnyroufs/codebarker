@@ -1,7 +1,8 @@
-import { ExcludeMethods, IEntity, NullOr } from '@codebarker/shared';
+import { ExcludeMethods, IEntity } from '@codebarker/shared';
 
 import { Answer } from './Answer';
 import { KataValidator } from './KataValidator';
+import { Smell } from './Smell';
 import { Solution } from './Solution';
 
 export class Kata implements IEntity {
@@ -17,8 +18,8 @@ export class Kata implements IEntity {
     this.answers = props.answers;
   }
 
-  public isCorrectAnswer(id: string): boolean {
-    return this.solution.id === id;
+  public isCorrectAnswer(smell: Smell): boolean {
+    return this.solution.type === smell;
   }
 
   public addAnswer(answer: Answer): void {

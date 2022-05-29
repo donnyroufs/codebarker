@@ -1,4 +1,4 @@
-import { Answer, AnswerProps } from '@codebarker/domain';
+import { Answer, AnswerProps, Smell } from '@codebarker/domain';
 
 export class AnswerFactory {
   public static make(props?: Partial<AnswerProps>): Answer {
@@ -6,6 +6,7 @@ export class AnswerFactory {
       id: 'id',
       kataId: 'kataId',
       userId: 'userId',
+      smell: Smell.DataClump,
       ...props,
     });
   }
