@@ -1,4 +1,4 @@
 export interface IStartKataRequest {
   userId: string;
-  excludeCompletedKatas?: boolean;
+  excludeCompletedKatas: boolean;
 }
