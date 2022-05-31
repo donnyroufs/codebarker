@@ -5,10 +5,11 @@ import { AppProps } from 'next/app';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { ChakraProvider } from '@chakra-ui/react';
-
-import { theme } from '@codebarker/components';
 import React from 'react';
 import { QueryClient, QueryClientProvider, setLogger } from 'react-query';
+import { SessionProvider } from 'next-auth/react';
+
+import { theme } from '@codebarker/components';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: JSX.Element) => JSX.Element;
@@ -24,7 +25,10 @@ setLogger({
   warn: console.warn,
 });
 
-function CustomApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
+function CustomApp({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppPropsWithLayout): JSX.Element {
   const queryClient = React.useMemo(
     () =>
       new QueryClient({
@@ -40,8 +44,10 @@ function CustomApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
   const getLayout =
     Component.getLayout ?? ((page: JSX.Element): JSX.Element => page);
 
+  // https://github.com/nextauthjs/react-query
+  // TODO: Add env
   return (
-    <>
+    <SessionProvider session={session}>
       <Head>
         <title>Codebarker</title>
       </Head>
@@ -52,7 +58,7 @@ function CustomApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
           </ChakraProvider>
         </main>
       </QueryClientProvider>
-    </>
+    </SessionProvider>
   );
 }
 
