@@ -9,27 +9,68 @@ generator client {
   previewFeatures = ["referentialIntegrity"]
 }
 
-model User {
-  id String @id 
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
-  answers Answer[]
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+
+  accounts Account[]
+  sessions Session[]
+  answers  Answer[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 model Kata {
   id      String @id
-  content  Json
+  content Json
 
-  solution Solution @relation(fields: [solutionId], references: [id])
-  solutionId String
+  solution   Solution @relation(fields: [solutionId], references: [id])
+  solutionId String   @unique
 
-  answers  Answer[]
+  answers Answer[]
 }
 
 model Answer {
   id String @id
 
-  smell Int // Smell enum in domain
-  isCorrect Boolean 
+  smell     Int // Smell enum in domain
+  isCorrect Boolean
 
   kata   Kata   @relation(fields: [kataId], references: [id])
   kataId String
@@ -40,7 +81,7 @@ model Answer {
 }
 
 model Solution {
-  id   String @id
+  id String @id
 
   type Int // Smell enum in domain
   kata Kata?

@@ -11,6 +11,7 @@ export const Navigation = (): JSX.Element => {
       justifyContent="center"
       alignItems="center"
       flexDir="column"
+      spacing={6}
     >
       <NavLink
         to="/"

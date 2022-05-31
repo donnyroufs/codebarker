@@ -2352,6 +2352,16 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
+"@next-auth/prisma-adapter@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@next-auth/prisma-adapter/-/prisma-adapter-1.0.3.tgz#cd6b866a3e281370ce64aa67daf320322a42a2b9"
+  integrity sha512-3Lq1cD3ytKM3EGKJZ4UZvlqshLtlPvYxLeCrUV9ifYwYlq51kmDaHjsIawlp8EbH5pE1UhlsvtlXMery7RghtA==
+
+"@next-auth/react-query@^0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@next-auth/react-query/-/react-query-0.0.12.tgz#f07cf1bc8e594a60df13b379820cb3e512497cf4"
+  integrity sha512-ccqg0ih1jxLayzVmEFkC2w93YPM8KeF6Qy+MGKPbQB04ri9O/3VEtwLK5sqsOuFx65vw76SkCOEYdVnJmXieww==
+
 "@next/env@12.1.5":
   version "12.1.5"
   resolved "https://registry.yarnpkg.com/@next/env/-/env-12.1.5.tgz#a21ba6708022d630402ca2b340316e69a0296dfc"
