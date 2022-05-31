@@ -1,7 +1,11 @@
 import { Container } from 'inversify';
 import { mock, mockReset } from 'jest-mock-extended';
 
-import { IKataRepository, KataRepositoryToken } from '@codebarker/domain';
+import {
+  IKataRepository,
+  KataRepositoryToken,
+  Smell,
+} from '@codebarker/domain';
 import { TestingFactory, ValidationException } from '@codebarker/shared';
 
 import { ApplicationModule } from '../../../src/lib/ApplicationModule';
@@ -55,7 +59,7 @@ describe('start kata', () => {
       const kataId = 'kataId';
       const kata = KataFactory.make({ id: kataId });
       mockedRepo.getAsync.mockResolvedValueOnce(kata);
-      const expectedResponse = StartKataResponse.from(kata);
+      const expectedResponse = StartKataResponse.from(kata, expect.anything());
 
       const response = await sut.execute(request);
 
@@ -79,6 +83,24 @@ describe('start kata', () => {
     const act = (): Promise<StartKataResponse> => sut.execute(request);
 
     expect(act).rejects.toThrowError(NoAvailableKatasException);
+  });
+
+  test('returns possible options including the answer', async () => {
+    const request: IStartKataRequest = {
+      userId: 'userId',
+      excludeCompletedKatas: false,
+    };
+    const kata = KataFactory.make();
+    mockedRepo.getAsync.mockResolvedValueOnce(kata);
+
+    const response = await sut.execute(request);
+
+    const hasInvalidSmell = response.options.some((opt) => Smell[opt] == null);
+    const uniq = new Set(response.options);
+    expect(hasInvalidSmell).toBeFalsy();
+    expect(uniq.size).toBe(4);
+    expect(response.options).toHaveLength(4);
+    expect(response.options).toContain(kata.solution.type);
   });
 });
 

@@ -10,14 +10,14 @@ generator client {
 }
 
 model User {
-  id String @id
+  id String @id 
 
   answers Answer[]
 }
 
 model Kata {
   id      String @id
-  content String
+  content  Json
 
   solution Solution @relation(fields: [solutionId], references: [id])
   solutionId String
@@ -29,6 +29,7 @@ model Answer {
   id String @id
 
   smell Int // Smell enum in domain
+  isCorrect Boolean 
 
   kata   Kata   @relation(fields: [kataId], references: [id])
   kataId String

@@ -9,6 +9,7 @@ export class AnswerMapper {
       kataId: model.kataId,
       userId: model.userId,
       smell: model.smell,
+      isCorrect: model.isCorrect,
     });
   }
 
@@ -22,6 +23,7 @@ export class AnswerMapper {
       kataId: entity.kataId,
       userId: entity.userId,
       smell: entity.smell,
+      isCorrect: entity.isCorrect,
     };
   }
 

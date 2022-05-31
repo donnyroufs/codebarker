@@ -1,36 +1,18 @@
-import { Box, Container, Flex, Spinner, Text } from '@chakra-ui/react';
-import { useQuery } from 'react-query';
-
-import { Header } from '@codebarker/components';
+import { Box } from '@chakra-ui/react';
 
 import { Banner } from '../components';
-import { Sidebar } from '../components/Sidebar';
-import { startKata } from './api/startKata';
-import { __UserId } from '../container';
+import { Layout } from '../components/Layout';
 
 export function Index(): JSX.Element {
-  const { isLoading, data } = useQuery('startKata', () =>
-    startKata({ userId: __UserId, excludeCompletedKatas: false })
-  );
-
   const progress = 38;
-
-  if (isLoading) {
-    return <Spinner color="brand.accent" />;
-  }
 
   return (
     <Box>
-      <Header name="Donny R." />
-      <Flex>
-        <Sidebar />
-        <Container maxW="100%" padding={8}>
-          <Banner progress={progress} />
-          <Text color="brand.white">{JSON.stringify(data, null, 2)}</Text>
-        </Container>
-      </Flex>
+      <Banner progress={progress} />
     </Box>
   );
 }
+
+Index.getLayout = (page: JSX.Element): JSX.Element => <Layout>{page}</Layout>;
 
 export default Index;

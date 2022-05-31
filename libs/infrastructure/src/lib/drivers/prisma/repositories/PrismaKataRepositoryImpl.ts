@@ -15,6 +15,7 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
     this._prismaService = prismaService;
   }
 
+  // TODO: Need to store whether an answer was correct so that I can filter
   public async getAsync(
     userId: string,
     excludeFinishedCases?: boolean
@@ -24,6 +25,7 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
           answers: {
             none: {
               userId,
+              isCorrect: true,
             },
           },
         }
@@ -71,10 +73,14 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
     const { solution, answers, ...model } = KataMapper.toModel(kata);
 
     // TODO: What about deleting answers that im not including?
-    await this._prismaService.kata.create({
-      data: {
+    await this._prismaService.kata.upsert({
+      where: {
+        id: kata.id,
+      },
+      create: {
         id: model.id,
-        content: model.content,
+        // TODO: Fix type
+        content: model.content as string,
         solution: {
           connect: {
             id: solution.id,
@@ -85,7 +91,27 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
             where: {
               id: answer.id,
             },
-            create: answer,
+            create: {
+              id: answer.id,
+              smell: answer.smell,
+              userId: answer.userId,
+              isCorrect: answer.isCorrect,
+            },
+          })),
+        },
+      },
+      update: {
+        answers: {
+          connectOrCreate: answers.map((answer) => ({
+            where: {
+              id: answer.id,
+            },
+            create: {
+              id: answer.id,
+              smell: answer.smell,
+              userId: answer.userId,
+              isCorrect: answer.isCorrect,
+            },
           })),
         },
       },

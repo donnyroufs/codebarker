@@ -72,7 +72,7 @@ export const Banner = ({ progress }: Props): JSX.Element => {
             color="brand.accent"
             trackColor="brand.400"
           >
-            <NextLink href="#" passHref>
+            <NextLink href="/learn" passHref>
               <Link
                 fontSize="xl"
                 variant="unstyled"

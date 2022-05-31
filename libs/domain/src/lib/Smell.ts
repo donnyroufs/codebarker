@@ -5,4 +5,8 @@
 export enum Smell {
   DataClump = 0,
   LongParameterList,
+  DataClass,
+  ShotgunSurgery,
+  Comments,
+  FeatureEnvy,
 }

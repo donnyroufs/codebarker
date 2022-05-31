@@ -37,7 +37,6 @@ describe('Submit kata', () => {
 
   test('returns that it was a success if the answer was correct', async () => {
     const request: ISubmitKataRequest = {
-      answerId: 'answerId',
       kataId: 'kataId',
       userId: 'userId',
       smell: Smell.DataClump,
@@ -45,7 +44,6 @@ describe('Submit kata', () => {
 
     const kata = KataFactory.make({
       solution: SolutionFactory.make({
-        id: request.answerId,
         type: request.smell,
       }),
     });
@@ -59,7 +57,6 @@ describe('Submit kata', () => {
 
   test('returns that it was not a success if the answer was incorrect', async () => {
     const request: ISubmitKataRequest = {
-      answerId: 'answerId',
       kataId: 'kataId',
       userId: 'userId',
       smell: Smell.DataClump,
@@ -67,7 +64,7 @@ describe('Submit kata', () => {
 
     const kata = KataFactory.make({
       solution: SolutionFactory.make({
-        id: 'wrong',
+        type: Smell.DataClass,
       }),
     });
 
@@ -80,7 +77,6 @@ describe('Submit kata', () => {
 
   test('throws an unknown kata exception when the kata is not found', async () => {
     const request: ISubmitKataRequest = {
-      answerId: 'answerId',
       kataId: 'kataId',
       userId: 'userId',
       smell: Smell.DataClump,
@@ -95,12 +91,11 @@ describe('Submit kata', () => {
 
   test.each(inputData())(
     'throws a validation exception when the input is invalid',
-    async (answerId: string, kataId: string, userId: string) => {
+    async (smell: Smell, kataId: string, userId: string) => {
       const request: ISubmitKataRequest = {
-        answerId,
         kataId,
         userId,
-        smell: Smell.DataClump,
+        smell,
       };
 
       const act = (): Promise<SubmitKataResponse> => sut.execute(request);
@@ -111,14 +106,13 @@ describe('Submit kata', () => {
 
   test('saves the given answer', async () => {
     const request: ISubmitKataRequest = {
-      answerId: 'answerId',
       kataId: 'kataId',
       userId: 'userId',
       smell: Smell.DataClump,
     };
 
     const solution = SolutionFactory.make({
-      id: request.answerId,
+      type: Smell.DataClump,
     });
 
     const kata = KataFactory.make({
@@ -129,6 +123,7 @@ describe('Submit kata', () => {
       id: 'generatedId',
       kataId: request.kataId,
       userId: request.userId,
+      isCorrect: true,
     });
 
     const kataToBePersisted = KataFactory.make({
@@ -146,8 +141,8 @@ describe('Submit kata', () => {
 
 function inputData(): any[] {
   return [
-    ['answerId', 'kataId', 1],
-    ['answerId', 1, 'userId'],
-    [1, 'kataId', 'userId'],
+    [999, 'kataId', 'userId'],
+    [Smell.Comments, 1, 'userId'],
+    [Smell.FeatureEnvy, 'kataId', 1],
   ];
 }

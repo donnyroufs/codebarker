@@ -4,6 +4,9 @@ import { extendTheme } from '@chakra-ui/react';
 import { IconButtonConfig } from './iconButton/IconButtonConfig';
 
 export const theme = extendTheme({
+  config: {
+    useSystemColorMode: false,
+  },
   fonts: {
     heading: "'Karla', 'sans-serif'",
     body: "'Karla', 'sans-serif'",
@@ -18,6 +21,8 @@ export const theme = extendTheme({
       headerShade: '#3c3c5c',
       white: '#D0D0D1',
       border: '#2F2F4C',
+      gray: '#4C4C58',
+      panel: '#2F2F4C',
     },
   },
   components: {

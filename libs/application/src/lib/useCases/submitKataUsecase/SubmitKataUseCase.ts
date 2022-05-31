@@ -37,6 +37,7 @@ export class SubmitKataUseCase
       kataId: input.kataId,
       userId: input.userId,
       smell: input.smell,
+      isCorrect,
     });
 
     // TODO: Do not count rank points when already given an answer

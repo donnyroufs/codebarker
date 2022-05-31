@@ -1,6 +1,8 @@
-import { Link, List, ListIcon } from '@chakra-ui/react';
-import NextLink from 'next/link';
+import { List, ListIcon } from '@chakra-ui/react';
 import { AiOutlineHome } from 'react-icons/ai';
+import { FaChalkboardTeacher } from 'react-icons/fa';
+
+import NavLink from './NavLink';
 
 export const Navigation = (): JSX.Element => {
   return (
@@ -9,26 +11,29 @@ export const Navigation = (): JSX.Element => {
       justifyContent="center"
       alignItems="center"
       flexDir="column"
-      spacing={2}
     >
-      <NextLink href="/" passHref>
-        <Link
-          borderRight="2px solid"
-          borderColor="brand.accent"
-          py={2}
-          px="35px"
-          _hover={{
-            opacity: 0.8,
-          }}
-        >
+      <NavLink
+        to="/"
+        render={(isActive): JSX.Element => (
           <ListIcon
             as={AiOutlineHome}
-            color="brand.accent"
             fontSize="3xl"
             margin={0}
+            color={isActive ? 'brand.accent' : 'brand.gray'}
           />
-        </Link>
-      </NextLink>
+        )}
+      />
+      <NavLink
+        to="/learn"
+        render={(isActive): JSX.Element => (
+          <ListIcon
+            as={FaChalkboardTeacher}
+            fontSize="3xl"
+            margin={0}
+            color={isActive ? 'brand.accent' : 'brand.gray'}
+          />
+        )}
+      />
     </List>
   );
 };

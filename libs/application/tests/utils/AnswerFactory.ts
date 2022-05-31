@@ -7,6 +7,7 @@ export class AnswerFactory {
       kataId: 'kataId',
       userId: 'userId',
       smell: Smell.DataClump,
+      isCorrect: false,
       ...props,
     });
   }

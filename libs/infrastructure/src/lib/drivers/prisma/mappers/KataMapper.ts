@@ -8,7 +8,7 @@ export class KataMapper {
   public static toDomain(model: KataModel): Kata {
     return Kata.make({
       id: model.id,
-      content: model.content,
+      content: JSON.stringify(model.content),
       answers: AnswerMapper.toDomainMany(model.answers),
       solution: SolutionMapper.toDomain(model.solution),
     });
@@ -17,7 +17,7 @@ export class KataMapper {
   public static toModel(entity: Kata): KataModel {
     return {
       id: entity.id,
-      content: entity.content,
+      content: JSON.stringify(entity.content),
       solution: SolutionMapper.toModel(entity.solution),
       answers: AnswerMapper.toModelMany(entity.answers),
       solutionId: entity.solution.id,
