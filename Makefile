@@ -1,4 +1,4 @@
-branch ?= main
+branch ?= staging
 
 pscale-up:
 	pscale connect codebarker $(branch) --port 3309
