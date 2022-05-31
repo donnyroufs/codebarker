@@ -39,4 +39,4 @@ testem.log
 Thumbs.db
 
 .todo
-.env
+.env.local
