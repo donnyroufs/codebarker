@@ -15,10 +15,12 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
     this._prismaService = prismaService;
   }
 
-  // TODO: Need to store whether an answer was correct so that I can filter
+  // TODO: Abstract filters
+  // TODO: Write an integration test against the filters
   public async getAsync(
     userId: string,
-    excludeFinishedCases?: boolean
+    excludeFinishedCases?: boolean,
+    previousKataId?: string
   ): NullOrAsync<Kata> {
     const filterQuery = excludeFinishedCases
       ? {
@@ -31,8 +33,21 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
         }
       : {};
 
+    const excludePreviousKata = previousKataId
+      ? {
+          NOT: {
+            answers: {
+              some: {
+                kataId: previousKataId,
+              },
+            },
+          },
+        }
+      : {};
+
     const result = await this._prismaService.kata.findFirst({
       where: {
+        ...excludePreviousKata,
         ...filterQuery,
       },
       include: {

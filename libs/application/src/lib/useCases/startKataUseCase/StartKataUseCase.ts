@@ -73,7 +73,8 @@ export class StartKataUseCase
 
     const kata = await this._kataRepository.getAsync(
       input.userId,
-      input.excludeCompletedKatas
+      input.excludeCompletedKatas,
+      input.previousKataId
     );
 
     if (isNull(kata)) {

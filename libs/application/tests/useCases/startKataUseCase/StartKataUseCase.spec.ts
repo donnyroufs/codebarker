@@ -65,7 +65,8 @@ describe('start kata', () => {
 
       expect(mockedRepo.getAsync).toHaveBeenCalledWith(
         request.userId,
-        request.excludeCompletedKatas
+        request.excludeCompletedKatas,
+        undefined
       );
 
       expect(response).toEqual(expectedResponse);
@@ -102,12 +103,36 @@ describe('start kata', () => {
     expect(response.options).toHaveLength(4);
     expect(response.options).toContain(kata.solution.type);
   });
+
+  test('returns a different kata than before', async () => {
+    const prevKataId = 'prevKataId';
+
+    const request: IStartKataRequest = {
+      userId: 'userId',
+      excludeCompletedKatas: false,
+      previousKataId: prevKataId,
+    };
+
+    const kataId = 'kataId';
+    const kata = KataFactory.make({ id: kataId });
+    mockedRepo.getAsync.mockResolvedValueOnce(kata);
+
+    await sut.execute(request);
+
+    expect(mockedRepo.getAsync).toHaveBeenCalledWith(
+      request.userId,
+      request.excludeCompletedKatas,
+      request.previousKataId
+    );
+  });
 });
 
+// TODO: Add previous kata id
 function inputData(): any[] {
   return [
     [10, 'true'],
     ['userId', 'true'],
     [10, true],
+    [10, false, 'previousKataId'],
   ];
 }

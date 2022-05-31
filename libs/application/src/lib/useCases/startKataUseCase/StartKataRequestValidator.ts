@@ -14,5 +14,10 @@ export class StartKataRequestValidator extends Validator<IStartKataRequest> {
       Validator.is.string,
       'The user id has to be of type String'
     );
+    this.ruleFor(
+      'previousKataId',
+      (val) => Validator.is.undefined(val) || Validator.is.string(val),
+      'The previous kata id has to be of type String or undefined'
+    );
   }
 }

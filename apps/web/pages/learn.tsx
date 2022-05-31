@@ -45,20 +45,28 @@ export const LearnPage = (): JSX.Element => {
     'codebarker-exclude-finished',
     true
   );
+  const [previousKataId, setPreviousKataId] = useState<undefined | string>(
+    undefined
+  );
   const [lastChanged, setLastChanged] = useState(new Date());
   const client = useQueryClient();
 
   const [lastClicked, setLastClicked] = useState<number | null>(null);
   const { isLoading, data, isError } = useQuery(
-    ['startKata', lastChanged],
-    () => startKata({ userId: __UserId, excludeCompletedKatas: excludeFilter }),
-    {}
+    ['startKata', { lastChanged, previousKataId }],
+    () =>
+      startKata({
+        userId: __UserId,
+        excludeCompletedKatas: excludeFilter,
+        previousKataId,
+      })
   );
 
   const mutate = useMutation(submitKata, {
-    onSuccess: (data) => {
-      if (!data.isCorrect) return;
+    onSuccess: (res) => {
+      if (!res.isCorrect) return;
 
+      setPreviousKataId(data!.id);
       client.invalidateQueries('startKata');
       setLastClicked(null);
     },
@@ -74,6 +82,7 @@ export const LearnPage = (): JSX.Element => {
 
   function onFilterChange(val: boolean): void {
     setExcludeFilter(val);
+    setLastClicked(null);
     setLastChanged(new Date());
   }
 

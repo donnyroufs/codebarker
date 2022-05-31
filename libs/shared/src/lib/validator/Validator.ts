@@ -65,6 +65,10 @@ export abstract class Validator<T> {
   }
 
   public static is = new (class {
+    public undefined(value: any): value is undefined {
+      return value === undefined || typeof value === 'undefined';
+    }
+
     public number(value: any): value is number {
       return typeof value === 'number';
     }

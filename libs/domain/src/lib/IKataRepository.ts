@@ -3,7 +3,11 @@ import { NullOrAsync } from '@codebarker/shared';
 import { Kata } from './Kata';
 
 export interface IKataRepository {
-  getAsync(userId: string, excludeFinishedCases?: boolean): NullOrAsync<Kata>;
+  getAsync(
+    userId: string,
+    excludeFinishedCases?: boolean,
+    previousKataId?: string
+  ): NullOrAsync<Kata>;
   getByIdAsync(id: string): NullOrAsync<Kata>;
   saveAsync(kata: Kata): Promise<void>;
   generateId(): string;
