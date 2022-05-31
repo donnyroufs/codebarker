@@ -17,6 +17,8 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
 
   // TODO: Abstract filters
   // TODO: Write an integration test against the filters
+  // - Random kata
+  // does it exclude the previous one
   public async getAsync(
     userId: string,
     excludeFinishedCases?: boolean,
@@ -53,6 +55,9 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
       include: {
         answers: true,
         solution: true,
+      },
+      orderBy: {
+        id: Math.random() > 0.5 ? 'asc' : 'desc',
       },
     });
 
