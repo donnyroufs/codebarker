@@ -1,5 +1,13 @@
 {
   "$schema": "./node_modules/nx/schemas/workspace-schema.json",
   "version": 2,
-  "projects": {}
+  "projects": {
+    "application": "libs/application",
+    "components": "libs/components",
+    "domain": "libs/domain",
+    "infrastructure": "libs/infrastructure",
+    "shared": "libs/shared",
+    "web": "apps/web",
+    "web-e2e": "apps/web-e2e"
+  }
 }

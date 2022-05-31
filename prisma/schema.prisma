@@ -1,0 +1,47 @@
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+model User {
+  id String @id 
+
+  answers Answer[]
+}
+
+model Kata {
+  id      String @id
+  content  Json
+
+  solution Solution @relation(fields: [solutionId], references: [id])
+  solutionId String
+
+  answers  Answer[]
+}
+
+model Answer {
+  id String @id
+
+  smell Int // Smell enum in domain
+  isCorrect Boolean 
+
+  kata   Kata   @relation(fields: [kataId], references: [id])
+  kataId String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@unique([id, kataId, userId])
+}
+
+model Solution {
+  id   String @id
+
+  type Int // Smell enum in domain
+  kata Kata?
+}

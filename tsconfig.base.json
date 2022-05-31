@@ -13,8 +13,15 @@
     "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "strictNullChecks": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@codebarker/application": ["libs/application/src/index.ts"],
+      "@codebarker/components": ["libs/components/src/index.ts"],
+      "@codebarker/domain": ["libs/domain/src/index.ts"],
+      "@codebarker/infrastructure": ["libs/infrastructure/src/index.ts"],
+      "@codebarker/shared": ["libs/shared/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
