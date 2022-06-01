@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider, setLogger } from 'react-query';
 import { SessionProvider } from 'next-auth/react';
 
 import { theme } from '@codebarker/components';
+import { ForceLightMode } from '../components/ForceLightMode';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: JSX.Element) => JSX.Element;
@@ -54,7 +55,9 @@ function CustomApp({
       <QueryClientProvider client={queryClient}>
         <main className="app">
           <ChakraProvider theme={theme} resetCSS={true}>
-            {getLayout(<Component {...pageProps} />)}
+            <ForceLightMode>
+              {getLayout(<Component {...pageProps} />)}
+            </ForceLightMode>
           </ChakraProvider>
         </main>
       </QueryClientProvider>
