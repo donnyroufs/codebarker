@@ -56,7 +56,13 @@ export const SignInModal = ({ isOpen, onClose }: Props): JSX.Element => {
             variant="outline"
             onClick={(): Promise<void> => signIn('github')}
           >
-            Login with Github
+            Continue with Github
+          </Button>
+          <Button
+            variant="outline"
+            onClick={(): Promise<void> => signIn('discord')}
+          >
+            Continue with Discord
           </Button>
         </ModalBody>
 
