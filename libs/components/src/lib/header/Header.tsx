@@ -9,7 +9,9 @@ import {
   Skeleton,
   Button,
 } from '@chakra-ui/react';
-import { FaRegBell, FaAngleDown } from 'react-icons/fa';
+import Link from 'next/link';
+import { FaRegBell } from 'react-icons/fa';
+import { Dropdown } from '../dropdown/Dropdown';
 import { IconButton } from '../iconButton/IconButton';
 
 export type Props = {
@@ -17,6 +19,7 @@ export type Props = {
   avatarUrl?: string | null;
   onOpen: () => void;
   isLoading: boolean;
+  signOut: () => Promise<void>;
 };
 
 // TODO: Move avatar to its own component
@@ -25,6 +28,7 @@ export const Header = ({
   isLoading,
   name,
   avatarUrl,
+  signOut,
 }: Props): JSX.Element => {
   const isSignedIn = !isLoading && Boolean(name);
   const isLoaded = !isLoading;
@@ -95,7 +99,18 @@ export const Header = ({
                   aria-label="your notifcations"
                   icon={<FaRegBell />}
                 />
-                <IconButton aria-label="menu" icon={<FaAngleDown />} />
+                <Dropdown>
+                  <Link href="/">
+                    <Dropdown.MenuItem>Home</Dropdown.MenuItem>
+                  </Link>
+                  <Link href="/learn">
+                    <Dropdown.MenuItem>Learn</Dropdown.MenuItem>
+                  </Link>
+                  <Dropdown.MenuDivider color="brand.border" />
+                  <Dropdown.MenuItem onClick={signOut}>
+                    sign out
+                  </Dropdown.MenuItem>
+                </Dropdown>
               </ButtonGroup>
             )}
           </>

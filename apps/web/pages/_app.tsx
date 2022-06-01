@@ -53,7 +53,7 @@ function CustomApp({
       </Head>
       <QueryClientProvider client={queryClient}>
         <main className="app">
-          <ChakraProvider theme={theme}>
+          <ChakraProvider theme={theme} resetCSS={true}>
             {getLayout(<Component {...pageProps} />)}
           </ChakraProvider>
         </main>

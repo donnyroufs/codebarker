@@ -1,7 +1,7 @@
 import { Box, Flex, Container, useDisclosure } from '@chakra-ui/react';
 
 import { Header } from '@codebarker/components';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 import { Sidebar } from './Sidebar';
 import { SignInModal } from './SignInModal';
@@ -20,6 +20,7 @@ export const Layout = ({ children }): JSX.Element => {
         onOpen={onOpen}
         isLoading={isLoading}
         avatarUrl={session?.user?.image}
+        signOut={signOut}
       />
       <Flex>
         <Sidebar />
