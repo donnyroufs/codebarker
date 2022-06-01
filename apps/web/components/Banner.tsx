@@ -34,7 +34,7 @@ export const Banner = ({ progress }: Props): JSX.Element => {
       <Container
         display="flex"
         justifyContent="space-between"
-        color="brand.white"
+        color="brand.text"
         width="full"
         p={10}
         alignItems="center"

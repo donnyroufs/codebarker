@@ -38,7 +38,7 @@ export const Header = ({
   return (
     <HStack
       bgColor="brand.header"
-      color="brand.white"
+      color="brand.text"
       h="8rem"
       px={8}
       justifyContent="space-between"

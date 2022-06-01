@@ -21,7 +21,7 @@ export const theme = extendTheme({
       accent: '#21A2B1',
       header: '#2B2844',
       headerShade: '#3c3c5c',
-      white: '#D0D0D1',
+      text: '#c1c1d6',
       border: '#2F2F4C',
       gray: '#4C4C58',
       panel: '#2F2F4C',

@@ -106,7 +106,7 @@ export const LearnPage = (): JSX.Element => {
         <Accordion
           allowToggle
           bgColor="brand.panel"
-          color="brand.white"
+          color="brand.text"
           borderRadius={12}
           p={2}
           mb={6}
@@ -125,7 +125,7 @@ export const LearnPage = (): JSX.Element => {
               </AccordionButton>
             </Box>
             <AccordionPanel pb={4}>
-              <Divider my={2} borderColor="brand.white" height="2px" />
+              <Divider my={2} borderColor="brand.text" height="2px" />
               <Box mt={4}>
                 <Checkbox
                   isChecked={excludeFilter}
@@ -153,7 +153,7 @@ export const LearnPage = (): JSX.Element => {
               status="info"
               variant="solid"
               bgColor="brand.600"
-              color="brand.white"
+              color="brand.text"
               flexDirection="column"
               alignItems="center"
               justifyContent="center"
@@ -205,7 +205,6 @@ export const LearnPage = (): JSX.Element => {
                 {data.options.map((opt) => (
                   <Button
                     variant="secondary"
-                    fontWeight="bold"
                     bgColor={
                       !mutate.data?.isCorrect && lastClicked === opt
                         ? 'red.500'

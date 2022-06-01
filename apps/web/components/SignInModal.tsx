@@ -26,7 +26,7 @@ export const SignInModal = ({ isOpen, onClose }: Props): JSX.Element => {
       size="xl"
     >
       <ModalOverlay />
-      <ModalContent bgColor="brand.600" color="brand.white" borderRadius={12}>
+      <ModalContent bgColor="brand.600" color="brand.text" borderRadius={12}>
         <ModalHeader>
           <Text
             letterSpacing=".14rem"

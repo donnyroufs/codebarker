@@ -28,7 +28,7 @@ export const ButtonConfig: ComponentStyleConfig = {
       bgColor: 'transparent !important',
       border: '2px solid',
       borderColor: 'brand.border',
-      color: 'brand.white',
+      color: 'brand.text',
       textTransform: 'capitalize',
       fontSize: '.9rem',
       padding: '1rem 1.45rem',
