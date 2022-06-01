@@ -3,13 +3,13 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
-  Button,
   ModalCloseButton,
   ModalBody,
   Text,
   Heading,
+  VStack,
 } from '@chakra-ui/react';
+import { Button } from '@codebarker/components';
 import { signIn } from 'next-auth/react';
 
 type Props = {
@@ -52,26 +52,64 @@ export const SignInModal = ({ isOpen, onClose }: Props): JSX.Element => {
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Button
-            variant="outline"
-            onClick={(): Promise<void> => signIn('github')}
+          <VStack spacing={2} my={6}>
+            <Button
+              fontSize="md"
+              fontWeight="bold"
+              w="full"
+              variant="outline"
+              onClick={(): Promise<void> => signIn('github')}
+              bgColor="#151329"
+              py={6}
+              _hover={{
+                bgColor: '#151329',
+                opacity: 0.8,
+              }}
+            >
+              Continue with Github
+            </Button>
+            <Button
+              fontSize="md"
+              bgColor="#151329"
+              fontWeight="bold"
+              _hover={{
+                bgColor: '#151329',
+                opacity: 0.8,
+              }}
+              w="full"
+              py={6}
+              variant="outline"
+              onClick={(): Promise<void> => signIn('discord')}
+            >
+              Continue with Discord
+            </Button>
+            <Button
+              fontSize="md"
+              bgColor="#151329"
+              fontWeight="bold"
+              _hover={{
+                bgColor: '#151329',
+                opacity: 0.8,
+              }}
+              w="full"
+              py={6}
+              variant="outline"
+              onClick={(): Promise<void> => signIn('google')}
+            >
+              Continue with Google
+            </Button>
+          </VStack>
+          <Text
+            as="button"
+            onClick={(): void => alert('not yet implemented')}
+            mb={6}
+            textAlign="center"
+            w="full"
+            textDecor="underline"
           >
-            Continue with Github
-          </Button>
-          <Button
-            variant="outline"
-            onClick={(): Promise<void> => signIn('discord')}
-          >
-            Continue with Discord
-          </Button>
+            Want to try the app first? <b>Continue as guest</b>
+          </Text>
         </ModalBody>
-
-        <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onClose}>
-            Close
-          </Button>
-          <Button variant="ghost">Secondary Action</Button>
-        </ModalFooter>
       </ModalContent>
     </Modal>
   );
