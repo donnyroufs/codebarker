@@ -42,7 +42,7 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  role          Int       @default(0) // Guest
+  role          Int       @default(1) // User
 
   accounts Account[]
   sessions Session[]
