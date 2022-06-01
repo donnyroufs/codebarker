@@ -6,3 +6,5 @@ export * from './lib/Answer';
 export * from './lib/Solution';
 
 export * from './lib/Smell';
+
+export * from './lib/UserRole';

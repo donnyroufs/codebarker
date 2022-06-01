@@ -1,25 +1,26 @@
 import { Box, Flex, Container, useDisclosure } from '@chakra-ui/react';
 
 import { Header } from '@codebarker/components';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
+import { useAuth } from '../hooks';
 
 import { Sidebar } from './Sidebar';
 import { SignInModal } from './SignInModal';
 
 export const Layout = ({ children }): JSX.Element => {
   const { onOpen, ...disclosure } = useDisclosure();
-  const { data: session, status } = useSession();
-
-  const isLoading = status === 'loading';
+  const { user, isLoading } = useAuth({
+    required: false,
+  });
 
   return (
     <Box>
       <SignInModal {...disclosure} />
       <Header
-        name={session?.user?.name}
+        name={user?.name}
         onOpen={onOpen}
         isLoading={isLoading}
-        avatarUrl={session?.user?.image}
+        avatarUrl={user?.image}
         signOut={signOut}
       />
       <Flex>

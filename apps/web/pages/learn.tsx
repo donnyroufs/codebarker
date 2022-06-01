@@ -31,16 +31,16 @@ import { Smell } from '@codebarker/domain';
 import { Button } from '@codebarker/components';
 
 import { startKata } from './api/startKata';
-import { __UserId } from '../container';
 
 import { submitKata } from './api/submitKata';
 import { Layout } from '../components/Layout';
 import { CamelCaseUtil } from '../utils/CamelCaseUtil';
-import useLocalStorage from '../hooks/useLocalStorage';
+import { useAuth, useLocalStorage } from '../hooks';
 
 // TODO: Add E2E tests for excludeCompletedKatas
 // TODO: Fix overflow caused by highlighter when too many lines
 export const LearnPage = (): JSX.Element => {
+  const { user } = useAuth();
   const [excludeFilter, setExcludeFilter] = useLocalStorage<boolean>(
     'codebarker-exclude-finished',
     true
@@ -56,7 +56,7 @@ export const LearnPage = (): JSX.Element => {
     ['startKata', { lastChanged, previousKataId }],
     () =>
       startKata({
-        userId: __UserId,
+        userId: user!.id,
         excludeCompletedKatas: excludeFilter,
         previousKataId,
       })
@@ -90,7 +90,7 @@ export const LearnPage = (): JSX.Element => {
     setLastClicked(null);
 
     await mutate.mutateAsync({
-      userId: __UserId,
+      userId: user!.id,
       kataId: data!.id,
       smell,
     });
