@@ -31,7 +31,6 @@ export const Dropdown = (props: Props): JSX.Element => {
       />
       <MenuList bgColor="brand.600" borderColor="brand.border" borderRadius={4}>
         {props.children}
-        <Dropdown.MenuDivider />
       </MenuList>
     </Menu>
   );

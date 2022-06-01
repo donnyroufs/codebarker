@@ -54,6 +54,7 @@ export const SignInModal = ({ isOpen, onClose }: Props): JSX.Element => {
         <ModalBody>
           <VStack spacing={2} my={6}>
             <Button
+              tabIndex={1}
               fontSize="md"
               fontWeight="bold"
               w="full"
@@ -69,6 +70,7 @@ export const SignInModal = ({ isOpen, onClose }: Props): JSX.Element => {
               Continue with Github
             </Button>
             <Button
+              tabIndex={2}
               fontSize="md"
               bgColor="#151329"
               fontWeight="bold"
@@ -84,6 +86,7 @@ export const SignInModal = ({ isOpen, onClose }: Props): JSX.Element => {
               Continue with Discord
             </Button>
             <Button
+              tabIndex={3}
               fontSize="md"
               bgColor="#151329"
               fontWeight="bold"
@@ -99,7 +102,7 @@ export const SignInModal = ({ isOpen, onClose }: Props): JSX.Element => {
               Continue with Google
             </Button>
           </VStack>
-          <Text
+          {/* <Text
             as="button"
             onClick={(): void => alert('not yet implemented')}
             mb={6}
@@ -108,7 +111,7 @@ export const SignInModal = ({ isOpen, onClose }: Props): JSX.Element => {
             textDecor="underline"
           >
             Want to try the app first? <b>Continue as guest</b>
-          </Text>
+          </Text> */}
         </ModalBody>
       </ModalContent>
     </Modal>
