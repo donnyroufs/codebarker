@@ -26,7 +26,11 @@ export const Layout = ({ children }): JSX.Element => {
         onOpen={onOpen}
         isLoading={isLoading}
         avatarUrl={user?.image}
-        signOut={signOut}
+        signOut={(): Promise<void> =>
+          signOut({
+            callbackUrl: '/',
+          })
+        }
       />
       <Flex>
         <Sidebar />

@@ -11,7 +11,6 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { SessionProvider } from 'next-auth/react';
 
 import { theme } from '@codebarker/components';
-import { ForceLightMode } from '../components/ForceLightMode';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: JSX.Element) => JSX.Element;
@@ -46,8 +45,6 @@ function CustomApp({
   const getLayout =
     Component.getLayout ?? ((page: JSX.Element): JSX.Element => page);
 
-  // https://github.com/nextauthjs/react-query
-  // TODO: Add env
   return (
     <SessionProvider session={session}>
       <Head>
@@ -57,9 +54,7 @@ function CustomApp({
         <ReactQueryDevtools />
         <main className="app">
           <ChakraProvider theme={theme} resetCSS={true}>
-            <ForceLightMode>
-              {getLayout(<Component {...pageProps} />)}
-            </ForceLightMode>
+            {getLayout(<Component {...pageProps} />)}
           </ChakraProvider>
         </main>
       </QueryClientProvider>
