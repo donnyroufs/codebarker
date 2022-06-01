@@ -7,6 +7,7 @@ import Head from 'next/head';
 import { ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
 import { QueryClient, QueryClientProvider, setLogger } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { SessionProvider } from 'next-auth/react';
 
 import { theme } from '@codebarker/components';
@@ -53,6 +54,7 @@ function CustomApp({
         <title>Codebarker</title>
       </Head>
       <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools />
         <main className="app">
           <ChakraProvider theme={theme} resetCSS={true}>
             <ForceLightMode>

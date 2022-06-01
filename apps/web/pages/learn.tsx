@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import {
   Flex,
@@ -22,7 +22,7 @@ import {
   Skeleton,
   Spinner,
 } from '@chakra-ui/react';
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
@@ -40,6 +40,7 @@ import { ButtonLink } from '../components';
 // TODO: Add E2E tests for excludeCompletedKatas
 // TODO: Fix overflow caused by highlighter when too many lines
 export const LearnPage = (): JSX.Element => {
+  const client = useQueryClient();
   const { user } = useAuth();
   const [excludeFilter, setExcludeFilter] = useLocalStorage<boolean>(
     'codebarker-exclude-finished',
@@ -50,7 +51,7 @@ export const LearnPage = (): JSX.Element => {
   );
 
   const [lastClicked, setLastClicked] = useState<number | null>(null);
-  const { isLoading, data, isError } = useQuery(
+  const { isLoading, data, isError, isFetching } = useQuery(
     ['startKata', previousKataId, excludeFilter],
     () =>
       startKata({
@@ -59,6 +60,12 @@ export const LearnPage = (): JSX.Element => {
         previousKataId,
       })
   );
+
+  useEffect(() => {
+    return () => {
+      client.clear();
+    };
+  }, [client]);
 
   const mutate = useMutation(submitKata, {
     onSuccess: (res) => {
@@ -142,7 +149,7 @@ export const LearnPage = (): JSX.Element => {
           p={8}
           borderRadius={12}
           w="full"
-          isLoaded={!isLoading}
+          isLoaded={[!isLoading, !isFetching].every((v) => v)}
         >
           {noAvailableKatas && (
             <Alert
