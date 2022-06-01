@@ -12,17 +12,21 @@ import { ISubmitKataRequest } from './ISubmitKataRequest';
 import { SubmitKataResponse } from './SubmitKataResponse';
 import { UnknownKataException } from './UnknownKataException';
 import { SubmitKataRequestValidator } from './SubmitKataRequestValidator';
+import { ILogger, LoggerToken } from '../../interfaces';
 
 @injectable()
 export class SubmitKataUseCase
   implements IUseCase<ISubmitKataRequest, SubmitKataResponse>
 {
   private readonly _kataRepository: IKataRepository;
+  private readonly _logger: ILogger;
 
   public constructor(
-    @inject(KataRepositoryToken) kataRepository: IKataRepository
+    @inject(KataRepositoryToken) kataRepository: IKataRepository,
+    @inject(LoggerToken) logger: ILogger
   ) {
     this._kataRepository = kataRepository;
+    this._logger = logger;
   }
 
   public async execute(input: ISubmitKataRequest): Promise<SubmitKataResponse> {
@@ -42,6 +46,8 @@ export class SubmitKataUseCase
 
     // TODO: Do not count rank points when already given an answer
     kata.addAnswer(answer);
+
+    this._logger.info(`Before persisting answerId: ${answer.id}`);
 
     await this._kataRepository.saveAsync(kata);
 

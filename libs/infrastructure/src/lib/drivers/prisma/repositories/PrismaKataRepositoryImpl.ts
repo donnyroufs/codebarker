@@ -1,7 +1,8 @@
 import { v4 } from 'uuid';
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
 
 import { IKataRepository, Kata } from '@codebarker/domain';
+import { ILogger, LoggerToken } from '@codebarker/application';
 import { isNull, NullOrAsync } from '@codebarker/shared';
 
 import { PrismaService } from '../PrismaService';
@@ -10,9 +11,14 @@ import { KataMapper } from '../mappers/KataMapper';
 @injectable()
 export class PrismaKataRepositoryImpl implements IKataRepository {
   private readonly _prismaService: PrismaService;
+  private readonly _logger: ILogger;
 
-  public constructor(prismaService: PrismaService) {
+  public constructor(
+    prismaService: PrismaService,
+    @inject(LoggerToken) logger: ILogger
+  ) {
     this._prismaService = prismaService;
+    this._logger = logger;
   }
 
   // TODO: Abstract filters
@@ -93,49 +99,53 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
     const { solution, answers, ...model } = KataMapper.toModel(kata);
 
     // TODO: What about deleting answers that im not including?
-    await this._prismaService.kata.upsert({
-      where: {
-        id: kata.id,
-      },
-      create: {
-        id: model.id,
-        // TODO: Fix type
-        content: model.content as string,
-        solution: {
-          connect: {
-            id: solution.id,
+    try {
+      await this._prismaService.kata.upsert({
+        where: {
+          id: kata.id,
+        },
+        create: {
+          id: model.id,
+          // TODO: Fix type
+          content: model.content as string,
+          solution: {
+            connect: {
+              id: solution.id,
+            },
+          },
+          answers: {
+            connectOrCreate: answers.map((answer) => ({
+              where: {
+                id: answer.id,
+              },
+              create: {
+                id: answer.id,
+                smell: answer.smell,
+                userId: answer.userId,
+                isCorrect: answer.isCorrect,
+              },
+            })),
           },
         },
-        answers: {
-          connectOrCreate: answers.map((answer) => ({
-            where: {
-              id: answer.id,
-            },
-            create: {
-              id: answer.id,
-              smell: answer.smell,
-              userId: answer.userId,
-              isCorrect: answer.isCorrect,
-            },
-          })),
+        update: {
+          answers: {
+            connectOrCreate: answers.map((answer) => ({
+              where: {
+                id: answer.id,
+              },
+              create: {
+                id: answer.id,
+                smell: answer.smell,
+                userId: answer.userId,
+                isCorrect: answer.isCorrect,
+              },
+            })),
+          },
         },
-      },
-      update: {
-        answers: {
-          connectOrCreate: answers.map((answer) => ({
-            where: {
-              id: answer.id,
-            },
-            create: {
-              id: answer.id,
-              smell: answer.smell,
-              userId: answer.userId,
-              isCorrect: answer.isCorrect,
-            },
-          })),
-        },
-      },
-    });
+      });
+    } catch (err: any) {
+      this._logger.error(err.message);
+    }
   }
 
   public generateId(): string {

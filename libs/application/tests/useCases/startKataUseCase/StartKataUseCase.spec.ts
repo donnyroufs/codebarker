@@ -17,6 +17,7 @@ import {
 } from '../../../src/lib/useCases';
 
 import { KataFactory } from '../../utils/KataFactory';
+import { ILogger, LoggerToken } from '../../../src/lib/interfaces';
 
 describe('start kata', () => {
   const mockedRepo = mock<IKataRepository>();
@@ -25,8 +26,10 @@ describe('start kata', () => {
   let sut: StartKataUseCase;
 
   beforeAll(() => {
+    const mockedLogger = mock<ILogger>();
     container = TestingFactory.createContainer(ApplicationModule);
     container.bind(KataRepositoryToken).toConstantValue(mockedRepo);
+    container.bind(LoggerToken).toConstantValue(mockedLogger);
   });
 
   beforeEach(() => {

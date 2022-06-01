@@ -16,6 +16,7 @@
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11",
     "@fontsource/karla": "^4.5.8",
+    "@logtail/node": "^0.1.12",
     "@next-auth/prisma-adapter": "^1.0.3",
     "@next-auth/react-query": "^0.0.12",
     "@nrwl/next": "^14.1.9",

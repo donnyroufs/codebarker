@@ -9,6 +9,7 @@ import {
 import { TestingFactory, ValidationException } from '@codebarker/shared';
 
 import { KataFactory, AnswerFactory, SolutionFactory } from '../../utils';
+import { ILogger, LoggerToken } from '../../../src/lib/interfaces';
 
 import {
   SubmitKataUseCase,
@@ -25,8 +26,10 @@ describe('Submit kata', () => {
   let container: Container;
 
   beforeAll(() => {
+    const mockedLogger = mock<ILogger>();
     container = TestingFactory.createContainer(ApplicationModule);
     container.bind(KataRepositoryToken).toConstantValue(mockedRepo);
+    container.bind(LoggerToken).toConstantValue(mockedLogger);
   });
 
   beforeEach(() => {
