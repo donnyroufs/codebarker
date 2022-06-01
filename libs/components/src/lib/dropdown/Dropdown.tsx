@@ -40,13 +40,16 @@ Dropdown.MenuItem = (props: MenuItemProps): JSX.Element => (
   <MenuItem
     textTransform="capitalize"
     _hover={{
-      bg: 'brand.headerShade',
+      bg: 'brand.600',
+      color: 'brand.accent',
     }}
     _active={{
-      bg: 'brand.headerShade',
+      bg: 'brand.600',
+      color: 'brand.accent',
     }}
     _focus={{
-      bg: 'brand.headerShade',
+      bg: 'brand.600',
+      color: 'brand.accent',
     }}
     {...props}
   />

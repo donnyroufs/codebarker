@@ -1,8 +1,10 @@
 import { Logtail } from '@logtail/node';
 import { injectable } from 'inversify';
 
+import { ILogger } from '@codebarker/application';
+
 @injectable()
-export class LoggerLogTailImpl {
+export class LoggerLogTailImpl implements ILogger {
   private readonly _logTail = new Logtail(process.env.SOURCE_TOKEN!);
 
   public debug(msg: string): void {

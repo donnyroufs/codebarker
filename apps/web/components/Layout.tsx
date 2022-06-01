@@ -18,7 +18,7 @@ export const Layout = ({ children }): JSX.Element => {
 
   return (
     <Box>
-      <SignInModal {...disclosure} />
+      {/* <SignInModal {...disclosure} /> */}
       <Header
         name={user?.name}
         onOpen={onOpen}

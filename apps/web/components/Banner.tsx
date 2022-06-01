@@ -1,4 +1,3 @@
-import NextLink from 'next/link';
 import {
   Box,
   Heading,
@@ -6,10 +5,9 @@ import {
   Text,
   CircularProgress,
   Container,
-  Link,
   CircularProgressLabel,
 } from '@chakra-ui/react';
-import { Button } from '@codebarker/components';
+import { ButtonLink } from './ButtonLink';
 
 type Props = {
   progress: number;
@@ -48,12 +46,7 @@ export const Banner = ({ progress }: Props): JSX.Element => {
             Become a better developer by finding code smells in real source code
             and help authors avoid spaghetti.
           </Text>
-          <NextLink href="/learn" passHref>
-            <Link textDecor="none !important">
-              <Button as="span">Start Learning</Button>
-            </Link>
-          </NextLink>
-          {}
+          <ButtonLink href="/learn">Start Learning</ButtonLink>
         </VStack>
 
         <Box mt={{ base: 6, lg: 0 }}>

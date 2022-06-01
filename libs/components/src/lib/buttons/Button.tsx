@@ -1,8 +1,9 @@
 import { Button as ChakraButton, ButtonProps } from '@chakra-ui/react';
 
+export type ButtonVariant = 'primary' | 'secondary' | 'outline';
 export type Props = React.PropsWithChildren<
   ButtonProps & {
-    variant?: 'primary' | 'secondary' | 'outline';
+    variant?: ButtonVariant;
   }
 >;
 

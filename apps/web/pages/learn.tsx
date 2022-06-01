@@ -1,8 +1,6 @@
 import { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import NextLink from 'next/link';
 import {
-  Link,
   Flex,
   Box,
   Container,
@@ -23,7 +21,7 @@ import {
   HStack,
   Skeleton,
 } from '@chakra-ui/react';
-import { useQueryClient, useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation } from 'react-query';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
@@ -36,6 +34,7 @@ import { submitKata } from './api/submitKata';
 import { Layout } from '../components/Layout';
 import { CamelCaseUtil } from '../utils/CamelCaseUtil';
 import { useAuth, useLocalStorage } from '../hooks';
+import { ButtonLink } from '../components';
 
 // TODO: Add E2E tests for excludeCompletedKatas
 // TODO: Fix overflow caused by highlighter when too many lines
@@ -48,7 +47,6 @@ export const LearnPage = (): JSX.Element => {
   const [previousKataId, setPreviousKataId] = useState<undefined | string>(
     undefined
   );
-  const client = useQueryClient();
 
   const [lastClicked, setLastClicked] = useState<number | null>(null);
   const { isLoading, data, isError } = useQuery(
@@ -175,11 +173,9 @@ export const LearnPage = (): JSX.Element => {
                     >
                       Yes
                     </Button>
-                    <NextLink href="/" passHref>
-                      <Button as={Link} variant="outline">
-                        Back to home
-                      </Button>
-                    </NextLink>
+                    <ButtonLink href="/" variant="outline">
+                      Back to home
+                    </ButtonLink>
                   </HStack>
                 </Flex>
               </AlertDescription>

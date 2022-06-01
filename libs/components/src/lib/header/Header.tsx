@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import {
   HStack,
   Text,
@@ -8,7 +9,7 @@ import {
   ButtonGroup,
   Skeleton,
 } from '@chakra-ui/react';
-import Link from 'next/link';
+import NextLink from 'next/link';
 import { FaRegBell } from 'react-icons/fa';
 
 import { Button } from '../buttons/Button';
@@ -96,23 +97,29 @@ export const Header = ({
               </Skeleton>
             </HStack>
             {isSignedIn && (
-              <ButtonGroup spacing={2}>
+              <ButtonGroup>
                 <IconButton
                   aria-label="your notifcations"
                   icon={<FaRegBell />}
                 />
-                <Dropdown>
-                  <Link href="/">
-                    <Dropdown.MenuItem>Home</Dropdown.MenuItem>
-                  </Link>
-                  <Link href="/learn">
-                    <Dropdown.MenuItem>Learn</Dropdown.MenuItem>
-                  </Link>
-                  <Dropdown.MenuDivider color="brand.border" />
-                  <Dropdown.MenuItem onClick={signOut}>
-                    sign out
-                  </Dropdown.MenuItem>
-                </Dropdown>
+                <Box>
+                  <Dropdown>
+                    <NextLink href="/" passHref>
+                      <a>
+                        <Dropdown.MenuItem as="span">Home</Dropdown.MenuItem>
+                      </a>
+                    </NextLink>
+                    <NextLink href="/learn" passHref>
+                      <a>
+                        <Dropdown.MenuItem as="span">Learn</Dropdown.MenuItem>
+                      </a>
+                    </NextLink>
+                    <Dropdown.MenuDivider color="brand.border" />
+                    <Dropdown.MenuItem onClick={signOut}>
+                      sign out
+                    </Dropdown.MenuItem>
+                  </Dropdown>
+                </Box>
               </ButtonGroup>
             )}
           </>
