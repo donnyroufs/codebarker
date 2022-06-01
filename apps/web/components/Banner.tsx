@@ -6,6 +6,7 @@ import {
   CircularProgress,
   Container,
   CircularProgressLabel,
+  ButtonGroup,
 } from '@chakra-ui/react';
 import { ButtonLink } from './ButtonLink';
 
@@ -49,7 +50,12 @@ export const Banner = ({ progress }: Props): JSX.Element => {
             Become a better developer by finding code smells in real source code
             and help authors avoid spaghetti.
           </Text>
-          <ButtonLink href="/learn">Start Learning</ButtonLink>
+          <ButtonGroup>
+            <ButtonLink href="/learn">Start Learning</ButtonLink>
+            <ButtonLink variant="outline" href="/investigate">
+              Investigate
+            </ButtonLink>
+          </ButtonGroup>
         </VStack>
 
         <Box mt={{ base: 6, lg: 0 }}>
