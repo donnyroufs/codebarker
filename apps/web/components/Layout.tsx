@@ -12,6 +12,7 @@ export const Layout = ({ children }): JSX.Element => {
   useAuthError();
 
   const { onOpen, ...disclosure } = useDisclosure();
+
   const { user, isLoading } = useAuth({
     required: false,
   });
