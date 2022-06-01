@@ -15,15 +15,18 @@ type Props = {
 
 export const Banner = ({ progress }: Props): JSX.Element => {
   return (
-    <Box bgColor="brand.600" boxShadow="card" borderRadius={16}>
+    <Box>
       <Container
+        borderRadius={16}
+        boxShadow="card"
+        bgColor="brand.600"
         display="flex"
         justifyContent="space-between"
         color="brand.text"
         width="full"
         p={10}
         alignItems="center"
-        maxW="1400px"
+        maxW="container.lg"
         flexDir={{
           base: 'column',
           lg: 'row',
@@ -33,7 +36,7 @@ export const Banner = ({ progress }: Props): JSX.Element => {
           textAlign={{ base: 'center', lg: 'start' }}
           alignItems={{ base: 'center', lg: 'flex-start' }}
           maxW="70ch"
-          spacing={4}
+          spacing={5}
         >
           <Heading
             as="h1"
@@ -42,7 +45,7 @@ export const Banner = ({ progress }: Props): JSX.Element => {
           >
             Start learning
           </Heading>
-          <Text fontSize={{ base: 'xl', lg: '2xl' }} lineHeight="1.8">
+          <Text fontSize={{ base: 'xl', lg: '1xl' }} lineHeight="1.8">
             Become a better developer by finding code smells in real source code
             and help authors avoid spaghetti.
           </Text>
