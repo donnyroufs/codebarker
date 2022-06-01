@@ -1,8 +1,8 @@
-import { Box, Flex, Container, useDisclosure } from '@chakra-ui/react';
+import { Box, Flex, Container } from '@chakra-ui/react';
 
 import { Header } from '@codebarker/components';
 import { signOut } from 'next-auth/react';
-import { useAuth } from '../hooks';
+import { useAuth, useRedirectLogin, useModal } from '../hooks';
 import { useAuthError } from '../hooks/useAuthError';
 
 import { Sidebar } from './Sidebar';
@@ -10,8 +10,9 @@ import { SignInModal } from './SignInModal';
 
 export const Layout = ({ children }): JSX.Element => {
   useAuthError();
+  useRedirectLogin();
 
-  const { onOpen, ...disclosure } = useDisclosure();
+  const { onOpen, ...disclosure } = useModal();
 
   const { user, isLoading } = useAuth({
     required: false,

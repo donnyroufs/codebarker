@@ -9,7 +9,6 @@ export function useAuthError(): void {
   useEffect(() => {
     if (!router.query.error) return;
 
-    // TODO: Add log
     const msg = router.query.error.includes('OAuthAccountNotLinked')
       ? 'There seems to be an account with the same email already registered with another social auth provider. Try logging in with a different provider.'
       : `Something went wrong with authenticating, please contact an admin and give them this code: "${
@@ -24,5 +23,9 @@ export function useAuthError(): void {
       isClosable: true,
       position: 'bottom-right',
     });
-  }, [router.query, toast]);
+
+    router.replace(router.pathname, undefined, {
+      shallow: true,
+    });
+  }, [router.query, toast, router]);
 }

@@ -11,7 +11,7 @@ type Props = {
 export class AuthenticatedGuard {
   public static async execute(
     ctx: GetServerSidePropsContext,
-    redirect = '/'
+    redirect = '/?redirect=login'
   ): Promise<Props> {
     const session = await getSession({ req: ctx.req });
 
