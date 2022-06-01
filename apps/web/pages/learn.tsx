@@ -20,6 +20,7 @@ import {
   AlertTitle,
   HStack,
   Skeleton,
+  Spinner,
 } from '@chakra-ui/react';
 import { useQuery, useMutation } from 'react-query';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -183,16 +184,28 @@ export const LearnPage = (): JSX.Element => {
           )}
           {!noAvailableKatas && (
             <>
-              <SyntaxHighlighter
-                language="typescript"
-                style={atomDark}
-                customStyle={{
-                  background: '#1C1A31',
-                }}
-                showLineNumbers={true}
-              >
-                {code}
-              </SyntaxHighlighter>
+              <Box pos="relative">
+                {mutate.isLoading && (
+                  <Spinner
+                    pos="absolute"
+                    top={-2}
+                    right={4}
+                    color="brand.accent"
+                    thickness="3px"
+                  />
+                )}
+
+                <SyntaxHighlighter
+                  language="typescript"
+                  style={atomDark}
+                  customStyle={{
+                    background: '#1C1A31',
+                  }}
+                  showLineNumbers={true}
+                >
+                  {code}
+                </SyntaxHighlighter>
+              </Box>
               <Divider my={8} borderColor="brand.border" height="2px" />
               <SimpleGrid minChildWidth="200px" py={2} gap={4}>
                 {data.options.map((opt) => (
