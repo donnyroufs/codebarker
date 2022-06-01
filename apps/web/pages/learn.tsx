@@ -5,7 +5,6 @@ import {
   Link,
   Flex,
   Box,
-  Button,
   Container,
   Divider,
   Accordion,
@@ -29,18 +28,19 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 import { Smell } from '@codebarker/domain';
+import { Button } from '@codebarker/components';
 
 import { startKata } from './api/startKata';
-import { __UserId } from '../container';
 
 import { submitKata } from './api/submitKata';
 import { Layout } from '../components/Layout';
 import { CamelCaseUtil } from '../utils/CamelCaseUtil';
-import useLocalStorage from '../hooks/useLocalStorage';
+import { useAuth, useLocalStorage } from '../hooks';
 
 // TODO: Add E2E tests for excludeCompletedKatas
 // TODO: Fix overflow caused by highlighter when too many lines
 export const LearnPage = (): JSX.Element => {
+  const { user } = useAuth();
   const [excludeFilter, setExcludeFilter] = useLocalStorage<boolean>(
     'codebarker-exclude-finished',
     true
@@ -56,7 +56,7 @@ export const LearnPage = (): JSX.Element => {
     ['startKata', { lastChanged, previousKataId }],
     () =>
       startKata({
-        userId: __UserId,
+        userId: user!.id,
         excludeCompletedKatas: excludeFilter,
         previousKataId,
       })
@@ -90,7 +90,7 @@ export const LearnPage = (): JSX.Element => {
     setLastClicked(null);
 
     await mutate.mutateAsync({
-      userId: __UserId,
+      userId: user!.id,
       kataId: data!.id,
       smell,
     });
@@ -106,7 +106,7 @@ export const LearnPage = (): JSX.Element => {
         <Accordion
           allowToggle
           bgColor="brand.panel"
-          color="brand.white"
+          color="brand.text"
           borderRadius={12}
           p={2}
           mb={6}
@@ -125,7 +125,7 @@ export const LearnPage = (): JSX.Element => {
               </AccordionButton>
             </Box>
             <AccordionPanel pb={4}>
-              <Divider my={2} borderColor="brand.white" height="2px" />
+              <Divider my={2} borderColor="brand.text" height="2px" />
               <Box mt={4}>
                 <Checkbox
                   isChecked={excludeFilter}
@@ -153,7 +153,7 @@ export const LearnPage = (): JSX.Element => {
               status="info"
               variant="solid"
               bgColor="brand.600"
-              color="brand.white"
+              color="brand.text"
               flexDirection="column"
               alignItems="center"
               justifyContent="center"
@@ -174,27 +174,12 @@ export const LearnPage = (): JSX.Element => {
                   <HStack spacing={2} justifyContent="center" mt={2}>
                     <Button
                       onClick={(): void => onFilterChange(false)}
-                      variant="solid"
-                      color="brand.white"
-                      bgColor="brand.400"
-                      _hover={{
-                        opacity: 0.8,
-                      }}
+                      variant="primary"
                     >
                       Yes
                     </Button>
                     <NextLink href="/" passHref>
-                      <Button
-                        as={Link}
-                        textDecor="none !important"
-                        variant="outline"
-                        bgColor="transparent"
-                        borderColor="brand.400"
-                        color="brand.white"
-                        _hover={{
-                          opacity: 0.8,
-                        }}
-                      >
+                      <Button as={Link} variant="outline">
                         Back to home
                       </Button>
                     </NextLink>
@@ -219,8 +204,7 @@ export const LearnPage = (): JSX.Element => {
               <SimpleGrid minChildWidth="200px" py={2} gap={4}>
                 {data.options.map((opt) => (
                   <Button
-                    variant="solid"
-                    color="brand.white"
+                    variant="secondary"
                     bgColor={
                       !mutate.data?.isCorrect && lastClicked === opt
                         ? 'red.500'
@@ -229,9 +213,6 @@ export const LearnPage = (): JSX.Element => {
                     disabled={mutate.isLoading}
                     key={opt}
                     onClick={(): Promise<void> => handleSelection(opt)}
-                    _hover={{
-                      opacity: 0.8,
-                    }}
                   >
                     {CamelCaseUtil.toReadableString(Smell[opt])}
                   </Button>

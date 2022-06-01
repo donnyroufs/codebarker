@@ -9,7 +9,4 @@ export const container = new Container({
   skipBaseClassChecks: true,
 });
 
-// Remove when auth is implemented
-export const __UserId = 'userId';
-
 container.load(new ApplicationModule(), new InfrastructureModule());

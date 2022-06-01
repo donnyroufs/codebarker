@@ -7,34 +7,21 @@ import {
   CircularProgress,
   Container,
   Link,
+  CircularProgressLabel,
 } from '@chakra-ui/react';
+import { Button } from '@codebarker/components';
 
 type Props = {
   progress: number;
 };
 
-// TODO: Add a popover where it explains that done means you will only get code smells
-// that you have done before, perhaps a suggestion saying: "You can investigate new cases"
-function getLinkText(progress: number): string {
-  switch (progress) {
-    case 0:
-      return 'Start';
-    case 100:
-      return 'Done';
-    default:
-      return 'Continue';
-  }
-}
-
 export const Banner = ({ progress }: Props): JSX.Element => {
-  const linkTxt = getLinkText(progress);
-
   return (
     <Box bgColor="brand.600" boxShadow="card" borderRadius={16}>
       <Container
         display="flex"
         justifyContent="space-between"
-        color="brand.white"
+        color="brand.text"
         width="full"
         p={10}
         alignItems="center"
@@ -61,6 +48,12 @@ export const Banner = ({ progress }: Props): JSX.Element => {
             Become a better developer by finding code smells in real source code
             and help authors avoid spaghetti.
           </Text>
+          <NextLink href="/learn" passHref>
+            <Link textDecor="none !important">
+              <Button as="span">Start Learning</Button>
+            </Link>
+          </NextLink>
+          {}
         </VStack>
 
         <Box mt={{ base: 6, lg: 0 }}>
@@ -72,24 +65,7 @@ export const Banner = ({ progress }: Props): JSX.Element => {
             color="brand.accent"
             trackColor="brand.400"
           >
-            <NextLink href="/learn" passHref>
-              <Link
-                fontSize="xl"
-                variant="unstyled"
-                position="absolute"
-                left="50%"
-                transform="translate(-50%, -50%)"
-                textTransform="uppercase"
-                top="50%"
-                _hover={{
-                  textDecor: 'none',
-                  opacity: 0.8,
-                }}
-                fontWeight="bold"
-              >
-                {linkTxt}
-              </Link>
-            </NextLink>
+            <CircularProgressLabel>{progress}%</CircularProgressLabel>
           </CircularProgress>
         </Box>
       </Container>

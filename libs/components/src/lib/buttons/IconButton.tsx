@@ -6,5 +6,5 @@ export type Props = {
 };
 
 export const IconButton = (props: Props): JSX.Element => {
-  return <ChakraIconButton {...props} variant="icon" color="brand.white" />;
+  return <ChakraIconButton {...props} variant="icon" color="brand.text" />;
 };
