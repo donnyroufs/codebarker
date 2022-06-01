@@ -48,12 +48,11 @@ export const LearnPage = (): JSX.Element => {
   const [previousKataId, setPreviousKataId] = useState<undefined | string>(
     undefined
   );
-  const [lastChanged, setLastChanged] = useState(new Date());
   const client = useQueryClient();
 
   const [lastClicked, setLastClicked] = useState<number | null>(null);
   const { isLoading, data, isError } = useQuery(
-    ['startKata', { lastChanged, previousKataId }],
+    ['startKata', previousKataId, excludeFilter],
     () =>
       startKata({
         userId: user!.id,
@@ -67,7 +66,6 @@ export const LearnPage = (): JSX.Element => {
       if (!res.isCorrect) return;
 
       setPreviousKataId(data!.id);
-      client.invalidateQueries('startKata');
       setLastClicked(null);
     },
   });
@@ -83,7 +81,6 @@ export const LearnPage = (): JSX.Element => {
   function onFilterChange(val: boolean): void {
     setExcludeFilter(val);
     setLastClicked(null);
-    setLastChanged(new Date());
   }
 
   async function handleSelection(smell: Smell): Promise<void> {
