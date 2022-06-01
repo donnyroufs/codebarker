@@ -24,6 +24,13 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_SECRET!,
     }),
   ],
+  pages: {
+    newUser: '/',
+    signOut: '/',
+    signIn: '/',
+    verifyRequest: '/',
+    error: '/',
+  },
   callbacks: {
     async session({ session, user }): Promise<Session> {
       if (!session.user) return session;
