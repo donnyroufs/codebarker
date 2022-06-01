@@ -7,12 +7,14 @@ import {
   Avatar,
   ButtonGroup,
   Skeleton,
-  Button,
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import { FaRegBell } from 'react-icons/fa';
+
+import { Button } from '../buttons/Button';
+
 import { Dropdown } from '../dropdown/Dropdown';
-import { IconButton } from '../iconButton/IconButton';
+import { IconButton } from '../buttons/IconButton';
 
 export type Props = {
   name?: string | null;
@@ -52,7 +54,7 @@ export const Header = ({
         {!isSignedIn && (
           <ButtonGroup spacing={2}>
             <Button onClick={onOpen}>Sign Up</Button>
-            <Button variant="secondary" fontWeight="normal" onClick={onOpen}>
+            <Button variant="secondary" onClick={onOpen}>
               Sign In
             </Button>
           </ButtonGroup>

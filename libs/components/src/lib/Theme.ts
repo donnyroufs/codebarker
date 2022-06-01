@@ -1,7 +1,9 @@
 import '@fontsource/karla';
 
 import { extendTheme } from '@chakra-ui/react';
-import { IconButtonConfig } from './iconButton/IconButtonConfig';
+import { IconButtonConfig } from './buttons/IconButtonConfig';
+import { merge } from 'lodash';
+import { ButtonConfig } from './buttons/ButtonConfig';
 
 export const theme = extendTheme({
   config: {
@@ -23,11 +25,11 @@ export const theme = extendTheme({
       border: '#2F2F4C',
       gray: '#4C4C58',
       panel: '#2F2F4C',
-      btnSecondary: "#2F2F4C"
+      btnSecondary: '#2F2F4C',
     },
   },
   components: {
-    Button: IconButtonConfig,
+    Button: merge(IconButtonConfig, ButtonConfig),
   },
   shadows: {
     card: '5px 9px 66px -15px #292741',

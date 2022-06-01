@@ -1,15 +1,8 @@
 import { ComponentStyleConfig } from '@chakra-ui/react';
 
-export const IconButtonConfig: ComponentStyleConfig = {
+export const ButtonConfig: ComponentStyleConfig = {
   variants: {
-    icon: {
-      borderRadius: 'full',
-      bgColor: 'brand.headerShade',
-      _hover: {
-        opacity: 0.8,
-      },
-    },
-    solid: {
+    primary: {
       bgColor: 'brand.accent',
       color: 'white',
       fontSize: '.9rem',
@@ -17,7 +10,7 @@ export const IconButtonConfig: ComponentStyleConfig = {
       textTransform: 'capitalize',
       _hover: {
         bgColor: 'brand.accent',
-        opacity: 0.9,
+        opacity: 0.8,
       },
     },
     secondary: {
@@ -26,8 +19,22 @@ export const IconButtonConfig: ComponentStyleConfig = {
       textTransform: 'capitalize',
       fontSize: '.9rem',
       padding: '1rem 1.45rem',
+      fontWeight: 'normal',
       _hover: {
-        opacity: 0.9,
+        opacity: 0.8,
+      },
+    },
+    outline: {
+      bgColor: 'transparent !important',
+      border: '2px solid',
+      borderColor: 'brand.border',
+      color: 'brand.white',
+      textTransform: 'capitalize',
+      fontSize: '.9rem',
+      padding: '1rem 1.45rem',
+      fontWeight: 'normal',
+      _hover: {
+        opacity: 0.8,
       },
     },
   },

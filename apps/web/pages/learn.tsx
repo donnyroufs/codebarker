@@ -5,7 +5,6 @@ import {
   Link,
   Flex,
   Box,
-  Button,
   Container,
   Divider,
   Accordion,
@@ -29,6 +28,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 import { Smell } from '@codebarker/domain';
+import { Button } from '@codebarker/components';
 
 import { startKata } from './api/startKata';
 import { __UserId } from '../container';
@@ -174,27 +174,12 @@ export const LearnPage = (): JSX.Element => {
                   <HStack spacing={2} justifyContent="center" mt={2}>
                     <Button
                       onClick={(): void => onFilterChange(false)}
-                      variant="solid"
-                      color="brand.white"
-                      bgColor="brand.400"
-                      _hover={{
-                        opacity: 0.8,
-                      }}
+                      variant="primary"
                     >
                       Yes
                     </Button>
                     <NextLink href="/" passHref>
-                      <Button
-                        as={Link}
-                        textDecor="none !important"
-                        variant="outline"
-                        bgColor="transparent"
-                        borderColor="brand.400"
-                        color="brand.white"
-                        _hover={{
-                          opacity: 0.8,
-                        }}
-                      >
+                      <Button as={Link} variant="outline">
                         Back to home
                       </Button>
                     </NextLink>
@@ -219,8 +204,8 @@ export const LearnPage = (): JSX.Element => {
               <SimpleGrid minChildWidth="200px" py={2} gap={4}>
                 {data.options.map((opt) => (
                   <Button
-                    variant="solid"
-                    color="brand.white"
+                    variant="secondary"
+                    fontWeight="bold"
                     bgColor={
                       !mutate.data?.isCorrect && lastClicked === opt
                         ? 'red.500'
@@ -229,9 +214,6 @@ export const LearnPage = (): JSX.Element => {
                     disabled={mutate.isLoading}
                     key={opt}
                     onClick={(): Promise<void> => handleSelection(opt)}
-                    _hover={{
-                      opacity: 0.8,
-                    }}
                   >
                     {CamelCaseUtil.toReadableString(Smell[opt])}
                   </Button>
