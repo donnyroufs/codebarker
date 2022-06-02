@@ -4,12 +4,10 @@ import GithubProvider from 'next-auth/providers/github';
 import DiscordProvider from 'next-auth/providers/discord';
 import GoogleProvider from 'next-auth/providers/google';
 
-import { PrismaService } from '@codebarker/infrastructure';
-
-import { container } from '../../../container';
+import prisma from '../../../prisma';
 
 export default NextAuth({
-  adapter: PrismaAdapter(container.get(PrismaService)),
+  adapter: PrismaAdapter(prisma),
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID!,

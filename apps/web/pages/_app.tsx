@@ -6,7 +6,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
-import { QueryClient, QueryClientProvider, setLogger } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { SessionProvider } from 'next-auth/react';
 
@@ -20,11 +20,11 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-setLogger({
-  error: () => void 0,
-  log: console.log,
-  warn: console.warn,
-});
+// setLogger({
+//   error: () => void 0,
+//   log: console.log,
+//   warn: console.warn,
+// });
 
 function CustomApp({
   Component,
