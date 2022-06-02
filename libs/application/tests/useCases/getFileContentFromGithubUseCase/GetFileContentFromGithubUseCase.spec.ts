@@ -1,6 +1,7 @@
-import { TestingFactory, ValidationException } from '@codebarker/shared';
 import { Container } from 'inversify';
 import { mock, mockReset } from 'jest-mock-extended';
+
+import { TestingFactory, ValidationException } from '@codebarker/shared';
 
 import {
   ApplicationModule,
@@ -11,8 +12,9 @@ import {
   IGithubApi,
   ILogger,
   LoggerToken,
+  ContentDto,
 } from '../../../src';
-
+import { ContentFactory } from '../../utils/ContentFactory';
 describe('get file content from github', () => {
   const mockedGithubApi = mock<IGithubApi>();
 
@@ -48,15 +50,14 @@ describe('get file content from github', () => {
       fileDir: 'filedir',
       repositoryName: 'repositoryName',
     };
+    const content = ContentFactory.make();
     const expectedResult: GetFileContentFromGithubResponse = {
       author: request.author,
-      content: 'content', // TODO: Might need to create a VO
+      content: ContentDto.from(content),
       repositoryName: request.repositoryName,
     };
 
-    mockedGithubApi.getFileContents.mockResolvedValueOnce(
-      expectedResult.content
-    );
+    mockedGithubApi.getFileContents.mockResolvedValueOnce(content);
 
     const result = await sut.execute(request);
 

@@ -1,4 +1,5 @@
 import { Validator } from '@codebarker/shared';
+import { Content } from './Content';
 
 import { KataProps } from './Kata';
 import { Solution } from './Solution';
@@ -8,8 +9,8 @@ export class KataValidator extends Validator<KataProps> {
     this.ruleFor('id', Validator.is.string, 'The id has to be of type String');
     this.ruleFor(
       'content',
-      Validator.is.string,
-      'Content has to be of type String'
+      (val) => Validator.is.instance(val, Content),
+      'Content has to be of type Content'
     );
     this.ruleFor(
       'solution',

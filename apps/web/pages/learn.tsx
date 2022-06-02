@@ -86,9 +86,7 @@ export const LearnPage = (): JSX.Element => {
   const code = useMemo(() => {
     if (!data) return [];
 
-    return JSON.parse(data!.content)
-      .map((item: any) => item.content)
-      .join('\n');
+    return data.content.lines.map((line) => line.value).join('\n');
   }, [data]);
 
   function onFilterChange(val: boolean): void {
