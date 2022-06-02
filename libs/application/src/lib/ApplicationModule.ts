@@ -13,6 +13,7 @@ export class ApplicationModule extends ContainerModule {
       bind(StartKataUseCase).toSelf().inSingletonScope();
       bind(SubmitKataUseCase).toSelf().inSingletonScope();
       bind(GetFileContentFromGithubUseCase).toSelf().inSingletonScope();
+      bind(SubmitAnalysisUseCase).toSelf().inSingletonScope();
     });
   }
 }
