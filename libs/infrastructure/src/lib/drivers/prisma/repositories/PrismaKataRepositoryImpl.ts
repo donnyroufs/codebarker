@@ -80,7 +80,6 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
         id,
       },
       include: {
-        answers: true,
         solution: true,
       },
     });
@@ -89,7 +88,7 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
       return null;
     }
 
-    return KataMapper.toDomain(result);
+    return KataMapper.toDomain({ ...result, answers: [] });
   }
 
   // TODO: Test whether this works as expected
