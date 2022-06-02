@@ -130,7 +130,6 @@ describe('start kata', () => {
   });
 });
 
-// TODO: Add previous kata id
 function inputData(): any[] {
   return [
     [10, 'true'],
