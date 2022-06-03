@@ -5,19 +5,25 @@ export const ButtonConfig: ComponentStyleConfig = {
     primary: {
       bgColor: 'brand.accent',
       color: 'white',
-      fontSize: '.9rem',
+      fontSize: '1rem',
       padding: '1rem 1.45rem',
       textTransform: 'capitalize',
       _hover: {
         bgColor: 'brand.accent',
         opacity: 0.8,
       },
+      _disabled: {
+        _hover: {
+          bgColor: 'brand.accent !important',
+          opacity: 0.3,
+        },
+      },
     },
     secondary: {
       bgColor: 'brand.btnSecondary',
       color: 'white',
       textTransform: 'capitalize',
-      fontSize: '.9rem',
+      fontSize: '1rem',
       padding: '1rem 1.45rem',
       fontWeight: 'normal',
       _hover: {
@@ -30,7 +36,7 @@ export const ButtonConfig: ComponentStyleConfig = {
       borderColor: 'brand.border',
       color: 'brand.text',
       textTransform: 'capitalize',
-      fontSize: '.9rem',
+      fontSize: '1rem',
       padding: '1rem 1.45rem',
       fontWeight: 'normal',
       _hover: {
