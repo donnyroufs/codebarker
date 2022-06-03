@@ -23,7 +23,7 @@ import {
 } from '@chakra-ui/react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { tomorrow as atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 import { Smell } from '@codebarker/domain';
 import { Button } from '@codebarker/components';
