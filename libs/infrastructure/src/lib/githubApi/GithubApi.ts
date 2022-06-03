@@ -37,7 +37,7 @@ export class GithubApi implements IGithubApi {
     const arr = code.split('\n');
 
     return Content.make({
-      lines: arr.map((line, i) => Line.make(i, line)),
+      lines: arr.map((line, i) => Line.make(i, line, false)),
     });
   }
 }
