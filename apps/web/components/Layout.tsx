@@ -8,7 +8,11 @@ import { useAuthError } from '../hooks/useAuthError';
 import { Sidebar } from './Sidebar';
 import { SignInModal } from './SignInModal';
 
-export const Layout = ({ children }): JSX.Element => {
+export const Layout = ({
+  children,
+}: {
+  children: JSX.Element;
+}): JSX.Element => {
   useAuthError();
   useRedirectLogin();
 
