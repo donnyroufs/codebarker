@@ -34,7 +34,7 @@ export const Layout = ({ children }): JSX.Element => {
       />
       <Flex>
         <Sidebar />
-        <Container maxW="100%" padding={8}>
+        <Container padding={8} maxW={{ base: 'auto', md: 'calc(100% - 8rem)' }}>
           {children}
         </Container>
       </Flex>
