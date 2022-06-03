@@ -1,8 +1,9 @@
 import '@fontsource/karla';
 
 import { extendTheme } from '@chakra-ui/react';
-import { IconButtonConfig } from './buttons/IconButtonConfig';
 import { merge } from 'lodash';
+
+import { IconButtonConfig } from './buttons/IconButtonConfig';
 import { ButtonConfig } from './buttons/ButtonConfig';
 
 export const theme = extendTheme({
@@ -18,6 +19,7 @@ export const theme = extendTheme({
       400: '#2B2844',
       500: '#212037',
       600: '#1C1A31',
+      700: '#151329',
       accent: '#21A2B1',
       header: '#2B2844',
       headerShade: '#3c3c5c',
