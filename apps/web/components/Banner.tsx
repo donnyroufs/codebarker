@@ -27,7 +27,7 @@ export const Banner = ({ progress }: Props): JSX.Element => {
         width="full"
         p={10}
         alignItems="center"
-        maxW="container.lg"
+        maxW="container.xl"
         flexDir={{
           base: 'column',
           lg: 'row',
@@ -52,9 +52,9 @@ export const Banner = ({ progress }: Props): JSX.Element => {
           </Text>
           <ButtonGroup>
             <ButtonLink href="/learn">Start Learning</ButtonLink>
-            <ButtonLink variant="outline" href="/investigate">
+            {/* <ButtonLink variant="outline" href="/investigate">
               Investigate
-            </ButtonLink>
+            </ButtonLink> */}
           </ButtonGroup>
         </VStack>
 
