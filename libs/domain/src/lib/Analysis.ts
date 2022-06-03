@@ -2,7 +2,6 @@ import { ExcludeMethods, IEntity } from '@codebarker/shared';
 
 import { AnalysisValidator } from './AnalysisValidator';
 import { Content } from './Content';
-import { Line } from './Line';
 import { Smell } from './Smell';
 
 export class Analysis implements IEntity {
