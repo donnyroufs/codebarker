@@ -9,7 +9,6 @@ export class AnalysisFactory {
       content: ContentFactory.make(),
       fileDir: 'fileDir',
       id: 'id',
-      infectedLines: [],
       reason: 'reason',
       repositoryName: 'repositoryName',
       smell: Smell.Comments,

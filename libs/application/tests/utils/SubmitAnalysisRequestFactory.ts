@@ -11,7 +11,6 @@ export class SubmitAnalysisRequestFactory {
       author: 'author',
       content: ContentDto.from(ContentFactory.make()),
       fileDir: 'fileDir',
-      infectedLines: [],
       reason: 'reason',
       repositoryName: 'repositoryName',
       smell: Smell.ShotgunSurgery,
@@ -30,9 +29,6 @@ export class SubmitAnalysisRequestFactory {
       }),
       SubmitAnalysisRequestFactory.make({
         fileDir: 1 as any,
-      }),
-      SubmitAnalysisRequestFactory.make({
-        infectedLines: 1 as any,
       }),
       SubmitAnalysisRequestFactory.make({
         reason: 1 as any,

@@ -49,18 +49,15 @@ describe('submit analysis', () => {
     const id = 'generatedId';
 
     const request = SubmitAnalysisRequestFactory.make();
-    const { content, infectedLines, ...rest } = request;
+    const { content, ...rest } = request;
     const analysis = AnalysisFactory.make({
       ...rest,
       id,
       content: ContentFactory.make({
         lines: content.lines.map((line) =>
-          Line.make(line.lineNumber, line.value)
+          Line.make(line.lineNumber, line.value, line.isInfected)
         ),
       }),
-      infectedLines: infectedLines.map((line) =>
-        Line.make(line.lineNumber, line.value)
-      ),
     });
 
     mockedRepo.generateId.mockReturnValue(id);

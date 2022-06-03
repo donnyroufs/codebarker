@@ -43,14 +43,11 @@ export class SubmitAnalysisUseCase
       author: input.author,
       content: Content.make({
         lines: input.content.lines.map((line) =>
-          Line.make(line.lineNumber, line.value)
+          Line.make(line.lineNumber, line.value, line.isInfected)
         ),
       }),
       fileDir: input.fileDir,
       id: this._repo.generateId(),
-      infectedLines: input.infectedLines.map((line) =>
-        Line.make(line.lineNumber, line.value)
-      ),
       reason: input.reason,
       repositoryName: input.repositoryName,
       smell: input.smell,

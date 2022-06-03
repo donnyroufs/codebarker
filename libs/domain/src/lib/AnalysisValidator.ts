@@ -8,7 +8,6 @@ export class AnalysisValidator extends Validator<AnalysisProps> {
     this.ruleFor('author', Validator.is.string);
     this.ruleFor('content', (val) => Validator.is.instance(val, Content));
     this.ruleFor('fileDir', Validator.is.string);
-    this.ruleFor('infectedLines', (val) => Array.isArray(val));
     this.ruleFor('reason', Validator.is.string);
     this.ruleFor('repositoryName', Validator.is.string);
     this.ruleFor('smell', (val) => Validator.is.enum(val, Smell));
