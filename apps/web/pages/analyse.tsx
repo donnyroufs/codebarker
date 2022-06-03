@@ -54,6 +54,7 @@ export function Analyse(): JSX.Element {
         author: obj.author!,
         fileDir: obj.fileDir!,
         repositoryName: obj.repositoryName!,
+        sha: obj.sha,
       }),
     {
       enabled: isAnalysing,
@@ -191,7 +192,7 @@ export function Analyse(): JSX.Element {
       >
         <VStack
           flex={4}
-          p={10}
+          p={12}
           color="brand.text"
           spacing={6}
           alignItems="start"
@@ -290,6 +291,20 @@ export function Analyse(): JSX.Element {
               wordBreak="break-word"
             >
               {obj.fileDir ?? 'None'}
+            </Text>
+          </VStack>
+          <VStack alignItems="start" spacing={0}>
+            <Text fontWeight="bold" textColor="brand.accent" fontSize="lg">
+              Branch
+            </Text>
+            <Text
+              fontWeight="bold"
+              fontSize="xl"
+              textColor="brand.accent"
+              color="brand.text"
+              wordBreak="break-word"
+            >
+              {obj.sha ?? 'None'}
             </Text>
           </VStack>
         </Flex>

@@ -15,6 +15,7 @@ import {
   ContentDto,
 } from '../../../src';
 import { ContentFactory } from '../../utils/ContentFactory';
+
 describe('get file content from github', () => {
   const mockedGithubApi = mock<IGithubApi>();
 
@@ -49,6 +50,7 @@ describe('get file content from github', () => {
       author: 'author',
       fileDir: 'filedir',
       repositoryName: 'repositoryName',
+      sha: 'sha',
     };
     const content = ContentFactory.make();
     const expectedResult: GetFileContentFromGithubResponse = {
@@ -64,7 +66,8 @@ describe('get file content from github', () => {
     expect(mockedGithubApi.getFileContents).toHaveBeenCalledWith(
       request.author,
       request.repositoryName,
-      request.fileDir
+      request.fileDir,
+      request.sha
     );
     expect(result).toEqual(expectedResult);
   });

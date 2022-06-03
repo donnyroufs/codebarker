@@ -7,6 +7,7 @@ describe('Github Repository Url Parser', () => {
       repositoryName: 'ddd-forum',
       fileDir:
         '/src/modules/forum/repos/implementations/sequelizeCommentVotesRepo.ts',
+      sha: 'master',
     };
 
     const result = GithubRepositoryUrlParser.parse(
@@ -21,6 +22,7 @@ describe('Github Repository Url Parser', () => {
       author: undefined,
       repositoryName: undefined,
       fileDir: undefined,
+      sha: undefined,
     };
 
     const result = GithubRepositoryUrlParser.parse(

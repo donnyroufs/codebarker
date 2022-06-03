@@ -29,7 +29,8 @@ export class GetFileContentFromGithubUseCase
     const content = await this._githubApi.getFileContents(
       input.author,
       input.repositoryName,
-      input.fileDir
+      input.fileDir,
+      input.sha
     );
 
     return GetFileContentFromGithubResponse.from(content, input);

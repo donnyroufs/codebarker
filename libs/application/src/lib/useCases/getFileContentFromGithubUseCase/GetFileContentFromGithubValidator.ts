@@ -19,5 +19,6 @@ export class GetFileContentFromGithubValidator extends Validator<IGetFileContent
       Validator.is.string,
       'repositoryName must be of type String'
     );
+    // TODO: VAlidate sha
   }
 }

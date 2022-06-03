@@ -3,6 +3,7 @@ export class GithubRepositoryUrlParser {
     author?: string;
     repositoryName?: string;
     fileDir?: string;
+    sha?: string;
   } {
     if (!this.isValidBlobUrl(url)) {
       return {
@@ -18,11 +19,13 @@ export class GithubRepositoryUrlParser {
     const author = arr.at(index - 2)!;
     const repositoryName = arr.at(index - 1)!;
     const fileDir = arr.slice(index + 2, arr.length).join('/');
+    const sha = arr.at(index + 1);
 
     return {
       author,
       repositoryName,
       fileDir: fileDir ? '/' + fileDir : undefined,
+      sha,
     };
   }
 
