@@ -1,7 +1,8 @@
+import { Analysis } from '@codebarker/domain';
 import { cast } from '@codebarker/shared';
-import { Analysis, Content, Line } from '@codebarker/domain';
 
 import { AnalysisModel } from '../models/AnalysisModel';
+import { ContentMapper } from './ContentMapper';
 
 // TODO: Create util for Json, so that I dont have to hack my way through 'any'
 export class AnalysisMapper {
@@ -9,22 +10,18 @@ export class AnalysisMapper {
     return Analysis.make({
       ...rest,
       sha: rest.sha === null ? undefined : rest.sha,
-      content: Content.make({
-        lines: cast<any>(content).map((item: any) =>
-          Line.make(item.line, item.content, item.isInfected)
-        ),
-      }),
+      content: ContentMapper.toDomain(content),
     });
   }
 
   public static toModel({
     content,
     ...rest
-  }: Analysis): Omit<AnalysisModel, 'user'> {
+  }: Analysis): Omit<AnalysisModel, 'user' | 'contentId'> {
     return {
       ...rest,
       sha: rest.sha === undefined ? null : rest.sha,
-      content: cast<string>(content.lines),
+      content: cast<any>(ContentMapper.toModel(content)),
     };
   }
 }

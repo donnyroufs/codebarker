@@ -110,6 +110,7 @@ export const LearnPage = (): JSX.Element => {
 
   const isLoaded = [!isLoading, !isFetching].every((v) => v);
 
+  console.log(data);
   return (
     <Container maxW="container.lg" w="100%">
       <Accordion
@@ -211,7 +212,7 @@ export const LearnPage = (): JSX.Element => {
               )}
 
               <SyntaxHighlighter
-                language="typescript"
+                language={data?.content.programmingLanguage.name}
                 style={atomDark}
                 customStyle={{
                   background: '#1C1A31',

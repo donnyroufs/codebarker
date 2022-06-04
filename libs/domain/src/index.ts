@@ -14,3 +14,5 @@ export * from './lib/Line';
 
 export * from './lib/Analysis';
 export * from './lib/IAnalysisRepository';
+
+export * from './lib/ProgrammingLanguage';

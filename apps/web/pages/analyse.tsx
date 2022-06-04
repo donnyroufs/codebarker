@@ -133,6 +133,10 @@ export function Analyse(): JSX.Element {
             ? { ...line, isInfected: true }
             : line
         ),
+        programmingLanguage: {
+          extension: 'ts',
+          name: 'typescript',
+        },
       },
       fileDir: obj.fileDir!,
       reason: values.reason,

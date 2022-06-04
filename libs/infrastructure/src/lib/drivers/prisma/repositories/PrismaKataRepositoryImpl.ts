@@ -3,7 +3,7 @@ import { injectable, inject } from 'inversify';
 
 import { IKataRepository, Kata } from '@codebarker/domain';
 import { ILogger, LoggerToken } from '@codebarker/application';
-import { isNull, NullOrAsync } from '@codebarker/shared';
+import { cast, isNull, NullOrAsync } from '@codebarker/shared';
 
 import { PrismaService } from '../PrismaService';
 import { KataMapper } from '../mappers/KataMapper';
@@ -61,6 +61,11 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
       include: {
         answers: true,
         solution: true,
+        content: {
+          include: {
+            programmingLanguage: true,
+          },
+        },
       },
       orderBy: {
         id: Math.random() > 0.5 ? 'asc' : 'desc',
@@ -81,6 +86,7 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
       },
       include: {
         solution: true,
+        content: true,
       },
     });
 
@@ -105,8 +111,18 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
         },
         create: {
           id: model.id,
-          // TODO: Fix type
-          content: model.content as string,
+          content: {
+            connectOrCreate: {
+              where: {
+                id: model.content.id,
+              },
+              create: {
+                id: this.generateId(),
+                lines: cast<string>(model.content.lines),
+                programmingLanguageId: model.content.programmingLanguageId,
+              },
+            },
+          },
           solution: {
             connect: {
               id: solution.id,

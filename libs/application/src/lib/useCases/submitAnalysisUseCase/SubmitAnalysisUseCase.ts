@@ -11,6 +11,7 @@ import {
 
 import { ISubmitAnalysisRequest } from './ISubmitAnalysisRequest';
 import { SubmitAnalysisRequestValidator } from './SubmitAnalysisRequestValidator';
+import { ProgrammingLanguageDto } from '../../dtos';
 
 // TODO: Check if user is applicable, based on rank.
 @injectable()
@@ -44,6 +45,9 @@ export class SubmitAnalysisUseCase
       content: Content.make({
         lines: input.content.lines.map((line) =>
           Line.make(line.lineNumber, line.value, line.isInfected)
+        ),
+        programmingLanguage: ProgrammingLanguageDto.toDomain(
+          input.content.programmingLanguage
         ),
       }),
       fileDir: input.fileDir,

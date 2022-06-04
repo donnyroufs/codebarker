@@ -4,6 +4,7 @@ const kata = Prisma.validator<Prisma.KataArgs>()({
   include: {
     answers: true,
     solution: true,
+    content: true,
   },
 });
 
