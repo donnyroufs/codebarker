@@ -8,6 +8,7 @@ export class AnalysisMapper {
   public static toDomain({ content, ...rest }: AnalysisModel): Analysis {
     return Analysis.make({
       ...rest,
+      sha: rest.sha === null ? undefined : rest.sha,
       content: Content.make({
         lines: cast<any>(content).map((item: any) =>
           Line.make(item.line, item.content, item.isInfected)
@@ -22,6 +23,7 @@ export class AnalysisMapper {
   }: Analysis): Omit<AnalysisModel, 'user'> {
     return {
       ...rest,
+      sha: rest.sha === undefined ? null : rest.sha,
       content: cast<string>(content.lines),
     };
   }
