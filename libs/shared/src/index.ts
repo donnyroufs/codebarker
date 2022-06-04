@@ -11,3 +11,5 @@ export * from './lib/inversify';
 export * from './lib/validator';
 
 export * from './lib/Utils';
+
+export * from './lib/ValueObject';

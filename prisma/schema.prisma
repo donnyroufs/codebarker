@@ -44,6 +44,7 @@ model User {
   image         String?
   role          Int       @default(1) // User
 
+  analyses Analysis[]
   accounts Account[]
   sessions Session[]
   answers  Answer[]
@@ -86,4 +87,19 @@ model Solution {
 
   type Int // Smell enum in domain
   kata Kata?
+}
+
+model Analysis {
+  id String @id
+
+  smell          Int // Smell enum in domain
+  reason         String  @db.Text
+  repositoryName String
+  author         String
+  fileDir        String  @db.VarChar(255)
+  content        Json
+  sha            String? @db.VarChar(255)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 }

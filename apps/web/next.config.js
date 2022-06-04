@@ -1,6 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const withNx = require('@nrwl/next/plugins/with-nx');
-const withRpc = require('next-rpc')();
+const withRpc = require('next-rpc')({
+  experimentalContext: true,
+});
 
 /**
  * @type {import('@nrwl/next/plugins/with-nx').WithNxOptions}

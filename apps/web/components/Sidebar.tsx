@@ -6,9 +6,10 @@ export const Sidebar = (): JSX.Element => {
     <Box
       width="100px"
       bgColor="brand.600"
-      height="calc(100vh - 8rem)"
+      minHeight="calc(100vh - 8rem)"
       borderRight="2px solid #2F2F4C"
       display={{ base: 'none', md: 'block' }}
+      position="relative"
     >
       <Box mt={8}>
         <Navigation />

@@ -1,5 +1,4 @@
 import { useState, useMemo, useEffect } from 'react';
-import { GetServerSideProps } from 'next';
 import {
   Flex,
   Box,
@@ -24,7 +23,7 @@ import {
 } from '@chakra-ui/react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { tomorrow as atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 import { Smell } from '@codebarker/domain';
 import { Button } from '@codebarker/components';
@@ -35,14 +34,24 @@ import { submitKata } from './api/submitKata';
 import { Layout } from '../components/Layout';
 import { CamelCaseUtil } from '../utils/CamelCaseUtil';
 import { ButtonLink } from '../components';
-import { AuthenticatedGuard } from '../guards/AuthenticatedGuard';
+import {
+  useAuth,
+  LocalStorageItem,
+  useLocalStorage,
+  useIsFirstRender,
+} from '../hooks';
 
-export const LearnPage = ({ user }: any): JSX.Element => {
+export const LearnPage = (): JSX.Element => {
   const client = useQueryClient();
-  const [excludeFilter, setExcludeFilter] = useState<boolean>(true);
+  const isFirstRender = useIsFirstRender();
+  const [excludeFilter, setExcludeFilter] = useLocalStorage(
+    LocalStorageItem.ExcludeFilter,
+    true
+  );
   const [previousKataId, setPreviousKataId] = useState<undefined | string>(
     undefined
   );
+  const { user, isSignedIn } = useAuth();
 
   const [lastClicked, setLastClicked] = useState<number | null>(null);
   const { isLoading, data, isError, isFetching } = useQuery(
@@ -52,7 +61,10 @@ export const LearnPage = ({ user }: any): JSX.Element => {
         userId: user!.id,
         excludeCompletedKatas: excludeFilter,
         previousKataId,
-      })
+      }),
+    {
+      enabled: isSignedIn,
+    }
   );
 
   useEffect(() => {
@@ -74,9 +86,7 @@ export const LearnPage = ({ user }: any): JSX.Element => {
   const code = useMemo(() => {
     if (!data) return [];
 
-    return JSON.parse(data!.content)
-      .map((item: any) => item.content)
-      .join('\n');
+    return data.content.lines.map((line) => line.value).join('\n');
   }, [data]);
 
   function onFilterChange(val: boolean): void {
@@ -97,6 +107,8 @@ export const LearnPage = ({ user }: any): JSX.Element => {
   }
 
   const noAvailableKatas = !data || (data && isError);
+
+  const isLoaded = [!isLoading, !isFetching].every((v) => v);
 
   return (
     <Container maxW="container.lg" w="100%">
@@ -124,12 +136,14 @@ export const LearnPage = ({ user }: any): JSX.Element => {
           <AccordionPanel pb={4}>
             <Divider my={2} borderColor="brand.text" height="2px" />
             <Box mt={4}>
-              <Checkbox
-                isChecked={excludeFilter}
-                onChange={(e): void => onFilterChange(e.target.checked)}
-              >
-                Exclude completed
-              </Checkbox>
+              {!isFirstRender && (
+                <Checkbox
+                  isChecked={excludeFilter}
+                  onChange={(e): void => onFilterChange(e.target.checked)}
+                >
+                  Exclude completed
+                </Checkbox>
+              )}
             </Box>
           </AccordionPanel>
         </AccordionItem>
@@ -143,7 +157,7 @@ export const LearnPage = ({ user }: any): JSX.Element => {
         p={8}
         borderRadius={12}
         w="full"
-        isLoaded={[!isLoading, !isFetching].every((v) => v)}
+        isLoaded={isLoaded}
       >
         {noAvailableKatas && (
           <Alert
@@ -235,8 +249,5 @@ export const LearnPage = ({ user }: any): JSX.Element => {
 LearnPage.getLayout = (page: JSX.Element): JSX.Element => (
   <Layout>{page}</Layout>
 );
-
-export const getServerSideProps: GetServerSideProps =
-  AuthenticatedGuard.execute;
 
 export default LearnPage;

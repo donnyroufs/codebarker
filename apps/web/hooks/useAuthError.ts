@@ -21,7 +21,7 @@ export function useAuthError(): void {
       status: 'error',
       duration: 15_000,
       isClosable: true,
-      position: 'bottom-right',
+      position: 'top',
     });
 
     router.replace(router.pathname, undefined, {

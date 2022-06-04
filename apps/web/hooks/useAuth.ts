@@ -13,17 +13,19 @@ type Props = {
    * @default false
    */
   required?: boolean;
+  redirectUri?: string;
 };
 
 export const useAuth = (props?: Props): UseAuthReturnValue => {
   const router = useRouter();
 
   const required = props?.required ?? true;
+  const redirectUri = props?.redirectUri ?? '/?redirect=login';
 
   const session = useSession({
     required,
     onUnauthenticated(): void {
-      router.push('/');
+      router.push(redirectUri);
     },
   });
 

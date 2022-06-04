@@ -8,7 +8,11 @@ import { useAuthError } from '../hooks/useAuthError';
 import { Sidebar } from './Sidebar';
 import { SignInModal } from './SignInModal';
 
-export const Layout = ({ children }): JSX.Element => {
+export const Layout = ({
+  children,
+}: {
+  children: JSX.Element;
+}): JSX.Element => {
   useAuthError();
   useRedirectLogin();
 
@@ -34,7 +38,7 @@ export const Layout = ({ children }): JSX.Element => {
       />
       <Flex>
         <Sidebar />
-        <Container maxW="100%" padding={8}>
+        <Container padding={8} maxW={{ base: 'auto', md: 'calc(100% - 8rem)' }}>
           {children}
         </Container>
       </Flex>
