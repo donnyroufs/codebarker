@@ -1,11 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-// import { exec } from 'child_process';
 
 const db = new PrismaClient();
 
 async function main(): Promise<void> {
-  // exec('yarn prisma migrate reset --force --skip-generate', async () => {});
-
   await db.user.create({
     data: {
       id: 'userId',
@@ -29,10 +26,100 @@ async function main(): Promise<void> {
     ],
   });
 
-  await db.programmingLanguage.create({
+  await db.programmingLanguage.createMany({
+    data: [
+      {
+        name: 'dart',
+        extension: 'dart',
+      },
+      {
+        name: 'typescript',
+        extension: 'ts',
+      },
+      {
+        name: 'csharp',
+        extension: 'cs',
+      },
+      {
+        name: 'golang',
+        extension: 'go',
+      },
+      {
+        name: 'rust',
+        extension: 'rs',
+      },
+      {
+        name: 'javascript',
+        extension: 'js',
+      },
+      {
+        name: 'java',
+        extension: 'java',
+      },
+      {
+        name: 'php',
+        extension: 'php',
+      },
+      {
+        name: 'ruby',
+        extension: 'rb',
+      },
+      {
+        name: 'elixir',
+        extension: 'exs',
+      },
+      {
+        name: 'kotlin',
+        extension: 'kt',
+      },
+    ],
+    skipDuplicates: true,
+  });
+
+  await db.kata.create({
     data: {
-      extension: 'ts',
-      name: 'typescript',
+      id: '058e8ba6-217b-4ddc-a018-20684e340211',
+      content: {
+        create: {
+          id: 'f9db035e-7411-4ac2-822a-4d2654ebcdf2',
+          lines: [
+            {
+              line: 1,
+              content: 'int basePrice = quantity * itemPrice;',
+              isInfected: false,
+            },
+            {
+              line: 2,
+              content: 'double seasonDiscount = this.GetSeasonalDiscount();',
+              isInfected: false,
+            },
+            {
+              line: 3,
+              content: 'double fees = this.GetFees();',
+              isInfected: false,
+            },
+            {
+              line: 4,
+              content:
+                'double finalPrice = DiscountedPrice(basePrice, seasonDiscount, fees);',
+              isInfected: true,
+            },
+          ],
+          programmingLanguage: {
+            connect: {
+              extension_name: {
+                extension: 'cs',
+                name: 'csharp',
+              },
+            },
+          },
+        },
+      },
+      solution: {
+        connect: {
+          id: '1',
+        },
+      },
     },
   });
 
@@ -123,44 +210,13 @@ async function main(): Promise<void> {
         },
       },
       solution: {
-        connect: {
-          id: '1',
+        create: {
+          id: '1a22fd0b-9cb9-4a48-a52d-c99864b4e1ef',
+          type: 1,
         },
       },
     },
   });
-
-  // await db.kata.createMany({
-  //   data: [
-  //     {
-  //       id: '38dc6b2f-d51f-4510-94a8-4e98f94ba86d',
-  //     {
-  //       id: '5595bc58-7e0f-4acb-93cd-8732adcff1ba',
-  //       content: [
-  //         { line: 1, content: '// sums 2 values' },
-  //         {
-  //           line: 2,
-  //           content: 'const sum = (a: number, b:number): number => a + b;',
-  //         },
-  //       ],
-  //       solutionId: '2',
-  //     },
-  //     {
-  //       id: '666cec4b-9b84-453b-a155-815ab7047a5f',
-  //       content: [
-  //         { line: 1, content: 'class Booking {' },
-  //         { line: 2, content: '  public constructor(' },
-  //         { line: 3, content: '    public bookingId: number,' },
-  //         { line: 4, content: '    public roomId: number,' },
-  //         { line: 5, content: '    public from: Date,' },
-  //         { line: 6, content: '    public to: Date' },
-  //         { line: 7, content: '  ) {}' },
-  //         { line: 8, content: '}' },
-  //       ],
-  //       solutionId: '3',
-  //     },
-  //   ],
-  // });
 }
 
 main()
