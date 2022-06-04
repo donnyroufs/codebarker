@@ -59,6 +59,8 @@ export function Analyse(): JSX.Element {
   const auth = useAuth({ required: true });
   const toast = useToast();
 
+  const [infectedLineNumbersError, setInfectedLineNumbersError] =
+    useState(false);
   const [infectedLineNumbers, setInfectedLineNumbers] = useState<number[]>([]);
   const [isAnalysing, setIsAnalysing] = useState<boolean>(false);
   const [value, setValue] = useState<string>('');
@@ -79,6 +81,7 @@ export function Analyse(): JSX.Element {
   const mutate = useMutation(submitAnalysis, {
     onSuccess: (): void => {
       setIsAnalysing(false);
+      setValue('');
 
       toast({
         title: 'Success',
@@ -103,13 +106,25 @@ export function Analyse(): JSX.Element {
 
   useEffect(() => {
     setInfectedLineNumbers([]);
+    setInfectedLineNumbersError(false);
   }, [isAnalysing]);
+
+  useEffect(() => {
+    if (infectedLineNumbers.length > 0 && infectedLineNumbersError) {
+      setInfectedLineNumbersError(false);
+    }
+  }, [infectedLineNumbers, infectedLineNumbersError]);
 
   function handleStart(): void {
     setIsAnalysing(true);
   }
 
   function handleSubmit(values: SubmitValues): void {
+    if (infectedLineNumbers.length === 0) {
+      setInfectedLineNumbersError(true);
+      return;
+    }
+
     mutate.mutate({
       author: obj.author!,
       content: {
@@ -178,6 +193,7 @@ export function Analyse(): JSX.Element {
                 customStyle={{
                   background: '#1C1A31',
                   userSelect: 'none',
+                  padding: 0,
                 }}
                 showLineNumbers={true}
                 codeTagProps={{
@@ -253,8 +269,9 @@ export function Analyse(): JSX.Element {
           >
             <VStack as="header" spacing={2} alignItems="start" mb={8}>
               <Heading>Your Analysis</Heading>
-              <Text opacity={0.8}>
-                Click on the line numbers on the left to mark the infected code.
+              <Text opacity={0.8} maxW="45ch">
+                Mark the lines on the left that are infected by clicking the
+                left mouse button on any line.{' '}
               </Text>
             </VStack>
             <Form
@@ -296,6 +313,27 @@ export function Analyse(): JSX.Element {
                       />
                     )}
                   </Field>
+                  <Box
+                    bgColor="brand.700"
+                    w="full"
+                    p={4}
+                    borderRadius="lg"
+                    border="1px solid"
+                    borderColor={
+                      infectedLineNumbersError ? 'red.600' : 'brand.border'
+                    }
+                  >
+                    <Text
+                      color={
+                        infectedLineNumbers.length > 0
+                          ? 'green.200'
+                          : 'brand.text'
+                      }
+                    >
+                      {infectedLineNumbers.length} out of the{' '}
+                      {data?.content.lines.length ?? 0} lines are infected.
+                    </Text>
+                  </Box>
                   <ButtonGroup>
                     <Button
                       variant="primary"
