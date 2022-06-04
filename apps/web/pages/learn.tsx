@@ -22,8 +22,6 @@ import {
   Spinner,
 } from '@chakra-ui/react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { tomorrow as atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 import { Smell } from '@codebarker/domain';
 import { Button } from '@codebarker/components';
@@ -110,7 +108,6 @@ export const LearnPage = (): JSX.Element => {
 
   const isLoaded = [!isLoading, !isFetching].every((v) => v);
 
-  console.log(data);
   return (
     <Container maxW="container.lg" w="100%">
       <Accordion
@@ -211,6 +208,12 @@ export const LearnPage = (): JSX.Element => {
                 />
               )}
               <CodeHighlighter
+                highlightSelectedLines={true}
+                selectedLines={
+                  data?.content.lines
+                    .filter((line) => line.isInfected)
+                    .map((line) => line.lineNumber) ?? []
+                }
                 language={data?.content.programmingLanguage.name}
                 code={code}
               />

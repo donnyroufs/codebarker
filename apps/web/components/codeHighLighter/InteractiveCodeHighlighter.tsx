@@ -27,6 +27,8 @@ export const InteractiveCodeHighlighter = ({
 }: Props): JSX.Element => {
   return (
     <CodeHighlighter
+      selectedLines={selectedLines}
+      highlightSelectedLines={true}
       code={code}
       language={language}
       codeTagProps={{
@@ -67,16 +69,10 @@ export const InteractiveCodeHighlighter = ({
           element.style.opacity = '1';
         },
       }}
-      lineProps={(lineNumber: number): { style: Record<string, unknown> } => {
+      lineProps={(): { style: Record<string, unknown> } => {
         const style: Record<string, unknown> = {
-          display: 'block',
           cursor: 'pointer',
-          '--wrapped-line': lineNumber,
         };
-
-        if (selectedLines.includes(lineNumber)) {
-          style['backgroundColor'] = '#2B2844';
-        }
 
         return { style };
       }}
