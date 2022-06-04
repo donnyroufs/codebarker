@@ -33,7 +33,7 @@ import { startKata } from './api/startKata';
 import { submitKata } from './api/submitKata';
 import { Layout } from '../components/Layout';
 import { CamelCaseUtil } from '../utils/CamelCaseUtil';
-import { ButtonLink } from '../components';
+import { ButtonLink, CodeHighlighter } from '../components';
 import {
   useAuth,
   LocalStorageItem,
@@ -84,7 +84,7 @@ export const LearnPage = (): JSX.Element => {
   });
 
   const code = useMemo(() => {
-    if (!data) return [];
+    if (!data) return '';
 
     return data.content.lines.map((line) => line.value).join('\n');
   }, [data]);
@@ -210,17 +210,10 @@ export const LearnPage = (): JSX.Element => {
                   thickness="3px"
                 />
               )}
-
-              <SyntaxHighlighter
+              <CodeHighlighter
                 language={data?.content.programmingLanguage.name}
-                style={atomDark}
-                customStyle={{
-                  background: '#1C1A31',
-                }}
-                showLineNumbers={true}
-              >
-                {code}
-              </SyntaxHighlighter>
+                code={code}
+              />
             </Box>
             <Divider my={8} borderColor="brand.border" height="2px" />
             <SimpleGrid minChildWidth="200px" py={2} gap={4}>

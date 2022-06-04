@@ -1,10 +1,11 @@
+export type ParsedGithubUrl = {
+  author?: string;
+  repositoryName?: string;
+  fileDir?: string;
+  sha?: string;
+};
 export class GithubRepositoryUrlParser {
-  public static parse(url: string): {
-    author?: string;
-    repositoryName?: string;
-    fileDir?: string;
-    sha?: string;
-  } {
+  public static parse(url: string): ParsedGithubUrl {
     if (!this.isValidBlobUrl(url)) {
       return {
         author: undefined,

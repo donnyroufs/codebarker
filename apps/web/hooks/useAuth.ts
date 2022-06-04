@@ -2,7 +2,7 @@ import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
-type UseAuthReturnValue = {
+export type UseAuthReturnValue = {
   isLoading: boolean;
   isSignedIn: boolean;
   user?: User;
