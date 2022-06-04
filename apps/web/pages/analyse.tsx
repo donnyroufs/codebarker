@@ -31,6 +31,16 @@ import { Option } from '../types';
 import { submitAnalysis } from './api/submitAnalysis';
 import { ValidationErrors } from 'final-form';
 
+function getElement(target: HTMLSpanElement): HTMLSpanElement {
+  const hasWrappedLineProp =
+    target.getAttribute('style')?.indexOf('--wrapped-line:') != -1;
+
+  const el = hasWrappedLineProp ? target : target.parentElement!;
+
+  const hasStyleAttr = el.getAttribute('style');
+  return hasStyleAttr ? el : el.parentElement!;
+}
+
 const smells = Object.entries(Smell)
   .filter((e) => !isNaN(e[0] as any))
   .map((e) => ({ name: e[1], id: e[0] }));
@@ -149,20 +159,45 @@ export function Analyse(): JSX.Element {
               w="full"
               isLoaded={isLoaded}
             >
+              <Box w="full" display="flex">
+                <Text
+                  color="brand.accent"
+                  display="inline-flex"
+                  px={10}
+                  py={2}
+                  borderRadius="xl"
+                  ml="auto"
+                  bgColor="brand.500"
+                >
+                  {obj.fileDir?.split('/').at(-1)}
+                </Text>
+              </Box>
               <SyntaxHighlighter
                 language="typescript"
                 style={atomDark}
                 customStyle={{
                   background: '#1C1A31',
+                  userSelect: 'none',
                 }}
                 showLineNumbers={true}
                 codeTagProps={{
                   onClick: (e: React.MouseEvent<HTMLSpanElement>): void => {
                     const target = cast<HTMLSpanElement>(e.target);
 
-                    if (!target.classList.contains('linenumber')) return;
+                    const element = getElement(target);
 
-                    const value = Number(target.innerHTML);
+                    const styleValues =
+                      element.getAttribute('style')?.split(' ') ?? [];
+
+                    const value = Number(
+                      styleValues
+                        .find((val) => val.includes('--wrapped-line'))
+                        ?.split(':')
+                        .at(1)!
+                        .slice(0, -1)
+                    );
+
+                    if (!value) return;
 
                     if (infectedLineNumbers.includes(value)) {
                       setInfectedLineNumbers((curr) => [
@@ -174,14 +209,16 @@ export function Analyse(): JSX.Element {
                     setInfectedLineNumbers((curr) => [...curr, value]);
                   },
                   onMouseOver: (e: any): void => {
-                    // e.target.parentElement.style.opacity = 0.5;
-                    // e.target.style.opacity = 0.5;
-                    // e.target.style['backgroundColor'] = '#208798';
+                    const target = cast<HTMLSpanElement>(e.target);
+                    const element = getElement(target);
+
+                    element.style.opacity = '0.5';
                   },
                   onMouseOut: (e: any): void => {
-                    // e.target.style.opacity = 1;
-                    // e.target.parentElement.style.opacity = 1;
-                    // e.target.style['backgroundColor'] = '#1C1A31';
+                    const target = cast<HTMLSpanElement>(e.target);
+                    const element = getElement(target);
+
+                    element.style.opacity = '1';
                   },
                 }}
                 wrapLines={true}
@@ -191,6 +228,7 @@ export function Analyse(): JSX.Element {
                   const style: Record<string, unknown> = {
                     display: 'block',
                     cursor: 'pointer',
+                    '--wrapped-line': lineNumber,
                   };
 
                   if (infectedLineNumbers.includes(lineNumber)) {
