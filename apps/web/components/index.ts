@@ -10,3 +10,4 @@ export * from './NavLink';
 export * from './Navigation';
 export * from './Sidebar';
 export * from './SignInModal';
+export * from './Required';

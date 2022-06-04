@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   ButtonGroup,
@@ -8,15 +8,16 @@ import {
   Link,
   Skeleton,
   Text,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
-import { useQuery } from 'react-query';
-
+import { useMutation, useQuery } from 'react-query';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow as atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { Field, Form } from 'react-final-form';
 
+import { cast } from '@codebarker/shared';
 import { Smell } from '@codebarker/domain';
 import { Button } from '@codebarker/components';
 
@@ -27,6 +28,8 @@ import { getFileContentFromGithub } from './api/getFileContentFromGithub';
 import { LabeledInput, LabeledSelect, LabeledTextArea } from '../components';
 import { CamelCaseUtil } from '../utils/CamelCaseUtil';
 import { Option } from '../types';
+import { submitAnalysis } from './api/submitAnalysis';
+import { ValidationErrors } from 'final-form';
 
 const smells = Object.entries(Smell)
   .filter((e) => !isNaN(e[0] as any))
@@ -43,7 +46,9 @@ type SubmitValues = {
 };
 
 export function Analyse(): JSX.Element {
-  useAuth({ required: true });
+  const toast = useToast();
+  const auth = useAuth({ required: true });
+  const [infectedLineNumbers, setInfectedLineNumbers] = useState<number[]>([]);
   const [isAnalysing, setIsAnalysing] = useState<boolean>(false);
   const [value, setValue] = useState<string>('');
 
@@ -60,6 +65,20 @@ export function Analyse(): JSX.Element {
       enabled: isAnalysing,
     }
   );
+  const mutate = useMutation(submitAnalysis, {
+    onSuccess: (): void => {
+      setIsAnalysing(false);
+
+      toast({
+        title: 'Success',
+        description: 'Your analysis got submitted.',
+        status: 'success',
+        duration: 5_000,
+        isClosable: true,
+        position: 'top',
+      });
+    },
+  });
 
   const obj = useMemo(() => {
     return GithubRepositoryUrlParser.parse(value);
@@ -71,12 +90,30 @@ export function Analyse(): JSX.Element {
     return data.content.lines.map((line) => line.value).join('\n');
   }, [data]);
 
+  useEffect(() => {
+    setInfectedLineNumbers([]);
+  }, [isAnalysing]);
+
   function handleStart(): void {
     setIsAnalysing(true);
   }
 
   function handleSubmit(values: SubmitValues): void {
-    console.log(values);
+    mutate.mutate({
+      author: obj.author!,
+      content: {
+        lines: data!.content.lines.map((line) =>
+          infectedLineNumbers.includes(line.lineNumber)
+            ? { ...line, isInfected: true }
+            : line
+        ),
+      },
+      fileDir: obj.fileDir!,
+      reason: values.reason,
+      repositoryName: obj.repositoryName!,
+      smell: +values.codeSmell.value,
+      userId: auth.user!.id,
+    });
   }
 
   function handleGoBack(): void {
@@ -87,7 +124,7 @@ export function Analyse(): JSX.Element {
 
   if (isAnalysing) {
     return (
-      <Container maxW="1800px">
+      <Container maxW="1700px">
         <Flex
           borderRadius={12}
           flexDir={{ base: 'column', lg: 'row' }}
@@ -117,6 +154,49 @@ export function Analyse(): JSX.Element {
                   background: '#1C1A31',
                 }}
                 showLineNumbers={true}
+                codeTagProps={{
+                  onClick: (e: React.MouseEvent<HTMLSpanElement>): void => {
+                    const target = cast<HTMLSpanElement>(e.target);
+
+                    if (!target.classList.contains('linenumber')) return;
+
+                    const value = Number(target.innerHTML);
+
+                    if (infectedLineNumbers.includes(value)) {
+                      setInfectedLineNumbers((curr) => [
+                        ...curr.filter((n) => n !== value),
+                      ]);
+                      return;
+                    }
+
+                    setInfectedLineNumbers((curr) => [...curr, value]);
+                  },
+                  onMouseOver: (e: any): void => {
+                    // e.target.parentElement.style.opacity = 0.5;
+                    // e.target.style.opacity = 0.5;
+                    // e.target.style['backgroundColor'] = '#208798';
+                  },
+                  onMouseOut: (e: any): void => {
+                    // e.target.style.opacity = 1;
+                    // e.target.parentElement.style.opacity = 1;
+                    // e.target.style['backgroundColor'] = '#1C1A31';
+                  },
+                }}
+                wrapLines={true}
+                lineProps={(
+                  lineNumber: number
+                ): { style: Record<string, unknown> } => {
+                  const style: Record<string, unknown> = {
+                    display: 'block',
+                    cursor: 'pointer',
+                  };
+
+                  if (infectedLineNumbers.includes(lineNumber)) {
+                    style['backgroundColor'] = '#2B2844';
+                  }
+
+                  return { style };
+                }}
               >
                 {code}
               </SyntaxHighlighter>
@@ -128,19 +208,36 @@ export function Analyse(): JSX.Element {
             borderRadius={12}
             flex={1}
             textColor="brand.text"
+            p={8}
+            height="fit-content"
           >
+            <VStack as="header" spacing={2} alignItems="start" mb={8}>
+              <Heading>Your Analysis</Heading>
+              <Text opacity={0.8}>
+                Click on the line numbers on the left to mark the infected code.
+              </Text>
+            </VStack>
             <Form
+              validate={(values): ValidationErrors => {
+                const codeSmellIsDefined = values.codeSmell.value !== undefined;
+
+                return {
+                  codeSmell: codeSmellIsDefined ? undefined : 'Required',
+                };
+              }}
               initialValues={{
                 codeSmell: '',
                 reason: '',
               }}
               onSubmit={handleSubmit}
               render={(props): JSX.Element => (
-                <VStack spacing={8} alignItems="start" flexDir="column" p={8}>
+                <VStack spacing={8} alignItems="start" flexDir="column">
                   <Field name="codeSmell">
                     {(props): JSX.Element => (
                       <LabeledSelect
+                        isRequired={true}
                         labelName="Code Smell"
+                        isInvalid={props.meta.touched && props.meta.error}
                         opts={opts}
                         {...props.input}
                       />
@@ -162,12 +259,16 @@ export function Analyse(): JSX.Element {
                   <ButtonGroup>
                     <Button
                       variant="primary"
-                      disabled={!Object.values(obj).every(Boolean)}
+                      disabled={
+                        !Object.values(obj).every(Boolean) || mutate.isLoading
+                      }
                       onClick={props.handleSubmit}
+                      isLoading={mutate.isLoading}
                     >
                       Submit
                     </Button>
                     <Button
+                      disabled={mutate.isLoading}
                       variant="outline"
                       onClick={(): void => handleGoBack()}
                     >

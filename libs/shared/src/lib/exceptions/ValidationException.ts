@@ -12,6 +12,7 @@ export class ValidationException extends DomainException {
   }
 
   public static fromValidationResults(results: ValidationResult[]): any {
+    console.log(results);
     // TODO: Improve error message, details are missing
     return new ValidationException('Invalid data received', results);
   }

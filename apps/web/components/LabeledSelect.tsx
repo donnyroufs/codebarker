@@ -2,6 +2,7 @@ import { Select } from 'chakra-react-select';
 
 import { Option } from '../types';
 import { Label } from './Label';
+import { Required } from './Required';
 
 type Props = {
   opts: Option[];
@@ -9,6 +10,8 @@ type Props = {
   name: string;
   onChange: any;
   labelName: string | JSX.Element;
+  isInvalid?: boolean;
+  isRequired?: boolean;
 };
 
 export const LabeledSelect = ({
@@ -17,6 +20,8 @@ export const LabeledSelect = ({
   name,
   onChange,
   labelName,
+  isInvalid = false,
+  isRequired = false,
 }: Props): JSX.Element => {
   return (
     <Label
@@ -26,7 +31,9 @@ export const LabeledSelect = ({
       }}
     >
       {labelName}
+      {isRequired && <Required />}
       <Select
+        isInvalid={isInvalid}
         options={opts as any}
         value={value}
         name={name}
