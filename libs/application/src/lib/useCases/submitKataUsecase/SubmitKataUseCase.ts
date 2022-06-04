@@ -48,6 +48,7 @@ export class SubmitKataUseCase
     kata.addAnswer(answer);
 
     this._logger.info(`Before persisting answerId: ${answer.id}`);
+    console.log(kata);
 
     this._kataRepository.saveAsync(kata);
 

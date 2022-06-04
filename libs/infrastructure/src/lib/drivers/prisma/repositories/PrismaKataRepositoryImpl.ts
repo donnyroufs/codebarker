@@ -23,8 +23,6 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
 
   // TODO: Abstract filters
   // TODO: Write an integration test against the filters
-  // - Random kata
-  // does it exclude the previous one
   public async getAsync(
     userId: string,
     excludeFinishedCases?: boolean,
@@ -86,7 +84,11 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
       },
       include: {
         solution: true,
-        content: true,
+        content: {
+          include: {
+            programmingLanguage: true,
+          },
+        },
       },
     });
 
@@ -117,9 +119,16 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
                 id: model.content.id,
               },
               create: {
-                id: this.generateId(),
+                id: model.content.id,
                 lines: cast<string>(model.content.lines),
-                programmingLanguageId: model.content.programmingLanguageId,
+                programmingLanguage: {
+                  connect: {
+                    extension_name: {
+                      extension: model.content.programmingLanguageExtension,
+                      name: model.content.programmingLanguageName,
+                    },
+                  },
+                },
               },
             },
           },

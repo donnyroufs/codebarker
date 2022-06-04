@@ -113,15 +113,15 @@ model Content {
 
   lines Json
 
-  programmingLanguage   ProgrammingLanguage @relation(fields: [programmingLanguageId], references: [id])
-  programmingLanguageId String
-  kata                  Kata[]
-  analysis              Analysis[]
+  programmingLanguage          ProgrammingLanguage @relation(fields: [programmingLanguageExtension, programmingLanguageName], references: [extension, name])
+  programmingLanguageExtension String
+  programmingLanguageName      String
+
+  kata     Kata[]
+  analysis Analysis[]
 }
 
 model ProgrammingLanguage {
-  id String @id
-
   extension String
   name      String
 

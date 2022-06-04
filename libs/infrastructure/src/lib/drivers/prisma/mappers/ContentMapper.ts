@@ -23,10 +23,11 @@ export class ContentMapper {
       id: v4(),
       lines: cast<string>(content.lines),
       programmingLanguage: {
-        id: undefined as any,
         name: content.programmingLanguage.name,
         extension: content.programmingLanguage.extension,
       },
+      programmingLanguageExtension: content.programmingLanguage.extension,
+      programmingLanguageName: content.programmingLanguage.name,
     };
   }
 }

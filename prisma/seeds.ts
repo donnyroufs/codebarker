@@ -31,7 +31,6 @@ async function main(): Promise<void> {
 
   await db.programmingLanguage.create({
     data: {
-      id: '60fe0a5e-d31c-4a3c-a54e-3d876a0464ec',
       extension: 'ts',
       name: 'typescript',
     },
