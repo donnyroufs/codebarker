@@ -16,6 +16,7 @@ import { useMutation, useQuery } from 'react-query';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow as atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { Field, Form } from 'react-final-form';
+import { ValidationErrors } from 'final-form';
 
 import { cast } from '@codebarker/shared';
 import { Smell } from '@codebarker/domain';
@@ -29,7 +30,6 @@ import { LabeledInput, LabeledSelect, LabeledTextArea } from '../components';
 import { CamelCaseUtil } from '../utils/CamelCaseUtil';
 import { Option } from '../types';
 import { submitAnalysis } from './api/submitAnalysis';
-import { ValidationErrors } from 'final-form';
 
 function getElement(target: HTMLSpanElement): HTMLSpanElement {
   const hasWrappedLineProp =
