@@ -1,4 +1,5 @@
 import { Validator } from '@codebarker/shared';
+
 import { AnalysisProps } from './Analysis';
 import { Content } from './Content';
 import { Smell } from './Smell';
@@ -12,5 +13,6 @@ export class AnalysisValidator extends Validator<AnalysisProps> {
     this.ruleFor('repositoryName', Validator.is.string);
     this.ruleFor('smell', (val) => Validator.is.enum(val, Smell));
     this.ruleFor('userId', Validator.is.string);
+    // TODO: Add validation for sha
   }
 }

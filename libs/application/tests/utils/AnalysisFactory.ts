@@ -13,6 +13,7 @@ export class AnalysisFactory {
       repositoryName: 'repositoryName',
       smell: Smell.Comments,
       userId: 'userId',
+      sha: 'sha',
       ...props,
     });
   }

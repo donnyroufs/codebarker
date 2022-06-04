@@ -93,11 +93,12 @@ model Analysis {
   id String @id
 
   smell          Int // Smell enum in domain
-  reason         String @db.Text
+  reason         String  @db.Text
   repositoryName String
   author         String
-  fileDir        String @db.VarChar(255)
+  fileDir        String  @db.VarChar(255)
   content        Json
+  sha            String? @db.VarChar(255)
 
   user   User   @relation(fields: [userId], references: [id])
   userId String

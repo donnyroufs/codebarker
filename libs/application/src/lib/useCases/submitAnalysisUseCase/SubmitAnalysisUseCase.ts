@@ -52,6 +52,7 @@ export class SubmitAnalysisUseCase
       repositoryName: input.repositoryName,
       smell: input.smell,
       userId: input.userId,
+      sha: input.sha,
     });
   }
 }

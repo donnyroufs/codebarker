@@ -13,6 +13,7 @@ export class Analysis implements IEntity {
   public readonly repositoryName: string;
   public readonly author: string;
   public readonly fileDir: string;
+  public readonly sha?: string;
 
   public readonly content: Content;
 
@@ -25,6 +26,7 @@ export class Analysis implements IEntity {
     this.author = props.author;
     this.fileDir = props.fileDir;
     this.content = props.content;
+    this.sha = props.sha;
   }
 
   public static make(props: AnalysisProps): Analysis {

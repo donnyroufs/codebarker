@@ -46,8 +46,9 @@ type SubmitValues = {
 };
 
 export function Analyse(): JSX.Element {
-  const toast = useToast();
   const auth = useAuth({ required: true });
+  const toast = useToast();
+
   const [infectedLineNumbers, setInfectedLineNumbers] = useState<number[]>([]);
   const [isAnalysing, setIsAnalysing] = useState<boolean>(false);
   const [value, setValue] = useState<string>('');
@@ -113,6 +114,7 @@ export function Analyse(): JSX.Element {
       repositoryName: obj.repositoryName!,
       smell: +values.codeSmell.value,
       userId: auth.user!.id,
+      sha: obj.sha,
     });
   }
 

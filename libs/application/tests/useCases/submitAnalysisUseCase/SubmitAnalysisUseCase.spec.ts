@@ -48,7 +48,9 @@ describe('submit analysis', () => {
   test('persists the analysis and resolves', async () => {
     const id = 'generatedId';
 
-    const request = SubmitAnalysisRequestFactory.make();
+    const request = SubmitAnalysisRequestFactory.make({
+      sha: 'sha',
+    });
     const { content, ...rest } = request;
     const analysis = AnalysisFactory.make({
       ...rest,
