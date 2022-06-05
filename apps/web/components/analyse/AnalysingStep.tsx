@@ -3,6 +3,7 @@ import {
   Box,
   ButtonGroup,
   Container,
+  Divider,
   Flex,
   Heading,
   Skeleton,
@@ -125,21 +126,24 @@ export const AnalysingStep = ({
             bgColor="brand.600"
             endColor="brand.600"
             fadeDuration={1}
-            p={8}
+            p={4}
             borderRadius={12}
             w="full"
             isLoaded={isLoaded}
           >
-            <Box w="full" display="flex" justifyContent="end" py={2} pb={4}>
+            <Box w="full" display="flex" justifyContent="start" pt={1}>
               <Text
-                color="brand.accent"
+                color="brand.text"
                 display="inline-flex"
+                textTransform="lowercase"
+                px={4}
                 borderRadius="xl"
                 fontWeight="bold"
               >
-                {startCase(data?.content?.programmingLanguage?.name)}{' '}
+                {data?.content?.programmingLanguage?.name}{' '}
               </Text>
             </Box>
+            <Divider my={4} borderColor="brand.border" height="2px" />
             <InteractiveCodeHighlighter
               setSelectedLines={setInfectedLineNumbers}
               selectedLines={infectedLineNumbers}

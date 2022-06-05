@@ -22,7 +22,6 @@ import {
   Spinner,
 } from '@chakra-ui/react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { startCase } from 'lodash';
 import { useRouter } from 'next/router';
 
 import { Smell } from '@codebarker/domain';
@@ -158,7 +157,7 @@ export const LearnPage = (): JSX.Element => {
         bgColor="brand.600"
         endColor="brand.600"
         fadeDuration={1}
-        p={8}
+        p={4}
         borderRadius={12}
         w="full"
         isLoaded={isLoaded}
@@ -207,25 +206,25 @@ export const LearnPage = (): JSX.Element => {
               {mutate.isLoading && (
                 <Spinner
                   pos="absolute"
-                  top={-2}
+                  top={0}
                   right={4}
                   color="brand.accent"
                   thickness="3px"
                 />
               )}
-              <Box w="full" display="flex" justifyContent="end">
+              <Box w="full" display="flex" justifyContent="start" pt={1}>
                 <Text
-                  color="brand.accent"
+                  color="brand.text"
                   display="inline-flex"
-                  px={10}
-                  py={2}
-                  pb={4}
+                  textTransform="lowercase"
+                  px={4}
                   borderRadius="xl"
                   fontWeight="bold"
                 >
-                  {startCase(data?.content?.programmingLanguage?.name)}{' '}
+                  {data?.content?.programmingLanguage?.name}{' '}
                 </Text>
               </Box>
+              <Divider my={4} borderColor="brand.border" height="2px" />
               <CodeHighlighter
                 highlightSelectedLines={true}
                 selectedLines={
