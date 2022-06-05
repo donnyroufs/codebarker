@@ -3,6 +3,7 @@
   "version": 2,
   "projects": {
     "application": "libs/application",
+    "build-kata": "apps/build-kata",
     "components": "libs/components",
     "domain": "libs/domain",
     "infrastructure": "libs/infrastructure",
