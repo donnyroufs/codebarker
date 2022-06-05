@@ -12,6 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
+import { useAuth } from '../hooks';
 
 import { getAllProgrammingLanguages } from '../pages/api/getAllProgrammingLanguages';
 import { Option } from '../types';
@@ -23,9 +24,14 @@ type Props = {
 };
 
 export const Banner = ({ progress }: Props): JSX.Element => {
+  const { isSignedIn } = useAuth();
   const [selectedLanguages, setSelectedLanguages] = useState<Option[]>([]);
-  const { data: langs } = useQuery(['getAllProgrammingLanguages'], () =>
-    getAllProgrammingLanguages()
+  const { data: langs } = useQuery(
+    ['getAllProgrammingLanguages'],
+    () => getAllProgrammingLanguages(),
+    {
+      enabled: isSignedIn,
+    }
   );
 
   const opts = useMemo(() => {
@@ -78,7 +84,7 @@ export const Banner = ({ progress }: Props): JSX.Element => {
             Become a better developer by finding code smells in real source code
             and help authors avoid spaghetti.
           </Text>
-          <Box mt={4} w="full" pb={2}>
+          <Box mt={4} w="full" pb={2} display={isSignedIn ? 'block' : 'none'}>
             <FormControl>
               <LabeledSelect
                 labelName="Languages"
