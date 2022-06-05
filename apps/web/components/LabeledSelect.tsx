@@ -13,7 +13,7 @@ type Props = {
   isInvalid?: boolean;
   isRequired?: boolean;
   isMulti?: boolean;
-  placeholder: string;
+  placeholder?: string;
 };
 
 export const LabeledSelect = ({
