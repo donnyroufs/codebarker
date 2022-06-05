@@ -43,11 +43,13 @@ import {
 
 export const LearnPage = (): JSX.Element => {
   const client = useQueryClient();
-  const router = useRouter();
+  const { isReady, query } = useRouter();
   const isFirstRender = useIsFirstRender();
-  const [languages, setLanguages] = useState<null | string[]>(
-    router.query.languages as string[]
-  );
+  // https://github.com/vercel/next.js/discussions/11484#discussioncomment-60563
+  const languages =
+    isReady && query.languages
+      ? cast<string>(query.languages).split(',')
+      : ['all'];
   const [excludeFilter, setExcludeFilter] = useLocalStorage(
     LocalStorageItem.ExcludeFilter,
     true
@@ -68,13 +70,9 @@ export const LearnPage = (): JSX.Element => {
         languages: cast<any>(languages),
       }),
     {
-      enabled: isSignedIn && Array.isArray(languages),
+      enabled: isSignedIn && isReady,
     }
   );
-
-  useEffect(() => {
-    setLanguages(cast<string>(router.query.languages)?.split(',') ?? ['all']);
-  }, [router.query]);
 
   useEffect(() => {
     return () => {
