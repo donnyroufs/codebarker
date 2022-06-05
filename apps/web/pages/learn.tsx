@@ -80,6 +80,9 @@ export const LearnPage = (): JSX.Element => {
     }
 
     setLanguages(cast<string>(router.query.languages)?.split(','));
+    return () => {
+      router.query = {};
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query]);
 
