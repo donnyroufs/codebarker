@@ -24,7 +24,7 @@ type Props = {
 };
 
 export const Banner = ({ progress }: Props): JSX.Element => {
-  const { isSignedIn } = useAuth();
+  const { isSignedIn } = useAuth({ required: false });
   const [selectedLanguages, setSelectedLanguages] = useState<Option[]>([]);
   const { data: langs } = useQuery(
     ['getAllProgrammingLanguages'],
