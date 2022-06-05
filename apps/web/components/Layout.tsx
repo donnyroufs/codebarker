@@ -1,4 +1,4 @@
-import { Box, Flex, Container } from '@chakra-ui/react';
+import { Box, Flex, Container, Spinner } from '@chakra-ui/react';
 
 import { Header } from '@codebarker/components';
 import { signOut } from 'next-auth/react';
@@ -21,6 +21,15 @@ export const Layout = ({
   const { user, isLoading } = useAuth({
     required: false,
   });
+
+  if (isLoading) {
+    console.log('showing spinner');
+    return (
+      <Flex h="100vh" w="full">
+        <Spinner margin="auto" color="brand.accent" thickness="3px" />
+      </Flex>
+    );
+  }
 
   return (
     <Box>
