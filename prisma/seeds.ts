@@ -3,25 +3,11 @@ import { PrismaClient } from '@prisma/client';
 const db = new PrismaClient();
 
 async function main(): Promise<void> {
-  await db.user.create({
-    data: {
-      id: 'userId',
-    },
-  });
-
   await db.solution.createMany({
     data: [
       {
         id: '1',
         type: 1,
-      },
-      {
-        id: '2',
-        type: 4,
-      },
-      {
-        id: '3',
-        type: 0,
       },
     ],
   });
