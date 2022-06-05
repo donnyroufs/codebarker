@@ -48,9 +48,11 @@ export const Banner = ({ progress }: Props): JSX.Element => {
   }, [langs]);
 
   const languagesQueryString = useMemo(() => {
-    if (selectedLanguages.length === 0) return 'all';
+    if (selectedLanguages.length === 0) return '';
 
-    return selectedLanguages.map((lang) => lang.value).join(',');
+    return (
+      '?languages=' + selectedLanguages.map((lang) => lang.value).join(',')
+    );
   }, [selectedLanguages]);
 
   return (
@@ -106,7 +108,7 @@ export const Banner = ({ progress }: Props): JSX.Element => {
             </FormControl>
           </Box>
           <ButtonGroup>
-            <ButtonLink href={`/learn?languages=${languagesQueryString}`}>
+            <ButtonLink href={`/learn${languagesQueryString}`}>
               Start Learning
             </ButtonLink>
             {/* <ButtonLink variant="outline" href="/investigate">

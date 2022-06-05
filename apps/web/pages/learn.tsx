@@ -45,7 +45,9 @@ export const LearnPage = (): JSX.Element => {
   const client = useQueryClient();
   const router = useRouter();
   const isFirstRender = useIsFirstRender();
-  const [languages, setLanguages] = useState<null | string[]>();
+  const [languages, setLanguages] = useState<null | string[]>(
+    router.query.languages as string[]
+  );
   const [excludeFilter, setExcludeFilter] = useLocalStorage(
     LocalStorageItem.ExcludeFilter,
     true
@@ -71,19 +73,7 @@ export const LearnPage = (): JSX.Element => {
   );
 
   useEffect(() => {
-    if (!router.query.languages) {
-      setLanguages(['all']);
-      router.replace('/learn', {
-        query: 'languages=all',
-      });
-      return;
-    }
-
-    setLanguages(cast<string>(router.query.languages)?.split(','));
-    return () => {
-      router.query = {};
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setLanguages(cast<string>(router.query.languages)?.split(',') ?? ['all']);
   }, [router.query]);
 
   useEffect(() => {
