@@ -45,6 +45,7 @@ export const LearnPage = (): JSX.Element => {
   const client = useQueryClient();
   const router = useRouter();
   const isFirstRender = useIsFirstRender();
+  const [languages, setLanguages] = useState<null | string[]>();
   const [excludeFilter, setExcludeFilter] = useLocalStorage(
     LocalStorageItem.ExcludeFilter,
     true
@@ -54,22 +55,33 @@ export const LearnPage = (): JSX.Element => {
   );
   const { user, isSignedIn } = useAuth();
 
-  const languages = cast<string>(router.query.languages)?.split(',');
-
   const [lastClicked, setLastClicked] = useState<number | null>(null);
   const { isLoading, data, isError, isFetching } = useQuery(
-    ['startKata', previousKataId, excludeFilter, router.query.languages],
+    ['startKata', previousKataId, excludeFilter, languages],
     () =>
       startKata({
         userId: user!.id,
         excludeCompletedKatas: excludeFilter,
         previousKataId,
-        languages,
+        languages: cast<any>(languages),
       }),
     {
       enabled: isSignedIn && Array.isArray(languages),
     }
   );
+
+  useEffect(() => {
+    if (!router.query.languages) {
+      setLanguages(['all']);
+      router.replace('/learn', {
+        query: 'languages=all',
+      });
+      return;
+    }
+
+    setLanguages(cast<string>(router.query.languages)?.split(','));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.query]);
 
   useEffect(() => {
     return () => {
