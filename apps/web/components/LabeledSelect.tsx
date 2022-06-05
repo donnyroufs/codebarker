@@ -6,12 +6,14 @@ import { Required } from './Required';
 
 type Props = {
   opts: Option[];
-  value: string;
+  value: string | any[];
   name: string;
   onChange: any;
   labelName: string | JSX.Element;
   isInvalid?: boolean;
   isRequired?: boolean;
+  isMulti?: boolean;
+  placeholder: string;
 };
 
 export const LabeledSelect = ({
@@ -22,6 +24,8 @@ export const LabeledSelect = ({
   labelName,
   isInvalid = false,
   isRequired = false,
+  isMulti = false,
+  placeholder = 'Select...',
 }: Props): JSX.Element => {
   return (
     <Label
@@ -33,11 +37,13 @@ export const LabeledSelect = ({
       {labelName}
       {isRequired && <Required />}
       <Select
+        isMulti={isMulti}
         isInvalid={isInvalid}
         options={opts as any}
         value={value}
         name={name}
         id={name}
+        placeholder={placeholder}
         onChange={onChange}
         chakraStyles={{
           control: (provided) => ({
@@ -76,6 +82,11 @@ export const LabeledSelect = ({
           indicatorSeparator: (provided) => ({
             ...provided,
             borderColor: 'brand.400',
+          }),
+          multiValue: (provided) => ({
+            ...provided,
+            background: 'brand.400',
+            color: 'brand.text',
           }),
         }}
       />

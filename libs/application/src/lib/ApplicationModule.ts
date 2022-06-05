@@ -1,6 +1,7 @@
 import { ContainerModule } from 'inversify';
 import {
   GetFileContentFromGithubUseCase,
+  GetProgrammingLanguagesUseCase,
   SubmitAnalysisUseCase,
   SubmitKataUseCase,
 } from './useCases';
@@ -14,6 +15,7 @@ export class ApplicationModule extends ContainerModule {
       bind(SubmitKataUseCase).toSelf().inSingletonScope();
       bind(GetFileContentFromGithubUseCase).toSelf().inSingletonScope();
       bind(SubmitAnalysisUseCase).toSelf().inSingletonScope();
+      bind(GetProgrammingLanguagesUseCase).toSelf().inSingletonScope();
     });
   }
 }

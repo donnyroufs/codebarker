@@ -20,6 +20,18 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
     this._prismaService = prismaService;
     this._logger = logger;
   }
+
+  public async getProgrammingLanguagesAsync(): Promise<ProgrammingLanguage[]> {
+    const result = await this._prismaService.programmingLanguage.findMany();
+
+    return result.map((lang) =>
+      ProgrammingLanguage.make({
+        extension: lang.extension,
+        name: lang.name,
+      })
+    );
+  }
+
   public async getProgrammingLanguageByExtAsync(
     ext: string
   ): NullOrAsync<ProgrammingLanguage> {
@@ -42,7 +54,8 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
   public async getAsync(
     userId: string,
     excludeFinishedCases?: boolean,
-    previousKataId?: string
+    previousKataId?: string,
+    languages?: string[]
   ): NullOrAsync<Kata> {
     const filterQuery = excludeFinishedCases
       ? {
@@ -67,10 +80,22 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
         }
       : {};
 
+    const languagesFilter = languages &&
+      languages.length > 0 && {
+        content: {
+          programmingLanguage: {
+            name: {
+              in: languages,
+            },
+          },
+        },
+      };
+
     const result = await this._prismaService.kata.findFirst({
       where: {
         ...excludePreviousKata,
         ...filterQuery,
+        ...languagesFilter,
       },
       include: {
         answers: true,
@@ -116,8 +141,7 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
   }
 
   // TODO: Test whether this works as expected
-  // perhaps I could move to multiple save methods to make my life more pleasant
-  // or implement some kind of change tracking
+  // TODO: Refactor into transaction
   public async saveAsync(kata: Kata): Promise<void> {
     const { solution, answers, ...model } = KataMapper.toModel(kata);
 

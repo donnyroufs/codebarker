@@ -7,10 +7,12 @@ export interface IKataRepository {
   getAsync(
     userId: string,
     excludeFinishedCases?: boolean,
-    previousKataId?: string
+    previousKataId?: string,
+    languages?: string[]
   ): NullOrAsync<Kata>;
   getByIdAsync(id: string): NullOrAsync<Kata>;
   saveAsync(kata: Kata): Promise<void>;
+  getProgrammingLanguagesAsync(): Promise<ProgrammingLanguage[]>;
   getProgrammingLanguageByExtAsync(
     ext: string
   ): NullOrAsync<ProgrammingLanguage>;

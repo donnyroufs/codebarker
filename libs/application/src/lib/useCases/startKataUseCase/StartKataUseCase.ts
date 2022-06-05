@@ -71,10 +71,13 @@ export class StartKataUseCase
   private async getKataOrThrowAsync(input: IStartKataRequest): Promise<Kata> {
     this.validateOrThrow(input);
 
+    const langs = input.languages.at(0) === 'all' ? [] : input.languages;
+
     const kata = await this._kataRepository.getAsync(
       input.userId,
       input.excludeCompletedKatas,
-      input.previousKataId
+      input.previousKataId,
+      langs
     );
 
     if (isNull(kata)) {

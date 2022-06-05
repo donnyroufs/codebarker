@@ -23,8 +23,10 @@ import {
 } from '@chakra-ui/react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { startCase } from 'lodash';
+import { useRouter } from 'next/router';
 
 import { Smell } from '@codebarker/domain';
+import { cast } from '@codebarker/shared';
 import { Button } from '@codebarker/components';
 
 import { startKata } from './api/startKata';
@@ -42,6 +44,7 @@ import {
 
 export const LearnPage = (): JSX.Element => {
   const client = useQueryClient();
+  const router = useRouter();
   const isFirstRender = useIsFirstRender();
   const [excludeFilter, setExcludeFilter] = useLocalStorage(
     LocalStorageItem.ExcludeFilter,
@@ -52,17 +55,20 @@ export const LearnPage = (): JSX.Element => {
   );
   const { user, isSignedIn } = useAuth();
 
+  const languages = cast<string>(router.query.languages)?.split(',');
+
   const [lastClicked, setLastClicked] = useState<number | null>(null);
   const { isLoading, data, isError, isFetching } = useQuery(
-    ['startKata', previousKataId, excludeFilter],
+    ['startKata', previousKataId, excludeFilter, router.query.languages],
     () =>
       startKata({
         userId: user!.id,
         excludeCompletedKatas: excludeFilter,
         previousKataId,
+        languages,
       }),
     {
-      enabled: isSignedIn,
+      enabled: isSignedIn && Array.isArray(languages),
     }
   );
 
@@ -108,7 +114,6 @@ export const LearnPage = (): JSX.Element => {
   const noAvailableKatas = !data || (data && isError);
 
   const isLoaded = [!isLoading, !isFetching].every((v) => v);
-
   return (
     <Container maxW="container.lg" w="100%">
       <Accordion

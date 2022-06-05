@@ -44,6 +44,7 @@ describe('start kata', () => {
       const request: IStartKataRequest = {
         userId,
         excludeCompletedKatas,
+        languages: ['all'],
       };
 
       const act = (): Promise<StartKataResponse> => sut.execute(request);
@@ -58,6 +59,7 @@ describe('start kata', () => {
       const request: IStartKataRequest = {
         userId: 'userId',
         excludeCompletedKatas,
+        languages: ['all'],
       };
       const kataId = 'kataId';
       const kata = KataFactory.make({ id: kataId });
@@ -69,7 +71,8 @@ describe('start kata', () => {
       expect(mockedRepo.getAsync).toHaveBeenCalledWith(
         request.userId,
         request.excludeCompletedKatas,
-        undefined
+        undefined,
+        []
       );
 
       expect(response).toEqual(expectedResponse);
@@ -80,6 +83,7 @@ describe('start kata', () => {
     const request: IStartKataRequest = {
       userId: 'userId',
       excludeCompletedKatas: true,
+      languages: ['all'],
     };
 
     mockedRepo.getAsync.mockResolvedValueOnce(null);
@@ -93,6 +97,7 @@ describe('start kata', () => {
     const request: IStartKataRequest = {
       userId: 'userId',
       excludeCompletedKatas: false,
+      languages: ['all'],
     };
     const kata = KataFactory.make();
     mockedRepo.getAsync.mockResolvedValueOnce(kata);
@@ -114,6 +119,7 @@ describe('start kata', () => {
       userId: 'userId',
       excludeCompletedKatas: false,
       previousKataId: prevKataId,
+      languages: ['all'],
     };
 
     const kataId = 'kataId';
@@ -125,7 +131,50 @@ describe('start kata', () => {
     expect(mockedRepo.getAsync).toHaveBeenCalledWith(
       request.userId,
       request.excludeCompletedKatas,
-      request.previousKataId
+      request.previousKataId,
+      []
+    );
+  });
+
+  test('maps ["all"] to []', async () => {
+    const request: IStartKataRequest = {
+      userId: 'userId',
+      excludeCompletedKatas: false,
+      languages: ['all'],
+    };
+
+    const kataId = 'kataId';
+    const kata = KataFactory.make({ id: kataId });
+    mockedRepo.getAsync.mockResolvedValueOnce(kata);
+
+    await sut.execute(request);
+
+    expect(mockedRepo.getAsync).toHaveBeenCalledWith(
+      request.userId,
+      request.excludeCompletedKatas,
+      request.previousKataId,
+      []
+    );
+  });
+
+  test('maps ["typescript"] to ["typescript"]', async () => {
+    const request: IStartKataRequest = {
+      userId: 'userId',
+      excludeCompletedKatas: false,
+      languages: ['typescript'],
+    };
+
+    const kataId = 'kataId';
+    const kata = KataFactory.make({ id: kataId });
+    mockedRepo.getAsync.mockResolvedValueOnce(kata);
+
+    await sut.execute(request);
+
+    expect(mockedRepo.getAsync).toHaveBeenCalledWith(
+      request.userId,
+      request.excludeCompletedKatas,
+      request.previousKataId,
+      ['typescript']
     );
   });
 });
