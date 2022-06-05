@@ -14,6 +14,7 @@ type Props = {
   isRequired?: boolean;
   isMulti?: boolean;
   placeholder?: string;
+  isLoading?: boolean;
 };
 
 export const LabeledSelect = ({
@@ -26,6 +27,7 @@ export const LabeledSelect = ({
   isRequired = false,
   isMulti = false,
   placeholder = 'Select...',
+  isLoading = false,
 }: Props): JSX.Element => {
   return (
     <Label
@@ -37,6 +39,7 @@ export const LabeledSelect = ({
       {labelName}
       {isRequired && <Required />}
       <Select
+        isLoading={isLoading}
         isMulti={isMulti}
         isInvalid={isInvalid}
         options={opts as any}

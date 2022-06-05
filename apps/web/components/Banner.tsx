@@ -26,7 +26,7 @@ type Props = {
 export const Banner = ({ progress }: Props): JSX.Element => {
   const { isSignedIn } = useAuth({ required: false });
   const [selectedLanguages, setSelectedLanguages] = useState<Option[]>([]);
-  const { data: langs } = useQuery(
+  const { data: langs, isLoading: isLoadingLanguages } = useQuery(
     ['getAllProgrammingLanguages'],
     () => getAllProgrammingLanguages(),
     {
@@ -87,6 +87,7 @@ export const Banner = ({ progress }: Props): JSX.Element => {
           <Box mt={4} w="full" pb={2} display={isSignedIn ? 'block' : 'none'}>
             <FormControl>
               <LabeledSelect
+                isLoading={isLoadingLanguages}
                 labelName="Languages"
                 name="languages"
                 onChange={(e: any): void => setSelectedLanguages(e)}
