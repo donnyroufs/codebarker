@@ -1,10 +1,6 @@
 import { Smell } from '@codebarker/domain';
 
-import {
-  ContentDto,
-  ISubmitAnalysisRequest,
-  ProgrammingLanguageDto,
-} from '../../src';
+import { ContentDto, ISubmitAnalysisRequest } from '../../src';
 import { ContentFactory } from './ContentFactory';
 
 export class SubmitAnalysisRequestFactory {
@@ -19,10 +15,7 @@ export class SubmitAnalysisRequestFactory {
       repositoryName: 'repositoryName',
       smell: Smell.ShotgunSurgery,
       userId: 'userId',
-      programmingLanguage: ProgrammingLanguageDto.make({
-        extension: 'extension',
-        name: 'name',
-      }),
+      sha: 'sha',
       ...props,
     };
   }

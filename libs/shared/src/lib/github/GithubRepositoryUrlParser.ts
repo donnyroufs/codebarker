@@ -30,6 +30,11 @@ export class GithubRepositoryUrlParser {
     };
   }
 
+  // TODO: Write test, and check if multiple dots
+  public static getFileExtension(fileDir: string): string {
+    return fileDir.split('.')!.at(-1)!;
+  }
+
   private static isValidBlobUrl(url: string): boolean {
     return url.includes('blob');
   }

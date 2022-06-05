@@ -1,4 +1,4 @@
-import { GithubRepositoryUrlParser } from './GithubRepositoryUrlParser';
+import { GithubRepositoryUrlParser } from '../../src/lib/github/GithubRepositoryUrlParser';
 
 describe('Github Repository Url Parser', () => {
   test('Parses a valid github link to a source file', () => {
@@ -28,6 +28,24 @@ describe('Github Repository Url Parser', () => {
     const result = GithubRepositoryUrlParser.parse(
       'src/modules/forum/repos/implementations/sequelizeCommentVotesRepo.ts'
     );
+
+    expect(result).toEqual(expectedResult);
+  });
+
+  test('gets the file extension when there is only one dot', () => {
+    const expectedResult = 'ts';
+    const fileDir = '/app/core/main.ts';
+
+    const result = GithubRepositoryUrlParser.getFileExtension(fileDir);
+
+    expect(result).toEqual(expectedResult);
+  });
+
+  test('gets the file extension when there are multiple dots', () => {
+    const expectedResult = 'ts';
+    const fileDir = '/app/core/app.controller.ts';
+
+    const result = GithubRepositoryUrlParser.getFileExtension(fileDir);
 
     expect(result).toEqual(expectedResult);
   });
