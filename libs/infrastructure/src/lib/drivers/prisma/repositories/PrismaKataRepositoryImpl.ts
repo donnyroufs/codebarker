@@ -1,9 +1,9 @@
 import { v4 } from 'uuid';
 import { injectable, inject } from 'inversify';
 
-import { IKataRepository, Kata } from '@codebarker/domain';
+import { IKataRepository, Kata, ProgrammingLanguage } from '@codebarker/domain';
 import { ILogger, LoggerToken } from '@codebarker/application';
-import { isNull, NullOrAsync } from '@codebarker/shared';
+import { cast, isNull, NullOrAsync } from '@codebarker/shared';
 
 import { PrismaService } from '../PrismaService';
 import { KataMapper } from '../mappers/KataMapper';
@@ -21,14 +21,41 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
     this._logger = logger;
   }
 
+  public async getProgrammingLanguagesAsync(): Promise<ProgrammingLanguage[]> {
+    const result = await this._prismaService.programmingLanguage.findMany();
+
+    return result.map((lang) =>
+      ProgrammingLanguage.make({
+        extension: lang.extension,
+        name: lang.name,
+      })
+    );
+  }
+
+  public async getProgrammingLanguageByExtAsync(
+    ext: string
+  ): NullOrAsync<ProgrammingLanguage> {
+    const result = await this._prismaService.programmingLanguage.findFirst({
+      where: {
+        extension: ext,
+      },
+    });
+
+    if (isNull(result)) return null;
+
+    return ProgrammingLanguage.make({
+      extension: result.extension,
+      name: result.name,
+    });
+  }
+
   // TODO: Abstract filters
   // TODO: Write an integration test against the filters
-  // - Random kata
-  // does it exclude the previous one
   public async getAsync(
     userId: string,
     excludeFinishedCases?: boolean,
-    previousKataId?: string
+    previousKataId?: string,
+    languages?: string[]
   ): NullOrAsync<Kata> {
     const filterQuery = excludeFinishedCases
       ? {
@@ -53,14 +80,31 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
         }
       : {};
 
+    const languagesFilter = languages &&
+      languages.length > 0 && {
+        content: {
+          programmingLanguage: {
+            name: {
+              in: languages,
+            },
+          },
+        },
+      };
+
     const result = await this._prismaService.kata.findFirst({
       where: {
         ...excludePreviousKata,
         ...filterQuery,
+        ...languagesFilter,
       },
       include: {
         answers: true,
         solution: true,
+        content: {
+          include: {
+            programmingLanguage: true,
+          },
+        },
       },
       orderBy: {
         id: Math.random() > 0.5 ? 'asc' : 'desc',
@@ -81,6 +125,11 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
       },
       include: {
         solution: true,
+        content: {
+          include: {
+            programmingLanguage: true,
+          },
+        },
       },
     });
 
@@ -92,8 +141,7 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
   }
 
   // TODO: Test whether this works as expected
-  // perhaps I could move to multiple save methods to make my life more pleasant
-  // or implement some kind of change tracking
+  // TODO: Refactor into transaction
   public async saveAsync(kata: Kata): Promise<void> {
     const { solution, answers, ...model } = KataMapper.toModel(kata);
 
@@ -105,8 +153,25 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
         },
         create: {
           id: model.id,
-          // TODO: Fix type
-          content: model.content as string,
+          content: {
+            connectOrCreate: {
+              where: {
+                id: model.content.id,
+              },
+              create: {
+                id: model.content.id,
+                lines: cast<string>(model.content.lines),
+                programmingLanguage: {
+                  connect: {
+                    extension_name: {
+                      extension: model.content.programmingLanguageExtension,
+                      name: model.content.programmingLanguageName,
+                    },
+                  },
+                },
+              },
+            },
+          },
           solution: {
             connect: {
               id: solution.id,

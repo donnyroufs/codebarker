@@ -22,10 +22,11 @@ import {
   Spinner,
 } from '@chakra-ui/react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { tomorrow as atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { startCase } from 'lodash';
+import { useRouter } from 'next/router';
 
 import { Smell } from '@codebarker/domain';
+import { cast } from '@codebarker/shared';
 import { Button } from '@codebarker/components';
 
 import { startKata } from './api/startKata';
@@ -33,7 +34,7 @@ import { startKata } from './api/startKata';
 import { submitKata } from './api/submitKata';
 import { Layout } from '../components/Layout';
 import { CamelCaseUtil } from '../utils/CamelCaseUtil';
-import { ButtonLink } from '../components';
+import { ButtonLink, CodeHighlighter } from '../components';
 import {
   useAuth,
   LocalStorageItem,
@@ -43,6 +44,7 @@ import {
 
 export const LearnPage = (): JSX.Element => {
   const client = useQueryClient();
+  const router = useRouter();
   const isFirstRender = useIsFirstRender();
   const [excludeFilter, setExcludeFilter] = useLocalStorage(
     LocalStorageItem.ExcludeFilter,
@@ -53,17 +55,20 @@ export const LearnPage = (): JSX.Element => {
   );
   const { user, isSignedIn } = useAuth();
 
+  const languages = cast<string>(router.query.languages)?.split(',');
+
   const [lastClicked, setLastClicked] = useState<number | null>(null);
   const { isLoading, data, isError, isFetching } = useQuery(
-    ['startKata', previousKataId, excludeFilter],
+    ['startKata', previousKataId, excludeFilter, router.query.languages],
     () =>
       startKata({
         userId: user!.id,
         excludeCompletedKatas: excludeFilter,
         previousKataId,
+        languages,
       }),
     {
-      enabled: isSignedIn,
+      enabled: isSignedIn && Array.isArray(languages),
     }
   );
 
@@ -84,7 +89,7 @@ export const LearnPage = (): JSX.Element => {
   });
 
   const code = useMemo(() => {
-    if (!data) return [];
+    if (!data) return '';
 
     return data.content.lines.map((line) => line.value).join('\n');
   }, [data]);
@@ -109,7 +114,6 @@ export const LearnPage = (): JSX.Element => {
   const noAvailableKatas = !data || (data && isError);
 
   const isLoaded = [!isLoading, !isFetching].every((v) => v);
-
   return (
     <Container maxW="container.lg" w="100%">
       <Accordion
@@ -209,17 +213,29 @@ export const LearnPage = (): JSX.Element => {
                   thickness="3px"
                 />
               )}
-
-              <SyntaxHighlighter
-                language="typescript"
-                style={atomDark}
-                customStyle={{
-                  background: '#1C1A31',
-                }}
-                showLineNumbers={true}
-              >
-                {code}
-              </SyntaxHighlighter>
+              <Box w="full" display="flex" justifyContent="end">
+                <Text
+                  color="brand.accent"
+                  display="inline-flex"
+                  px={10}
+                  py={2}
+                  pb={4}
+                  borderRadius="xl"
+                  fontWeight="bold"
+                >
+                  {startCase(data?.content?.programmingLanguage?.name)}{' '}
+                </Text>
+              </Box>
+              <CodeHighlighter
+                highlightSelectedLines={true}
+                selectedLines={
+                  data?.content.lines
+                    .filter((line) => line.isInfected)
+                    .map((line) => line.lineNumber) ?? []
+                }
+                language={data?.content.programmingLanguage.name}
+                code={code}
+              />
             </Box>
             <Divider my={8} borderColor="brand.border" height="2px" />
             <SimpleGrid minChildWidth="200px" py={2} gap={4}>

@@ -26,108 +26,196 @@ async function main(): Promise<void> {
     ],
   });
 
-  await db.kata.createMany({
+  await db.programmingLanguage.createMany({
     data: [
       {
-        id: '38dc6b2f-d51f-4510-94a8-4e98f94ba86d',
-        content: [
-          {
-            line: 1,
-            content: 'function logUser(',
-          },
-          {
-            line: 2,
-            content: '  id: number,',
-          },
-          {
-            line: 3,
-            content: '  firstName: string,',
-          },
-          {
-            line: 4,
-            content: '  lastName: string,',
-          },
-          {
-            line: 5,
-            content: '  fullName: string,',
-          },
-          {
-            line: 6,
-            content: '  age: number,',
-          },
-          {
-            line: 7,
-            content: '  country: string',
-          },
-          {
-            line: 8,
-            content: '): void {',
-          },
-          {
-            line: 9,
-            content: '  console.log({',
-          },
-          {
-            line: 10,
-            content: '    id,',
-          },
-          {
-            line: 11,
-            content: '    firstName,',
-          },
-          {
-            line: 12,
-            content: '    lastName,',
-          },
-          {
-            line: 13,
-            content: '    fullName,',
-          },
-          {
-            line: 14,
-            content: '    age,',
-          },
-          {
-            line: 15,
-            content: '    country,',
-          },
-          {
-            line: 16,
-            content: '  });',
-          },
-          {
-            line: 17,
-            content: '}',
-          },
-        ],
-        solutionId: '1',
+        name: 'dart',
+        extension: 'dart',
       },
       {
-        id: '5595bc58-7e0f-4acb-93cd-8732adcff1ba',
-        content: [
-          { line: 1, content: '// sums 2 values' },
-          {
-            line: 2,
-            content: 'const sum = (a: number, b:number): number => a + b;',
-          },
-        ],
-        solutionId: '2',
+        name: 'typescript',
+        extension: 'ts',
       },
       {
-        id: '666cec4b-9b84-453b-a155-815ab7047a5f',
-        content: [
-          { line: 1, content: 'class Booking {' },
-          { line: 2, content: '  public constructor(' },
-          { line: 3, content: '    public bookingId: number,' },
-          { line: 4, content: '    public roomId: number,' },
-          { line: 5, content: '    public from: Date,' },
-          { line: 6, content: '    public to: Date' },
-          { line: 7, content: '  ) {}' },
-          { line: 8, content: '}' },
-        ],
-        solutionId: '3',
+        name: 'csharp',
+        extension: 'cs',
+      },
+      {
+        name: 'golang',
+        extension: 'go',
+      },
+      {
+        name: 'rust',
+        extension: 'rs',
+      },
+      {
+        name: 'javascript',
+        extension: 'js',
+      },
+      {
+        name: 'java',
+        extension: 'java',
+      },
+      {
+        name: 'php',
+        extension: 'php',
+      },
+      {
+        name: 'ruby',
+        extension: 'rb',
+      },
+      {
+        name: 'elixir',
+        extension: 'ex',
+      },
+      {
+        name: 'kotlin',
+        extension: 'kt',
       },
     ],
+    skipDuplicates: true,
+  });
+
+  await db.kata.create({
+    data: {
+      id: '058e8ba6-217b-4ddc-a018-20684e340211',
+      content: {
+        create: {
+          id: 'f9db035e-7411-4ac2-822a-4d2654ebcdf2',
+          lines: [
+            {
+              line: 1,
+              content: 'int basePrice = quantity * itemPrice;',
+              isInfected: false,
+            },
+            {
+              line: 2,
+              content: 'double seasonDiscount = this.GetSeasonalDiscount();',
+              isInfected: false,
+            },
+            {
+              line: 3,
+              content: 'double fees = this.GetFees();',
+              isInfected: false,
+            },
+            {
+              line: 4,
+              content:
+                'double finalPrice = DiscountedPrice(basePrice, seasonDiscount, fees);',
+              isInfected: true,
+            },
+          ],
+          programmingLanguage: {
+            connect: {
+              extension_name: {
+                extension: 'cs',
+                name: 'csharp',
+              },
+            },
+          },
+        },
+      },
+      solution: {
+        connect: {
+          id: '1',
+        },
+      },
+    },
+  });
+
+  await db.kata.create({
+    data: {
+      id: '0ecc6bc3-fc50-4ffe-88f0-4b5a8838d112',
+      content: {
+        create: {
+          id: '1e132e81-9210-47f3-91cd-cd2364d0eb4a',
+          lines: [
+            {
+              line: 1,
+              content: 'function logUser(',
+            },
+            {
+              line: 2,
+              content: '  id: number,',
+            },
+            {
+              line: 3,
+              content: '  firstName: string,',
+            },
+            {
+              line: 4,
+              content: '  lastName: string,',
+            },
+            {
+              line: 5,
+              content: '  fullName: string,',
+            },
+            {
+              line: 6,
+              content: '  age: number,',
+            },
+            {
+              line: 7,
+              content: '  country: string',
+            },
+            {
+              line: 8,
+              content: '): void {',
+            },
+            {
+              line: 9,
+              content: '  console.log({',
+            },
+            {
+              line: 10,
+              content: '    id,',
+            },
+            {
+              line: 11,
+              content: '    firstName,',
+            },
+            {
+              line: 12,
+              content: '    lastName,',
+            },
+            {
+              line: 13,
+              content: '    fullName,',
+            },
+            {
+              line: 14,
+              content: '    age,',
+            },
+            {
+              line: 15,
+              content: '    country,',
+            },
+            {
+              line: 16,
+              content: '  });',
+            },
+            {
+              line: 17,
+              content: '}',
+            },
+          ],
+          programmingLanguage: {
+            connect: {
+              extension_name: {
+                extension: 'ts',
+                name: 'typescript',
+              },
+            },
+          },
+        },
+      },
+      solution: {
+        create: {
+          id: '1a22fd0b-9cb9-4a48-a52d-c99864b4e1ef',
+          type: 1,
+        },
+      },
+    },
   });
 }
 

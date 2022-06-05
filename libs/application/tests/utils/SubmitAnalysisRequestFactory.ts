@@ -15,6 +15,7 @@ export class SubmitAnalysisRequestFactory {
       repositoryName: 'repositoryName',
       smell: Smell.ShotgunSurgery,
       userId: 'userId',
+      sha: 'sha',
       ...props,
     };
   }

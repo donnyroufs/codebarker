@@ -4,3 +4,4 @@ export * from './useLoginRedirect';
 export * from './useModal';
 export * from './useLocalStorage';
 export * from './useIsFirstRender';
+export * from './useInfectedLineNumbers';

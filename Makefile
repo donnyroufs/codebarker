@@ -5,3 +5,7 @@ pscale-up:
 
 db-push:
 	yarn prisma db push
+
+db-reset:
+	yarn prisma migrate reset --force --skip-generate
+

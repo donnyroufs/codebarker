@@ -1,10 +1,11 @@
+export type ParsedGithubUrl = {
+  author?: string;
+  repositoryName?: string;
+  fileDir?: string;
+  sha?: string;
+};
 export class GithubRepositoryUrlParser {
-  public static parse(url: string): {
-    author?: string;
-    repositoryName?: string;
-    fileDir?: string;
-    sha?: string;
-  } {
+  public static parse(url: string): ParsedGithubUrl {
     if (!this.isValidBlobUrl(url)) {
       return {
         author: undefined,
@@ -27,6 +28,11 @@ export class GithubRepositoryUrlParser {
       fileDir: fileDir ? '/' + fileDir : undefined,
       sha,
     };
+  }
+
+  // TODO: Write test, and check if multiple dots
+  public static getFileExtension(fileDir: string): string {
+    return fileDir.split('.')!.at(-1)!;
   }
 
   private static isValidBlobUrl(url: string): boolean {

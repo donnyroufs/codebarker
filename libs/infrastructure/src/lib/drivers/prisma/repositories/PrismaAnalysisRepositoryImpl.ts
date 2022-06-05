@@ -26,8 +26,32 @@ export class PrismaAnalysisRepositoryImpl implements IAnalysisRepository {
 
     await this._prismaService.analysis.create({
       data: {
-        ...model,
-        content: cast<string>(content),
+        author: model.author,
+        fileDir: model.fileDir,
+        id: model.id,
+        reason: model.reason,
+        repositoryName: model.repositoryName,
+        smell: model.smell,
+        user: {
+          connect: {
+            id: model.userId,
+          },
+        },
+        sha: model.sha,
+        content: {
+          create: {
+            id: content.id,
+            lines: cast<string>(content.lines),
+            programmingLanguage: {
+              connect: {
+                extension_name: {
+                  extension: analysis.content.programmingLanguage.extension,
+                  name: analysis.content.programmingLanguage.name,
+                },
+              },
+            },
+          },
+        },
       },
     });
   }
