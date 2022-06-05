@@ -16,7 +16,6 @@ export const startKata = async (
   request: IStartKataRequest
 ): Promise<StartKataResponse> =>
   withSession(async (session) => {
-    console.log(request.languages);
     const userId = session!.user!.id;
 
     if (userId !== request.userId) {
