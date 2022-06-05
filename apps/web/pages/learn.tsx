@@ -22,6 +22,7 @@ import {
   Spinner,
 } from '@chakra-ui/react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { startCase } from 'lodash';
 
 import { Smell } from '@codebarker/domain';
 import { Button } from '@codebarker/components';
@@ -207,6 +208,19 @@ export const LearnPage = (): JSX.Element => {
                   thickness="3px"
                 />
               )}
+              <Box w="full" display="flex" justifyContent="end">
+                <Text
+                  color="brand.accent"
+                  display="inline-flex"
+                  px={10}
+                  py={2}
+                  pb={4}
+                  borderRadius="xl"
+                  fontWeight="bold"
+                >
+                  {startCase(data?.content?.programmingLanguage?.name)}{' '}
+                </Text>
+              </Box>
               <CodeHighlighter
                 highlightSelectedLines={true}
                 selectedLines={

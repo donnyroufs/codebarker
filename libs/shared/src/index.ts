@@ -13,3 +13,5 @@ export * from './lib/validator';
 export * from './lib/Utils';
 
 export * from './lib/ValueObject';
+
+export * from './lib/github';

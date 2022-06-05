@@ -2,9 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useToast } from '@chakra-ui/react';
 
+import { GithubRepositoryUrlParser } from '@codebarker/shared';
+
 import { Layout } from '../components/Layout';
 import { useAuth, useInfectedLineNumbers } from '../hooks';
-import { GithubRepositoryUrlParser } from '../parsers/GithubRepositoryUrlParser';
 import { getFileContentFromGithub } from './api/getFileContentFromGithub';
 import { AnalysingStep, FetchFileFromGithubStep } from '../components';
 
@@ -14,6 +15,7 @@ export function Analyse(): JSX.Element {
   const infectedLines = useInfectedLineNumbers();
   const { setInfectedLineNumbers, setInfectedLineNumbersError } = infectedLines;
 
+  const [error, setError] = useState<string | null>(null);
   const [isAnalysing, setIsAnalysing] = useState<boolean>(false);
   const [value, setValue] = useState<string>('');
 
@@ -28,6 +30,30 @@ export function Analyse(): JSX.Element {
       }),
     {
       enabled: isAnalysing,
+      // TODO: Improve how we sent errors from the backend
+      onError(err: Error) {
+        const ext = GithubRepositoryUrlParser.getFileExtension(
+          parsedGithubUrl.fileDir!
+        );
+        setIsAnalysing(false);
+        const message = err.message;
+
+        if (message.includes('Not Found')) {
+          setError('The file could not be found.');
+          return;
+        }
+
+        if (message.includes(ext)) {
+          setError(`We do not support the extension: '${ext}'`);
+          return;
+        }
+
+        // TODO: Add logger
+        setError(err.message);
+      },
+      onSuccess() {
+        setError(null);
+      },
     }
   );
 
@@ -64,7 +90,7 @@ export function Analyse(): JSX.Element {
 
   const isLoaded = [!isLoading, !isFetching].every((v) => v);
 
-  if (isAnalysing) {
+  if (isAnalysing && isLoaded) {
     return (
       <AnalysingStep
         isLoaded={isLoaded}
@@ -80,6 +106,8 @@ export function Analyse(): JSX.Element {
 
   return (
     <FetchFileFromGithubStep
+      error={error}
+      isLoading={isFetching}
       handleStart={handleStart}
       parsedGithubUrl={parsedGithubUrl}
       setUrlValue={setValue}

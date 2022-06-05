@@ -7,18 +7,21 @@ import {
   Text,
   Link,
   ButtonGroup,
+  Box,
 } from '@chakra-ui/react';
 
 import { Button } from '@codebarker/components';
+import { ParsedGithubUrl } from '@codebarker/shared';
 
-import { ParsedGithubUrl } from '../../parsers/GithubRepositoryUrlParser';
-import { LabeledInput } from '../LabeledInput';
+import { Input } from '../Input';
 
 type Props = {
   urlValue: string;
   handleStart(): void;
   setUrlValue(value: string): void;
   parsedGithubUrl: ParsedGithubUrl;
+  isLoading: boolean;
+  error: string | null;
 };
 
 export const FetchFileFromGithubStep = ({
@@ -26,6 +29,8 @@ export const FetchFileFromGithubStep = ({
   handleStart,
   setUrlValue,
   parsedGithubUrl,
+  isLoading,
+  error,
 }: Props): JSX.Element => (
   <Container maxW="container.xl">
     <Flex
@@ -58,7 +63,7 @@ export const FetchFileFromGithubStep = ({
             below.
           </Text>
         </VStack>
-        <LabeledInput
+        <Input
           name="githubUrl"
           type="text"
           value={urlValue}
@@ -69,12 +74,14 @@ export const FetchFileFromGithubStep = ({
             py: 6,
             maxW: '675px',
           }}
+          errorMessage={error!}
         />
         <ButtonGroup spacing={2}>
           <Button
             variant="primary"
             disabled={!Object.values(parsedGithubUrl).every(Boolean)}
             onClick={(): void => handleStart()}
+            isLoading={isLoading}
           >
             Fetch File
           </Button>

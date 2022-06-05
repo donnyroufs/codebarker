@@ -1,6 +1,7 @@
 import { NullOrAsync } from '@codebarker/shared';
 
 import { Kata } from './Kata';
+import { ProgrammingLanguage } from './ProgrammingLanguage';
 
 export interface IKataRepository {
   getAsync(
@@ -10,6 +11,9 @@ export interface IKataRepository {
   ): NullOrAsync<Kata>;
   getByIdAsync(id: string): NullOrAsync<Kata>;
   saveAsync(kata: Kata): Promise<void>;
+  getProgrammingLanguageByExtAsync(
+    ext: string
+  ): NullOrAsync<ProgrammingLanguage>;
   generateId(): string;
 }
 

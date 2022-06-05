@@ -66,7 +66,7 @@ async function main(): Promise<void> {
       },
       {
         name: 'elixir',
-        extension: 'exs',
+        extension: 'ex',
       },
       {
         name: 'kotlin',

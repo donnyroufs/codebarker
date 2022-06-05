@@ -1,7 +1,7 @@
 import { v4 } from 'uuid';
 import { injectable, inject } from 'inversify';
 
-import { IKataRepository, Kata } from '@codebarker/domain';
+import { IKataRepository, Kata, ProgrammingLanguage } from '@codebarker/domain';
 import { ILogger, LoggerToken } from '@codebarker/application';
 import { cast, isNull, NullOrAsync } from '@codebarker/shared';
 
@@ -19,6 +19,22 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
   ) {
     this._prismaService = prismaService;
     this._logger = logger;
+  }
+  public async getProgrammingLanguageByExtAsync(
+    ext: string
+  ): NullOrAsync<ProgrammingLanguage> {
+    const result = await this._prismaService.programmingLanguage.findFirst({
+      where: {
+        extension: ext,
+      },
+    });
+
+    if (isNull(result)) return null;
+
+    return ProgrammingLanguage.make({
+      extension: result.extension,
+      name: result.name,
+    });
   }
 
   // TODO: Abstract filters

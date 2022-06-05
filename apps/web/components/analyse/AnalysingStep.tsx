@@ -12,16 +12,17 @@ import {
 import { ValidationErrors } from 'final-form';
 import { Field, Form } from 'react-final-form';
 import { useMutation } from 'react-query';
+import { startCase } from 'lodash';
 
 import { Smell } from '@codebarker/domain';
 import { GetFileContentFromGithubResponse } from '@codebarker/application';
 import { Button } from '@codebarker/components';
+import { ParsedGithubUrl } from '@codebarker/shared';
 
 import { InteractiveCodeHighlighter } from '../codeHighLighter';
 import { LabeledSelect } from '../LabeledSelect';
 import { LabeledTextArea } from '../LabeledTextarea';
 import { CamelCaseUtil } from '../../utils/CamelCaseUtil';
-import { ParsedGithubUrl } from '../../parsers/GithubRepositoryUrlParser';
 import { Option } from '../../types';
 import { UseAuthReturnValue } from '../../hooks';
 import { submitAnalysis } from '../../pages/api/submitAnalysis';
@@ -129,17 +130,14 @@ export const AnalysingStep = ({
             w="full"
             isLoaded={isLoaded}
           >
-            <Box w="full" display="flex">
+            <Box w="full" display="flex" justifyContent="end" py={2} pb={4}>
               <Text
                 color="brand.accent"
                 display="inline-flex"
-                px={10}
-                py={2}
                 borderRadius="xl"
-                ml="auto"
-                bgColor="brand.500"
+                fontWeight="bold"
               >
-                {parsedGithubUrl.fileDir?.split('/').at(-1)}
+                {startCase(data?.content?.programmingLanguage?.name)}{' '}
               </Text>
             </Box>
             <InteractiveCodeHighlighter

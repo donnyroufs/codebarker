@@ -1,7 +1,8 @@
-import { ChakraProps, Input } from '@chakra-ui/react';
+import { ChakraProps } from '@chakra-ui/react';
 import { HTMLInputTypeAttribute } from 'react';
 
 import { Label } from './Label';
+import { Input } from './Input';
 
 type Props = {
   name: string;
@@ -11,16 +12,14 @@ type Props = {
   onChange: any;
   _labelStyles?: ChakraProps;
   _styles?: ChakraProps;
+  labelName: string;
 };
 
 export const LabeledInput = ({
-  value,
   name,
-  type,
-  placeholder,
-  _styles,
   _labelStyles,
-  onChange,
+  labelName,
+  ...rest
 }: Props): JSX.Element => {
   return (
     <Label
@@ -30,21 +29,8 @@ export const LabeledInput = ({
         ..._labelStyles,
       }}
     >
-      <Input
-        type={type}
-        placeholder={placeholder}
-        bgColor="brand.700"
-        borderColor="brand.border"
-        _hover={{
-          bgColor: 'brand.700',
-          borderColor: 'brand.headerShade',
-        }}
-        value={value}
-        onChange={onChange}
-        name={name}
-        id={name}
-        {..._styles}
-      />
+      {labelName}
+      <Input name={name} {...rest} />
     </Label>
   );
 };
