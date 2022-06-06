@@ -10,3 +10,5 @@ export type ExcludeMethods<TClass> = Pick<
 >;
 
 export type Constructor<T> = new (...args: any[]) => T;
+
+export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
