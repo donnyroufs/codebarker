@@ -22,7 +22,19 @@ export class PrismaAnalysisRepositoryImpl implements IAnalysisRepository {
   }
 
   public async getByIdAsync(id: string): NullOrAsync<Analysis> {
-    throw new Error('Method not implemented.');
+    const model = await this._prismaService.analysis.findFirst({
+      where: {
+        id,
+      },
+      include: {
+        content: true,
+        user: true,
+      },
+    });
+
+    if (!model) return null;
+
+    return AnalysisMapper.toDomain(model);
   }
 
   public async saveAsync(analysis: Analysis): Promise<void> {
