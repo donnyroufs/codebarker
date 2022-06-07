@@ -7,6 +7,7 @@ import {
   SubmitKataUseCase,
   VoteOnAnalysisUseCase,
   StartKataUseCase,
+  GetAnalysisDetailsUseCase,
 } from './useCases';
 
 export class ApplicationModule extends ContainerModule {
@@ -18,6 +19,7 @@ export class ApplicationModule extends ContainerModule {
       bind(SubmitAnalysisUseCase).toSelf().inSingletonScope();
       bind(GetProgrammingLanguagesUseCase).toSelf().inSingletonScope();
       bind(VoteOnAnalysisUseCase).toSelf().inSingletonScope();
+      bind(GetAnalysisDetailsUseCase).toSelf().inSingletonScope();
     });
   }
 }

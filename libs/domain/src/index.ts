@@ -15,3 +15,6 @@ export * from './lib/Vote';
 export * from './lib/CannotVoteOnAnalysisException';
 export * from './lib/HasAlreadyVotedException';
 export * from './lib/OwnersCannotVoteOnTheirOwnAnalysisException';
+export * from './lib/AnalysisDetails';
+export * from './lib/IUserRepository';
+export * from './lib/User';
