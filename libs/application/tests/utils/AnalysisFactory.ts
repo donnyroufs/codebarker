@@ -1,4 +1,9 @@
-import { Analysis, AnalysisProps, Smell } from '@codebarker/domain';
+import {
+  Analysis,
+  AnalysisProps,
+  AnalysisStatus,
+  Smell,
+} from '@codebarker/domain';
 
 import { ContentFactory } from './ContentFactory';
 
@@ -14,6 +19,8 @@ export class AnalysisFactory {
       smell: Smell.Comments,
       userId: 'userId',
       sha: 'sha',
+      status: AnalysisStatus.Pending,
+      votes: [],
       ...props,
     });
   }

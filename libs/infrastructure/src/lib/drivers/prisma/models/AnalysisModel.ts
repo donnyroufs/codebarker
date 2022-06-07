@@ -4,6 +4,7 @@ const analysis = Prisma.validator<Prisma.AnalysisArgs>()({
   include: {
     user: true,
     content: true,
+    votes: true,
   },
 });
 

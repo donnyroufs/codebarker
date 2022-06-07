@@ -44,6 +44,7 @@ model User {
   image         String?
   role          Int       @default(1) // User
 
+  votes    AnalysisVotes[]
   analyses Analysis[]
   accounts Account[]
   sessions Session[]
@@ -101,11 +102,25 @@ model Analysis {
   fileDir        String  @db.VarChar(255)
   content        Content @relation(fields: [contentId], references: [id])
   sha            String? @db.VarChar(255)
+  status         Int     @default(0) // AnalysisEnum in domain @default Pending
 
   user   User   @relation(fields: [userId], references: [id])
   userId String
 
   contentId String
+  votes     AnalysisVotes[]
+}
+
+model AnalysisVotes {
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  Analysis   Analysis @relation(fields: [analysisId], references: [id])
+  analysisId String
+
+  type Int // AnalysisType enum in Domain
+
+  @@id([analysisId, userId])
 }
 
 model Content {

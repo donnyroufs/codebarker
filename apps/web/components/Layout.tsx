@@ -23,7 +23,6 @@ export const Layout = ({
   });
 
   if (isLoading) {
-    console.log('showing spinner');
     return (
       <Flex h="100vh" w="full">
         <Spinner margin="auto" color="brand.accent" thickness="3px" />

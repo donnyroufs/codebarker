@@ -15,7 +15,7 @@ export class KataValidator extends Validator<KataProps> {
     this.ruleFor(
       'solution',
       (value) => Validator.is.instance(value, Solution),
-      'The solution id should be of type String'
+      'The solution should be of type Solution'
     );
   }
 }

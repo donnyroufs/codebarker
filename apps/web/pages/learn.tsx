@@ -39,17 +39,13 @@ import {
   LocalStorageItem,
   useLocalStorage,
   useIsFirstRender,
+  useLanguagesQueryString,
 } from '../hooks';
 
 export const LearnPage = (): JSX.Element => {
   const client = useQueryClient();
-  const { isReady, query } = useRouter();
+  const { isReady } = useRouter();
   const isFirstRender = useIsFirstRender();
-  // https://github.com/vercel/next.js/discussions/11484#discussioncomment-60563
-  const languages =
-    isReady && query.languages
-      ? cast<string>(query.languages).split(',')
-      : ['all'];
   const [excludeFilter, setExcludeFilter] = useLocalStorage(
     LocalStorageItem.ExcludeFilter,
     true
@@ -58,6 +54,7 @@ export const LearnPage = (): JSX.Element => {
     undefined
   );
   const { user, isSignedIn } = useAuth();
+  const { languages } = useLanguagesQueryString();
 
   const [lastClicked, setLastClicked] = useState<number | null>(null);
   const { isLoading, data, isError, isFetching } = useQuery(

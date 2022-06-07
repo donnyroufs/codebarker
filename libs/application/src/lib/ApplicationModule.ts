@@ -1,12 +1,14 @@
 import { ContainerModule } from 'inversify';
+
 import {
   GetFileContentFromGithubUseCase,
   GetProgrammingLanguagesUseCase,
   SubmitAnalysisUseCase,
   SubmitKataUseCase,
+  VoteOnAnalysisUseCase,
+  StartKataUseCase,
+  GetAnalysisDetailsUseCase,
 } from './useCases';
-
-import { StartKataUseCase } from './useCases/startKataUseCase/StartKataUseCase';
 
 export class ApplicationModule extends ContainerModule {
   public constructor() {
@@ -16,6 +18,8 @@ export class ApplicationModule extends ContainerModule {
       bind(GetFileContentFromGithubUseCase).toSelf().inSingletonScope();
       bind(SubmitAnalysisUseCase).toSelf().inSingletonScope();
       bind(GetProgrammingLanguagesUseCase).toSelf().inSingletonScope();
+      bind(VoteOnAnalysisUseCase).toSelf().inSingletonScope();
+      bind(GetAnalysisDetailsUseCase).toSelf().inSingletonScope();
     });
   }
 }

@@ -21,7 +21,13 @@ export class ContentMapper {
   ): Omit<ContentModel, 'programmingLanguageId'> {
     return {
       id: v4(),
-      lines: cast<string>(content.lines),
+      lines: cast<string>(
+        content.lines.map((line) => ({
+          content: line.value,
+          isInfected: line.isInfected,
+          line: line.lineNumber,
+        }))
+      ),
       programmingLanguage: {
         name: content.programmingLanguage.name,
         extension: content.programmingLanguage.extension,
