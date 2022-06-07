@@ -54,7 +54,7 @@ export const LearnPage = (): JSX.Element => {
     undefined
   );
   const { user, isSignedIn } = useAuth();
-  const languages = useLanguagesQueryString();
+  const { languages } = useLanguagesQueryString();
 
   const [lastClicked, setLastClicked] = useState<number | null>(null);
   const { isLoading, data, isError, isFetching } = useQuery(
