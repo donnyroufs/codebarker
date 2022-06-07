@@ -119,6 +119,13 @@ export const Header = ({
                         <Dropdown.MenuItem as="span">Analyse</Dropdown.MenuItem>
                       </a>
                     </NextLink>
+                    <NextLink href="/investigate" passHref>
+                      <a>
+                        <Dropdown.MenuItem as="span">
+                          Investigate
+                        </Dropdown.MenuItem>
+                      </a>
+                    </NextLink>
                     <Dropdown.MenuDivider color="brand.border" />
                     <Dropdown.MenuItem onClick={signOut}>
                       sign out

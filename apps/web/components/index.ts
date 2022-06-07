@@ -13,8 +13,8 @@ export * from './SignInModal';
 export * from './Required';
 export * from './Input';
 export * from './ErrorMessage';
-
 export * from './codeHighLighter';
+export * from './AsyncInfo';
 
 // Page Components
 export * from './analyse';

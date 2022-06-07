@@ -111,9 +111,12 @@ export const Banner = ({ progress }: Props): JSX.Element => {
             <ButtonLink href={`/learn${languagesQueryString}`}>
               Start Learning
             </ButtonLink>
-            {/* <ButtonLink variant="outline" href="/investigate">
+            <ButtonLink
+              variant="outline"
+              href={`/investigate${languagesQueryString}`}
+            >
               Investigate
-            </ButtonLink> */}
+            </ButtonLink>
           </ButtonGroup>
         </VStack>
 

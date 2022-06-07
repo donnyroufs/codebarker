@@ -8,13 +8,13 @@ import {
 } from '@codebarker/domain';
 
 import {
-  AnalysisDoesNotExistException,
   ApplicationModule,
   GetAnalysisDetailsResponse,
   GetAnalysisDetailsUseCase,
   IGetAnalysisDetailsRequest,
   ILogger,
   LoggerToken,
+  NoAvailableAnalysisForUserException,
 } from '../../../src';
 import { AnalysisDetailsFactory } from '../../utils';
 
@@ -39,9 +39,11 @@ describe('get analysis details', () => {
     sut = container.get(GetAnalysisDetailsUseCase);
   });
 
+  // TODO: Handle languages input validation
   test('throws a validation exception when the input is invalid', () => {
     const request: IGetAnalysisDetailsRequest = {
-      id: 1 as any,
+      userId: 1 as any,
+      languages: ['all'],
     };
 
     const act = (): Promise<GetAnalysisDetailsResponse> => sut.execute(request);
@@ -51,27 +53,54 @@ describe('get analysis details', () => {
 
   test('throws an exception when the analysis is not found', () => {
     const request: IGetAnalysisDetailsRequest = {
-      id: 'id',
+      userId: 'userId',
+      languages: ['all'],
     };
 
-    mockedRepo.getDetailsAsync.mockResolvedValueOnce(null);
+    mockedRepo.getAnalysisWithoutVotesForUserAsync.mockResolvedValueOnce(null);
 
     const act = (): Promise<GetAnalysisDetailsResponse> => sut.execute(request);
 
-    expect(act).rejects.toThrowError(AnalysisDoesNotExistException);
+    expect(act).rejects.toThrowError(NoAvailableAnalysisForUserException);
   });
 
   test('returns analysis details', async () => {
     const request: IGetAnalysisDetailsRequest = {
-      id: 'id',
+      userId: 'userId',
+      languages: ['all'],
     };
     const details = AnalysisDetailsFactory.make();
     const expectedResult = GetAnalysisDetailsResponse.from(details);
 
-    mockedRepo.getDetailsAsync.mockResolvedValueOnce(details);
+    mockedRepo.getAnalysisWithoutVotesForUserAsync.mockResolvedValueOnce(
+      details
+    );
 
     const result = await sut.execute(request);
 
     expect(result).toEqual(expectedResult);
+    expect(mockedRepo.getAnalysisWithoutVotesForUserAsync).toHaveBeenCalledWith(
+      request.userId,
+      []
+    );
+  });
+
+  test('calls the repo with the languages filter', async () => {
+    const request: IGetAnalysisDetailsRequest = {
+      userId: 'userId',
+      languages: ['js', 'ts'],
+    };
+    const details = AnalysisDetailsFactory.make();
+
+    mockedRepo.getAnalysisWithoutVotesForUserAsync.mockResolvedValueOnce(
+      details
+    );
+
+    await sut.execute(request);
+
+    expect(mockedRepo.getAnalysisWithoutVotesForUserAsync).toHaveBeenCalledWith(
+      request.userId,
+      request.languages
+    );
   });
 });

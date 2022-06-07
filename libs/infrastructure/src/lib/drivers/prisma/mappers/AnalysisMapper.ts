@@ -28,9 +28,9 @@ export class AnalysisMapper {
       sha: rest.sha === undefined ? null : rest.sha,
       content: cast<any>(ContentMapper.toModel(content)),
       votes: rest.votes.map((vote) => ({
-        analysisId: rest.id,
         type: vote.type,
         userId: vote.userId,
+        analysisId: undefined as any, // dont need this in create args
       })),
     };
   }

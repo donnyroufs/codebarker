@@ -6,6 +6,7 @@ import { ILogger, LoggerToken } from '@codebarker/application';
 import {
   Analysis,
   AnalysisDetails,
+  AnalysisStatus,
   IAnalysisRepository,
 } from '@codebarker/domain';
 
@@ -26,13 +27,66 @@ export class PrismaAnalysisRepositoryImpl implements IAnalysisRepository {
     this._logger = logger;
   }
 
+  // TODO: Integration test whether it excludes the user resources
+  // TODO: Integration test that it does not get resources where the user has already voted
+  // TODO: Integration test that it filters by language
+  public async getAnalysisWithoutVotesForUserAsync(
+    userId: string,
+    languages: string[]
+  ): NullOrAsync<AnalysisDetails> {
+    const languagesFilter = languages &&
+      languages.length > 0 && {
+        content: {
+          programmingLanguage: {
+            name: {
+              in: languages,
+            },
+          },
+        },
+      };
+
+    const details = await this._prismaService.analysis.findFirst({
+      where: {
+        ...languagesFilter,
+        votes: {
+          none: {
+            userId,
+          },
+        },
+        status: AnalysisStatus.Pending,
+        userId: {
+          not: userId,
+        },
+      },
+      include: {
+        content: {
+          include: {
+            programmingLanguage: true,
+          },
+        },
+        user: true,
+        votes: true,
+      },
+    });
+
+    if (!details) {
+      return null;
+    }
+
+    return AnalysisDetailsMapper.toDomain(details);
+  }
+
   public async getDetailsAsync(id: string): NullOrAsync<AnalysisDetails> {
     const analysis = await this._prismaService.analysis.findFirst({
       where: {
         id,
       },
       include: {
-        content: true,
+        content: {
+          include: {
+            programmingLanguage: true,
+          },
+        },
         user: true,
         votes: true,
       },
@@ -51,7 +105,11 @@ export class PrismaAnalysisRepositoryImpl implements IAnalysisRepository {
         id,
       },
       include: {
-        content: true,
+        content: {
+          include: {
+            programmingLanguage: true,
+          },
+        },
         user: true,
         votes: true,
       },
@@ -63,82 +121,87 @@ export class PrismaAnalysisRepositoryImpl implements IAnalysisRepository {
   }
 
   // TODO: Check if this doesnt delete votes, and adds new votes
+  // TODO: Content is not being saved properly. Lines do not include the actual code
   public async saveAsync(analysis: Analysis): Promise<void> {
     const { content, ...model } = AnalysisMapper.toModel(analysis);
 
-    await this._prismaService.analysis.upsert({
-      where: {
-        id: content.id,
-      },
-      create: {
-        author: model.author,
-        fileDir: model.fileDir,
-        id: model.id,
-        reason: model.reason,
-        repositoryName: model.repositoryName,
-        smell: model.smell,
-        user: {
-          connect: {
-            id: model.userId,
-          },
+    await this._prismaService.analysis
+      .upsert({
+        where: {
+          id: model.id,
         },
-        votes: {
-          createMany: {
-            data: model.votes,
-            skipDuplicates: true,
+        create: {
+          author: model.author,
+          fileDir: model.fileDir,
+          id: model.id,
+          reason: model.reason,
+          repositoryName: model.repositoryName,
+          smell: model.smell,
+          status: model.status,
+          user: {
+            connect: {
+              id: model.userId,
+            },
           },
-        },
-        sha: model.sha,
-        content: {
-          create: {
-            id: content.id,
-            lines: cast<string>(content.lines),
-            programmingLanguage: {
-              connect: {
-                extension_name: {
-                  extension: analysis.content.programmingLanguage.extension,
-                  name: analysis.content.programmingLanguage.name,
+          votes: {
+            createMany: {
+              data: model.votes,
+              skipDuplicates: true,
+            },
+          },
+          sha: model.sha,
+          content: {
+            create: {
+              id: content.id,
+              lines: cast<string>(content.lines),
+              programmingLanguage: {
+                connect: {
+                  extension_name: {
+                    extension: analysis.content.programmingLanguage.extension,
+                    name: analysis.content.programmingLanguage.name,
+                  },
                 },
               },
             },
           },
         },
-      },
-      update: {
-        author: model.author,
-        fileDir: model.fileDir,
-        id: model.id,
-        reason: model.reason,
-        repositoryName: model.repositoryName,
-        smell: model.smell,
-        user: {
-          connect: {
-            id: model.userId,
+        update: {
+          author: model.author,
+          fileDir: model.fileDir,
+          status: model.status,
+          id: model.id,
+          reason: model.reason,
+          repositoryName: model.repositoryName,
+          smell: model.smell,
+          user: {
+            connect: {
+              id: model.userId,
+            },
           },
-        },
-        votes: {
-          createMany: {
-            data: model.votes,
-            skipDuplicates: true,
+          votes: {
+            createMany: {
+              data: model.votes,
+              skipDuplicates: true,
+            },
           },
-        },
-        sha: model.sha,
-        content: {
-          create: {
-            id: content.id,
-            lines: cast<string>(content.lines),
-            programmingLanguage: {
-              connect: {
-                extension_name: {
-                  extension: analysis.content.programmingLanguage.extension,
-                  name: analysis.content.programmingLanguage.name,
+          sha: model.sha,
+          content: {
+            create: {
+              id: content.id,
+              lines: cast<string>(content.lines),
+              programmingLanguage: {
+                connect: {
+                  extension_name: {
+                    extension: analysis.content.programmingLanguage.extension,
+                    name: analysis.content.programmingLanguage.name,
+                  },
                 },
               },
             },
           },
         },
-      },
-    });
+      })
+      .catch((err) => console.log(err));
   }
 
   public generateId(): string {

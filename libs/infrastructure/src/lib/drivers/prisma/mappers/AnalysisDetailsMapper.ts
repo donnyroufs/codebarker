@@ -1,4 +1,8 @@
-import { AnalysisDetails, AnalysisType } from '@codebarker/domain';
+import {
+  AnalysisDetails,
+  AnalysisType,
+  ProgrammingLanguage,
+} from '@codebarker/domain';
 
 import { AnalysisModel } from '../models/AnalysisModel';
 import { ContentMapper } from './ContentMapper';
@@ -17,7 +21,10 @@ export class AnalysisDetailsMapper {
       analysisId: model.id,
       content,
       disagreedVotesAcount: Math.abs(totalVotes - agreedVotesCount),
-      programmingLanguage: content.programmingLanguage,
+      programmingLanguage: ProgrammingLanguage.make({
+        extension: content.programmingLanguage.extension,
+        name: content.programmingLanguage.name,
+      }),
       reason: model.reason,
       reportedBy: UserMapper.toDomain(model.user),
       smell: model.smell,

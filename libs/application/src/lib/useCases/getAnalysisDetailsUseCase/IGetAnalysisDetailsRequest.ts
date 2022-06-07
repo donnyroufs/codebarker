@@ -1,3 +1,4 @@
 export interface IGetAnalysisDetailsRequest {
-  id: string;
+  userId: string;
+  languages: string[];
 }

@@ -173,8 +173,14 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
             },
           },
           solution: {
-            connect: {
-              id: solution.id,
+            connectOrCreate: {
+              where: {
+                id: solution.id,
+              },
+              create: {
+                id: solution.id,
+                type: solution.type,
+              },
             },
           },
           answers: {

@@ -9,8 +9,9 @@ import { isNull, IUseCase } from '@codebarker/shared';
 import { GetAnalysisDetailsResponse } from './GetAnalysisDetailsResponse';
 import { IGetAnalysisDetailsRequest } from './IGetAnalysisDetailsRequest';
 import { GetAnalysisDetailsRequestValidator } from './GetAnalysisDetailsRequestValidator';
-import { AnalysisDoesNotExistException } from '../voteOnAnalysisUseCase';
+import { NoAvailableAnalysisForUserException } from './NoAvailableAnalysisForUserException';
 
+// TODO: Fix tests, since I changed implementation
 @injectable()
 export class GetAnalysisDetailsUseCase
   implements IUseCase<IGetAnalysisDetailsRequest, GetAnalysisDetailsResponse>
@@ -28,10 +29,16 @@ export class GetAnalysisDetailsUseCase
   ): Promise<GetAnalysisDetailsResponse> {
     this.validateOrThrow(input);
 
-    const details = await this._analysisRepository.getDetailsAsync(input.id);
+    const langs = input.languages.at(0) === 'all' ? [] : input.languages;
+
+    const details =
+      await this._analysisRepository.getAnalysisWithoutVotesForUserAsync(
+        input.userId,
+        langs
+      );
 
     if (isNull(details)) {
-      throw new AnalysisDoesNotExistException(input.id);
+      throw new NoAvailableAnalysisForUserException();
     }
 
     return GetAnalysisDetailsResponse.from(details);

@@ -7,6 +7,10 @@ export interface IAnalysisRepository {
   saveAsync(analysis: Analysis): Promise<void>;
   getByIdAsync(id: string): NullOrAsync<Analysis>;
   getDetailsAsync(id: string): NullOrAsync<AnalysisDetails>;
+  getAnalysisWithoutVotesForUserAsync(
+    userId: string,
+    languages: string[]
+  ): NullOrAsync<AnalysisDetails>;
   generateId(): string;
 }
 
