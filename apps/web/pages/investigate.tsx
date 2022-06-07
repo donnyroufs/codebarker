@@ -224,8 +224,8 @@ const Investigate = (): JSX.Element => {
                     'Be the first to vote on this report.'}
                   {data && totalVotes > 0 && (
                     <>
-                      {data?.agreedVotesCount} out of the {totalVotes} agreed
-                      with this report.
+                      {data?.agreedVotesCount} out of {totalVotes} agreed with
+                      this report.
                     </>
                   )}
                 </Text>
