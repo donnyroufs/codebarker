@@ -130,7 +130,7 @@ const Investigate = (): JSX.Element => {
             {!data && isLoaded && (
               <Box display="grid" placeItems="center" h="full" mt={4}>
                 <Text color="brand.text" opacity={0.8}>
-                  There are currently no reports for you to review,
+                  There are currently no reports for you to investigate,
                 </Text>
                 <Text color="brand.text" opacity={0.8}>
                   Please come back at a later time.
