@@ -3,8 +3,14 @@ import { isNull } from 'lodash';
 
 import { IUseCase } from '@codebarker/shared';
 import {
+  Analysis,
   AnalysisRepositoryToken,
+  AnalysisStatus,
   IAnalysisRepository,
+  IKataRepository,
+  Kata,
+  KataRepositoryToken,
+  Solution,
   Vote,
 } from '@codebarker/domain';
 
@@ -17,11 +23,14 @@ export class VoteOnAnalysisUseCase
   implements IUseCase<IVoteOnAnalysisRequest, void>
 {
   private readonly _analysisRepository: IAnalysisRepository;
+  private readonly _kataRepository: IKataRepository;
 
   public constructor(
-    @inject(AnalysisRepositoryToken) analysisRepository: IAnalysisRepository
+    @inject(AnalysisRepositoryToken) analysisRepository: IAnalysisRepository,
+    @inject(KataRepositoryToken) kataRepository: IKataRepository
   ) {
     this._analysisRepository = analysisRepository;
+    this._kataRepository = kataRepository;
   }
 
   public async execute(input: IVoteOnAnalysisRequest): Promise<void> {
@@ -40,7 +49,26 @@ export class VoteOnAnalysisUseCase
       })
     );
 
-    this._analysisRepository.saveAsync(analysis);
+    await this._analysisRepository.saveAsync(analysis);
+
+    this.makeOfficialKataWhenAccepted(analysis);
+  }
+
+  // TODO: Refactor this by subscribing to an event
+  private makeOfficialKataWhenAccepted(analysis: Analysis): void {
+    if (analysis.status !== AnalysisStatus.Accepted) return;
+
+    const kata = Kata.make({
+      id: this._kataRepository.generateId(),
+      answers: [],
+      content: analysis.content,
+      solution: Solution.make({
+        id: this._kataRepository.generateId(),
+        type: analysis.smell,
+      }),
+    });
+
+    this._kataRepository.saveAsync(kata);
   }
 
   private validateOrThrow(input: IVoteOnAnalysisRequest): void {

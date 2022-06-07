@@ -8,4 +8,12 @@ export class VoteFactory {
       ...props,
     });
   }
+  public static makeMany(amount: number): Vote[] {
+    return Array.from({ length: amount }).map((_, i) =>
+      this.make({
+        userId: 'userId-' + i,
+        type: AnalysisType.Agree,
+      })
+    );
+  }
 }

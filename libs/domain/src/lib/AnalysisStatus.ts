@@ -1,5 +1,5 @@
 export enum AnalysisStatus {
-  Accepted,
-  Declined,
   Pending,
+  Declined,
+  Accepted,
 }

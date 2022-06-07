@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { v4 } from 'uuid';
 
-import { cast } from '@codebarker/shared';
+import { cast, NullOrAsync } from '@codebarker/shared';
 import { ILogger, LoggerToken } from '@codebarker/application';
 import { Analysis, IAnalysisRepository } from '@codebarker/domain';
 
@@ -19,6 +19,10 @@ export class PrismaAnalysisRepositoryImpl implements IAnalysisRepository {
   ) {
     this._prismaService = prismaService;
     this._logger = logger;
+  }
+
+  public async getByIdAsync(id: string): NullOrAsync<Analysis> {
+    throw new Error('Method not implemented.');
   }
 
   public async saveAsync(analysis: Analysis): Promise<void> {

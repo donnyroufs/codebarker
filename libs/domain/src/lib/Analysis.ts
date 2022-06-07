@@ -1,14 +1,33 @@
-import { ExcludeMethods, IEntity, PartialBy } from '@codebarker/shared';
-import { AnalysisStatus } from './AnalysisStatus';
+import { BaseEntity } from '@codebarker/shared';
 
+import { AnalysisStatus } from './AnalysisStatus';
+import { AnalysisType } from './AnalysisType';
 import { AnalysisValidator } from './AnalysisValidator';
 import { CannotVoteOnAnalysisException } from './CannotVoteOnAnalysisException';
 import { Content } from './Content';
 import { HasAlreadyVotedException } from './HasAlreadyVotedException';
+import { OwnersCannotVoteOnTheirOwnAnalysisException } from './OwnersCannotVoteOnTheirOwnAnalysisException';
 import { Smell } from './Smell';
 import { Vote } from './Vote';
 
-export class Analysis implements IEntity {
+export type AnalysisProps = {
+  readonly id: string;
+  readonly smell: Smell;
+  readonly reason: string;
+  readonly userId: string;
+  readonly repositoryName: string;
+  readonly author: string;
+  readonly fileDir: string;
+  readonly sha?: string;
+  readonly content: Content;
+  readonly status?: AnalysisStatus;
+  readonly votes?: Vote[];
+};
+
+export class Analysis extends BaseEntity<AnalysisProps> {
+  public static MINIMUM_REQUIRED_VOTES = 10;
+  public static MINIMUM_PERCENTAGE = 70;
+
   public readonly id: string;
   public readonly smell: Smell;
   public readonly reason: string;
@@ -23,10 +42,9 @@ export class Analysis implements IEntity {
   public readonly status: AnalysisStatus = AnalysisStatus.Pending;
   public readonly votes: Vote[] = [];
 
-  private constructor({
-    status = AnalysisStatus.Pending,
-    ...props
-  }: AnalysisProps) {
+  private constructor(props: AnalysisProps) {
+    super(props);
+
     this.id = props.id;
     this.smell = props.smell;
     this.reason = props.reason;
@@ -36,24 +54,55 @@ export class Analysis implements IEntity {
     this.fileDir = props.fileDir;
     this.content = props.content;
     this.sha = props.sha;
-    this.status = status;
+    this.status = props.status ?? this.status;
     this.votes = props.votes ?? this.votes;
   }
 
   public addVote(vote: Vote): void {
+    if (this.isOwner(vote.userId)) {
+      throw new OwnersCannotVoteOnTheirOwnAnalysisException();
+    }
+
     if (!this.isPending()) {
       throw new CannotVoteOnAnalysisException();
     }
 
-    if (this.hasAlreadyVoted()) {
+    if (this.hasAlreadyVoted(vote.userId)) {
       throw new HasAlreadyVotedException();
     }
 
     this.votes.push(vote);
+
+    this.setStatusWhenApplicable();
   }
 
-  private hasAlreadyVoted(): boolean {
-    return this.votes.some((vote) => vote.userId === this.userId);
+  private isOwner(userId: string): boolean {
+    return this.userId === userId;
+  }
+
+  // TODO: Refactor, using policies and events
+  private setStatusWhenApplicable(): void {
+    const totalVotes = this.votes.length;
+
+    if (totalVotes < Analysis.MINIMUM_REQUIRED_VOTES) {
+      return;
+    }
+
+    const agreedVotesCount = this.votes.filter(
+      (vote) => vote.type === AnalysisType.Agree
+    ).length;
+
+    const percentage = Math.floor((agreedVotesCount / totalVotes) * 100);
+
+    if (percentage < Analysis.MINIMUM_PERCENTAGE) {
+      this.$set('status', AnalysisStatus.Declined);
+    }
+
+    this.$set('status', AnalysisStatus.Accepted);
+  }
+
+  private hasAlreadyVoted(userId: string): boolean {
+    return this.votes.some((vote) => vote.userId === userId);
   }
 
   private isPending(): boolean {
@@ -66,8 +115,3 @@ export class Analysis implements IEntity {
       .andThen(() => new Analysis(props));
   }
 }
-
-export type AnalysisProps = PartialBy<
-  ExcludeMethods<Analysis>,
-  'status' | 'votes'
->;
