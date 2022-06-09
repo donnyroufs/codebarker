@@ -10,6 +10,7 @@ import {
   Box,
   Center,
   Flex,
+  Heading,
   IconButton,
   Skeleton,
   Spacer,
@@ -110,12 +111,12 @@ export const Table = ({
       color="brand.text"
       bgColor="brand.600"
       borderRadius="lg"
-      maxW="container.xl"
-      margin="auto"
       p={9}
+      w="100%"
       mt={4}
       overflowX="auto"
     >
+      <Heading mb={4}>Your Reports</Heading>
       <Skeleton
         isLoaded={isLoaded}
         borderRadius="md"

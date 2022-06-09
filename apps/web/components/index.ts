@@ -16,6 +16,7 @@ export * from './ErrorMessage';
 export * from './codeHighLighter';
 export * from './AsyncInfo';
 export * from './Table';
+export { Select } from './Select';
 
 // Page Components
 export * from './analyse';
