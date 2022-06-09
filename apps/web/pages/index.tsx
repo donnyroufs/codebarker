@@ -31,11 +31,11 @@ export function Index(): JSX.Element {
           borderRadius={12}
           ml={{ base: 0, xl: 5 }}
           mt={{ base: 4, xl: 0 }}
-          p={10}
+          p={{ base: 8, lg: 10 }}
           flex={2}
           w="full"
         >
-          <Heading mb={4}>About Codebarker</Heading>
+          <Heading mb={4}>About</Heading>
           <Text lineHeight={1.7} opacity={0.8} fontSize="lg">
             Codebarker uses real snippets from Github, submitted by community
             members to fill its content. Users can learn from approved code
@@ -45,18 +45,21 @@ export function Index(): JSX.Element {
             A reported code smell needs to be{' '}
             <Link
               href="/investigate"
-              _styles={{ mr: 2, textDecor: 'underline', color: 'brand.accent' }}
+              _styles={{
+                mr: '5px',
+                textDecor: 'underline',
+                color: 'brand.accent',
+              }}
             >
               investigated
             </Link>
-            by at least 10 community members in order to be added to the
-            approved code smells list.
+            by at least 10 community members with a 70% agreed ratio in order to
+            be added to the approved code smells list.
           </Text>
           <Box as="footer" mt="auto" opacity={0.6}>
             <Divider my={8} borderColor="brand.border" height="2px" />
             <Text lineHeight={1.7} opacity={0.8} fontSize="lg" mt="auto">
-              The app is still a work in progress and a roadmap will be added
-              soon!
+              The app is not yet production ready.
             </Text>
           </Box>
         </Box>

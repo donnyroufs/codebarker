@@ -10,12 +10,12 @@ import {
   Skeleton,
 } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import { FaRegBell } from 'react-icons/fa';
+// import { FaRegBell } from 'react-icons/fa';
 
 import { Button } from '../buttons/Button';
 
 import { Dropdown } from '../dropdown/Dropdown';
-import { IconButton } from '../buttons/IconButton';
+// import { IconButton } from '../buttons/IconButton';
 
 export type Props = {
   name?: string | null;
@@ -98,10 +98,10 @@ export const Header = ({
             </HStack>
             {isSignedIn && (
               <ButtonGroup>
-                <IconButton
+                {/* <IconButton
                   aria-label="your notifcations"
                   icon={<FaRegBell />}
-                />
+                /> */}
                 <Box>
                   <Dropdown>
                     <NextLink href="/" passHref>

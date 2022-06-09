@@ -51,7 +51,7 @@ export const Banner = (): JSX.Element => {
   return (
     <Box
       bgColor="brand.600"
-      p={12}
+      p={{ base: 8, lg: 10 }}
       borderRadius="lg"
       flex={3}
       display="flex"
@@ -59,18 +59,16 @@ export const Banner = (): JSX.Element => {
       alignItems="start"
       justifyContent="center"
     >
-      <VStack alignItems="start" maxW="70ch" spacing={5}>
-        <Heading as="h1" fontSize={{ base: '3xl', lg: '4xl' }}>
-          Start Learning
-        </Heading>
-        <Text
-          fontSize={{ base: 'xl', lg: '1xl' }}
-          lineHeight="1.8"
-          opacity={0.8}
-        >
-          Become a better developer by finding code smells in real source code
-          and help authors avoid spaghetti.
-        </Text>
+      <VStack alignItems="start" maxW="70ch" spacing={6}>
+        <Box>
+          <Heading as="h1" fontSize={{ base: '3xl', lg: '4xl' }} mb={4}>
+            Start Learning
+          </Heading>
+          <Text fontSize="lg" lineHeight="1.8" opacity={0.8}>
+            Become a better developer by finding code smells in real source code
+            and help authors avoid spaghetti.
+          </Text>
+        </Box>
         <Box mt={4} w="full" pb={2} display={isSignedIn ? 'block' : 'none'}>
           <FormControl mb={2}>
             <Select
@@ -85,11 +83,27 @@ export const Banner = (): JSX.Element => {
             <FormHelperText>Leave it empty to get all languages</FormHelperText>
           </FormControl>
         </Box>
-        <ButtonGroup>
-          <ButtonLink href={`/learn${languagesQueryString}`}>
+        <ButtonGroup
+          flexDir={{ base: 'column', md: 'row' }}
+          w="100%"
+          spacing={{ base: 0, md: 4 }}
+        >
+          <ButtonLink
+            href={`/learn${languagesQueryString}`}
+            _style={{
+              width: '100%',
+              mb: {
+                base: 4,
+                md: 0,
+              },
+            }}
+          >
             Start Learning
           </ButtonLink>
           <ButtonLink
+            _style={{
+              width: '100%',
+            }}
             variant="outline"
             href={`/investigate${languagesQueryString}`}
           >
