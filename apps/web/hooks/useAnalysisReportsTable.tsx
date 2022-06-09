@@ -67,7 +67,7 @@ export function useAnalysisReportsTable(pageSize = 10): Props {
         id: item.analysisId,
         agreedVotesCount: item.agreedVotesCount,
         disagreedVotesCount: item.disagreedVotesAcount,
-        percentage: `${percentageAgreedVotes}%`,
+        percentage: `${percentageAgreedVotes.toFixed(1)}%`,
         languageName: item.programmingLanguage.name,
         smellType: CamelCaseUtil.toReadableString(Smell[item.smell]),
         status: AnalysisStatus[item.status],
