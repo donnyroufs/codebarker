@@ -49,7 +49,7 @@ export class SubmitKataUseCase
 
     this._logger.info(`Before persisting answerId: ${answer.id}`);
 
-    this._kataRepository.saveAsync(kata);
+    await this._kataRepository.saveAsync(kata);
 
     return SubmitKataResponse.from(isCorrect);
   }

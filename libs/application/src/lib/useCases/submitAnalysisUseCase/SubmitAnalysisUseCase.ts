@@ -32,7 +32,7 @@ export class SubmitAnalysisUseCase
     const analysis = this.makeAnalysis(input);
 
     // TODO: Add points
-    this._repo.saveAsync(analysis);
+    await this._repo.saveAsync(analysis);
   }
 
   private validateOrThrow(input: ISubmitAnalysisRequest): void {
