@@ -22,7 +22,25 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
   }
 
   public async getProgrammingLanguagesAsync(): Promise<ProgrammingLanguage[]> {
-    const result = await this._prismaService.programmingLanguage.findMany();
+    const result = await this._prismaService.programmingLanguage.findMany({
+      where: {
+        contents: {
+          some: {},
+        },
+      },
+      include: {
+        contents: {
+          select: {
+            kata: {
+              distinct: 'id',
+              select: {
+                _count: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
     return result.map((lang) =>
       ProgrammingLanguage.make({
