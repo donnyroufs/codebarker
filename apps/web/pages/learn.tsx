@@ -21,7 +21,7 @@ import {
   Skeleton,
   Spinner,
 } from '@chakra-ui/react';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useQuery, useMutation } from 'react-query';
 import { useRouter } from 'next/router';
 
 import { Smell } from '@codebarker/domain';
@@ -43,7 +43,6 @@ import {
 } from '../hooks';
 
 export const LearnPage = (): JSX.Element => {
-  const client = useQueryClient();
   const { isReady } = useRouter();
   const isFirstRender = useIsFirstRender();
   const [excludeFilter, setExcludeFilter] = useLocalStorage(
@@ -57,7 +56,7 @@ export const LearnPage = (): JSX.Element => {
   const { languages } = useLanguagesQueryString();
 
   const [lastClicked, setLastClicked] = useState<number | null>(null);
-  const { isLoading, data, isError, isFetching } = useQuery(
+  const { isLoading, data, isError, isFetching, remove } = useQuery(
     ['startKata', previousKataId, excludeFilter, languages],
     () =>
       startKata({
@@ -73,10 +72,9 @@ export const LearnPage = (): JSX.Element => {
 
   useEffect(() => {
     return () => {
-      // Might become an issue later on since I'm not invalidating the exact query
-      client.clear();
+      remove();
     };
-  }, [client]);
+  }, [remove]);
 
   const mutate = useMutation(submitKata, {
     onSuccess: (res) => {
