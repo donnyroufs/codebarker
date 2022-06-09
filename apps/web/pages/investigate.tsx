@@ -8,6 +8,7 @@ import {
   ButtonGroup,
   Container,
   Flex,
+  Progress,
 } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { useMutation, useQuery } from 'react-query';
@@ -217,7 +218,7 @@ const Investigate = (): JSX.Element => {
                 border="1px solid"
                 borderColor="brand.border"
               >
-                <Text color="brand.text">
+                <Text color="brand.text" mb={4}>
                   {!data && 'There is no analysis report to be reviewed'}
                   {data &&
                     totalVotes === 0 &&
@@ -229,9 +230,10 @@ const Investigate = (): JSX.Element => {
                     </>
                   )}
                 </Text>
+                <Progress value={20} size="xs" colorScheme="purple" />
               </Box>
             </Skeleton>
-            <ButtonGroup spacing={4}>
+            <ButtonGroup spacing={4} pt={4}>
               <Button
                 isLoading={
                   mutate.isLoading &&

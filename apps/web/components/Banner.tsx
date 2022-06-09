@@ -3,9 +3,6 @@ import {
   Heading,
   VStack,
   Text,
-  CircularProgress,
-  Container,
-  CircularProgressLabel,
   ButtonGroup,
   FormHelperText,
   FormControl,
@@ -17,13 +14,9 @@ import { useAuth } from '../hooks';
 import { getAllProgrammingLanguages } from '../pages/api/getAllProgrammingLanguages';
 import { Option } from '../types';
 import { ButtonLink } from './ButtonLink';
-import { LabeledSelect } from './LabeledSelect';
+import { Select } from './Select';
 
-type Props = {
-  progress: number;
-};
-
-export const Banner = ({ progress }: Props): JSX.Element => {
+export const Banner = (): JSX.Element => {
   const { isSignedIn } = useAuth({ required: false });
   const [selectedLanguages, setSelectedLanguages] = useState<Option[]>([]);
   const {
@@ -56,83 +49,68 @@ export const Banner = ({ progress }: Props): JSX.Element => {
   }, [selectedLanguages]);
 
   return (
-    <Box>
-      <Container
-        borderRadius={16}
-        boxShadow="card"
-        bgColor="brand.600"
-        display="flex"
-        justifyContent="space-between"
-        color="brand.text"
-        width="full"
-        p={10}
-        alignItems="center"
-        maxW="container.xl"
-        flexDir={{
-          base: 'column',
-          lg: 'row',
-        }}
-      >
-        <VStack
-          textAlign={{ base: 'center', lg: 'start' }}
-          alignItems={{ base: 'center', lg: 'flex-start' }}
-          maxW="70ch"
-          spacing={5}
-        >
-          <Heading
-            as="h1"
-            textTransform="uppercase"
-            fontSize={{ base: '3xl', lg: '5xl' }}
-          >
-            Start learning
+    <Box
+      bgColor="brand.600"
+      p={{ base: 8, lg: 10 }}
+      borderRadius="lg"
+      flex={3}
+      display="flex"
+      flexDir="column"
+      alignItems="start"
+      justifyContent="center"
+    >
+      <VStack alignItems="start" maxW="70ch" spacing={6}>
+        <Box>
+          <Heading as="h1" fontSize={{ base: '3xl', lg: '4xl' }} mb={4}>
+            Start Learning
           </Heading>
-          <Text fontSize={{ base: 'xl', lg: '1xl' }} lineHeight="1.8">
+          <Text fontSize="lg" lineHeight="1.8" opacity={0.8}>
             Become a better developer by finding code smells in real source code
             and help authors avoid spaghetti.
           </Text>
-          <Box mt={4} w="full" pb={2} display={isSignedIn ? 'block' : 'none'}>
-            <FormControl>
-              <LabeledSelect
-                isLoading={isLoadingLanguages || isFetching}
-                labelName="Languages"
-                name="languages"
-                onChange={(e: any): void => setSelectedLanguages(e)}
-                opts={opts}
-                placeholder="Select languages (optional)"
-                value={selectedLanguages}
-                isMulti={true}
-              />
-              <FormHelperText>
-                Leave it empty to get all languages
-              </FormHelperText>
-            </FormControl>
-          </Box>
-          <ButtonGroup>
-            <ButtonLink href={`/learn${languagesQueryString}`}>
-              Start Learning
-            </ButtonLink>
-            <ButtonLink
-              variant="outline"
-              href={`/investigate${languagesQueryString}`}
-            >
-              Investigate
-            </ButtonLink>
-          </ButtonGroup>
-        </VStack>
-
-        <Box mt={{ base: 6, lg: 0 }}>
-          <CircularProgress
-            value={progress}
-            size="250px"
-            thickness={2}
-            position="relative"
-            color="brand.accent"
-            trackColor="brand.400"
-          >
-            <CircularProgressLabel>{progress}%</CircularProgressLabel>
-          </CircularProgress>
         </Box>
-      </Container>
+        <Box mt={4} w="full" pb={2} display={isSignedIn ? 'block' : 'none'}>
+          <FormControl mb={2}>
+            <Select
+              isLoading={isLoadingLanguages || isFetching}
+              name="languages"
+              onChange={(e: any): void => setSelectedLanguages(e)}
+              opts={opts}
+              placeholder="Select languages (optional)"
+              value={selectedLanguages}
+              isMulti={true}
+            />
+            <FormHelperText>Leave it empty to get all languages</FormHelperText>
+          </FormControl>
+        </Box>
+        <ButtonGroup
+          flexDir={{ base: 'column', md: 'row' }}
+          w="100%"
+          spacing={{ base: 0, md: 4 }}
+        >
+          <ButtonLink
+            href={`/learn${languagesQueryString}`}
+            _style={{
+              width: '100%',
+              mb: {
+                base: 4,
+                md: 0,
+              },
+            }}
+          >
+            Start Learning
+          </ButtonLink>
+          <ButtonLink
+            _style={{
+              width: '100%',
+            }}
+            variant="outline"
+            href={`/investigate${languagesQueryString}`}
+          >
+            Investigate
+          </ButtonLink>
+        </ButtonGroup>
+      </VStack>
     </Box>
   );
 };

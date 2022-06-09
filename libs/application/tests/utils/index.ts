@@ -8,3 +8,4 @@ export * from './VoteOnAnalysisRequestFactory';
 export * from './VoteFactory';
 export * from './UserFactory';
 export * from './AnalysisDetailsFactory';
+export * from './GetMyAnalysisReportsRequestFactory';

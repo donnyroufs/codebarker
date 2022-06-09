@@ -3,3 +3,4 @@ export * from './LineDto';
 export * from './ProgrammingLanguageDto';
 export * from './InvestigateDto';
 export * from './UserDto';
+export * from './AnalysisDetailsDto';
