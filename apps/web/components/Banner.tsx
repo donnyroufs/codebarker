@@ -60,12 +60,8 @@ export const Banner = (): JSX.Element => {
       justifyContent="center"
     >
       <VStack alignItems="start" maxW="70ch" spacing={5}>
-        <Heading
-          as="h1"
-          textTransform="uppercase"
-          fontSize={{ base: '3xl', lg: '4xl' }}
-        >
-          Start learning
+        <Heading as="h1" fontSize={{ base: '3xl', lg: '4xl' }}>
+          Start Learning
         </Heading>
         <Text
           fontSize={{ base: 'xl', lg: '1xl' }}
@@ -76,7 +72,7 @@ export const Banner = (): JSX.Element => {
           and help authors avoid spaghetti.
         </Text>
         <Box mt={4} w="full" pb={2} display={isSignedIn ? 'block' : 'none'}>
-          <FormControl>
+          <FormControl mb={2}>
             <Select
               isLoading={isLoadingLanguages || isFetching}
               name="languages"
