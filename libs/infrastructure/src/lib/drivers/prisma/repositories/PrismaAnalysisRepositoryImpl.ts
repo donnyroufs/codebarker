@@ -8,6 +8,7 @@ import {
   AnalysisDetails,
   AnalysisStatus,
   IAnalysisRepository,
+  PaginatedAnalysisDetails,
 } from '@codebarker/domain';
 
 import { PrismaService } from '../PrismaService';
@@ -25,6 +26,41 @@ export class PrismaAnalysisRepositoryImpl implements IAnalysisRepository {
   ) {
     this._prismaService = prismaService;
     this._logger = logger;
+  }
+
+  public async getPaginatedAnalysisDetailsForUserAsync(
+    userId: string,
+    offset: number,
+    amount: number
+  ): Promise<PaginatedAnalysisDetails> {
+    const count = await this._prismaService.analysis.count({
+      where: {
+        userId,
+      },
+    });
+
+    const result = await this._prismaService.analysis.findMany({
+      where: {
+        userId,
+      },
+      skip: offset * amount,
+      take: amount,
+      include: {
+        content: {
+          include: {
+            programmingLanguage: true,
+          },
+        },
+        user: true,
+        votes: true,
+      },
+    });
+
+    return {
+      details: result.map(AnalysisDetailsMapper.toDomain),
+      hasMore: this.hasMore(result.length, amount, offset, count),
+      count,
+    };
   }
 
   // TODO: Integration test whether it excludes the user resources
@@ -202,6 +238,22 @@ export class PrismaAnalysisRepositoryImpl implements IAnalysisRepository {
         },
       })
       .catch((err) => console.log(err));
+  }
+
+  private hasMore(
+    fetchedCount: number,
+    amountToFetch: number,
+    offset: number,
+    totalCount: number
+  ): boolean {
+    if (fetchedCount < amountToFetch) return false;
+    if (this.getTotalFetched(offset, amountToFetch) >= totalCount) return false;
+
+    return true;
+  }
+
+  private getTotalFetched(offset: number, amountToFetch: number): number {
+    return (offset + 1) * amountToFetch;
   }
 
   public generateId(): string {

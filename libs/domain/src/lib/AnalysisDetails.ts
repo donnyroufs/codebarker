@@ -3,6 +3,7 @@ import { AnalysisDetailsValidator } from './AnalysisDetailsValidator';
 import { AnalysisStatus } from './AnalysisStatus';
 
 import { Content } from './Content';
+import { IPaginate } from './IPaginate';
 import { ProgrammingLanguage } from './ProgrammingLanguage';
 import { Smell } from './Smell';
 import { User } from './User';
@@ -51,3 +52,7 @@ export class AnalysisDetails extends ValueObject {
       .andThen(() => new AnalysisDetails(props));
   }
 }
+
+export type PaginatedAnalysisDetails = IPaginate & {
+  details: AnalysisDetails[];
+};

@@ -15,6 +15,7 @@ export * from './Input';
 export * from './ErrorMessage';
 export * from './codeHighLighter';
 export * from './AsyncInfo';
+export * from './Table';
 
 // Page Components
 export * from './analyse';

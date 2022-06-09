@@ -6,3 +6,4 @@ export * from './useLocalStorage';
 export * from './useIsFirstRender';
 export * from './useInfectedLineNumbers';
 export * from './useLanguagesQueryString';
+export * from './useAnalysisReportsTable';

@@ -42,7 +42,7 @@ export class Analysis extends BaseEntity<AnalysisProps> {
   public readonly status: AnalysisStatus = AnalysisStatus.Pending;
   public readonly votes: Vote[] = [];
 
-  private constructor(props: AnalysisProps) {
+  public constructor(props: AnalysisProps) {
     super(props);
 
     this.id = props.id;
