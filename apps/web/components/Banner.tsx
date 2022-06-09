@@ -80,7 +80,9 @@ export const Banner = (): JSX.Element => {
               value={selectedLanguages}
               isMulti={true}
             />
-            <FormHelperText>Leave it empty to get all languages</FormHelperText>
+            <FormHelperText>
+              Only shows languages that have smells
+            </FormHelperText>
           </FormControl>
         </Box>
         <ButtonGroup
