@@ -215,7 +215,8 @@ export const Table = ({
       >
         <Box>
           <Text fontSize="sm">
-            Page <b>{currentPageIndex + 1}</b> of <b>{pageOptions.length}</b>
+            Page <b>{isLoaded ? currentPageIndex + 1 : 0}</b> of{' '}
+            <b>{isLoaded ? pageOptions.length : 0}</b>
           </Text>
         </Box>
         <Flex>
