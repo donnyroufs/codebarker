@@ -15,4 +15,4 @@ db-new:
 	yarn db:seed
 
 cloc:
-	cloc --exclude-dir=node_modules,dist --exclude-lang=JavaScript,JSON . 
+	cloc --exclude-dir=node_modules,dist --exclude-lang=JavaScript,JSON,HTML . 
