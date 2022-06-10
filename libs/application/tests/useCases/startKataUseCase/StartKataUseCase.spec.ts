@@ -181,7 +181,7 @@ describe('start kata', () => {
     );
   });
 
-  test('checks if it has more than one kata if not it excludes the previousId', async () => {
+  test('excludes the previous id when there one language selected', async () => {
     const prevKataId = 'prevKataId';
 
     const request: IStartKataRequest = {
@@ -207,6 +207,60 @@ describe('start kata', () => {
       request.languages
     );
   });
+
+  test('does not exclude the previous kata id when there are multiple language filters', async () => {
+    const prevKataId = 'prevKataId';
+
+    const request: IStartKataRequest = {
+      userId: 'userId',
+      excludeCompletedKatas: false,
+      previousKataId: prevKataId,
+      languages: ['typescript', 'csharp'],
+    };
+
+    const kataId = 'kataId';
+    const kata = KataFactory.make({ id: kataId });
+
+    mockedRepo.countByLanguages.mockResolvedValueOnce(0);
+    mockedRepo.getAsync.mockResolvedValueOnce(kata);
+
+    await sut.execute(request);
+
+    expect(mockedRepo.getAsync).toHaveBeenCalledWith(
+      request.userId,
+      request.excludeCompletedKatas,
+      request.previousKataId,
+      request.languages
+    );
+  });
+
+  test('does not exclude the previous id when the language filter is all', async () => {
+    const prevKataId = 'prevKataId';
+
+    const request: IStartKataRequest = {
+      userId: 'userId',
+      excludeCompletedKatas: false,
+      previousKataId: prevKataId,
+      languages: ['all'],
+    };
+
+    const kataId = 'kataId';
+    const kata = KataFactory.make({ id: kataId });
+
+    mockedRepo.countByLanguages.mockResolvedValueOnce(0);
+    mockedRepo.getAsync.mockResolvedValueOnce(kata);
+
+    await sut.execute(request);
+
+    expect(mockedRepo.getAsync).toHaveBeenCalledWith(
+      request.userId,
+      request.excludeCompletedKatas,
+      request.previousKataId,
+      []
+    );
+  });
+
+  test.todo('all');
 });
 
 function inputData(): any[] {

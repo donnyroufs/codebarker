@@ -39,6 +39,9 @@ export class StartKataUseCase
   private async shouldIncludePreviousKataId(
     input: IStartKataRequest
   ): Promise<boolean> {
+    if (input.languages.length > 1 || input.languages.at(0) === 'all')
+      return true;
+
     const count = await this._kataRepository.countByLanguages(input.languages);
     return count > 1;
   }
