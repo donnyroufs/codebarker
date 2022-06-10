@@ -59,7 +59,7 @@ export function Index(): JSX.Element {
           <Box as="footer" mt="auto" opacity={0.6}>
             <Divider my={8} borderColor="brand.border" height="2px" />
             <Text lineHeight={1.7} opacity={0.8} fontSize="lg" mt="auto">
-              The app is not yet production ready.
+              v0.0.1
             </Text>
           </Box>
         </Box>
