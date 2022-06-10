@@ -3,10 +3,26 @@
 
 // TODO: Create script that syncs current smells to persistence
 export enum Smell {
-  DataClump = 0,
+  LongMethod = 0,
+  LargeClass,
+  PrimitiveObsession,
   LongParameterList,
-  DataClass,
+  DataClump,
+  RefusedBequest,
+  SwitchStatements,
+  TemporaryField,
+  DivergentChange,
+  ParallelInheritanceHierarchies,
   ShotgunSurgery,
   Comments,
+  DuplicateCode,
+  DataClass,
+  DeadCode,
+  LazyClass,
+  SpeculativeGenerality,
   FeatureEnvy,
+  InappropiateIntimacy,
+  IncompleteLibraryClass,
+  MessageChains,
+  MiddleMan,
 }
