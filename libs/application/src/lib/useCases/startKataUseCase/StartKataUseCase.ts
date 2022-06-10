@@ -31,13 +31,16 @@ export class StartKataUseCase
 
     const kata = await this.getKataOrThrowAsync(input);
 
-    // Might need to define static options in the entity
-    // becuase users could techincally cheat by reloading
-    // the kata a couple times and checking which smell
-    // didnt get removed.
     const options = this.getOptions(kata);
 
     return StartKataResponse.from(kata, options);
+  }
+
+  private async shouldIncludePreviousKataId(
+    input: IStartKataRequest
+  ): Promise<boolean> {
+    const count = await this._kataRepository.countByLanguages(input.languages);
+    return count > 1;
   }
 
   private getOptions(kata: Kata): Smell[] {
@@ -76,7 +79,9 @@ export class StartKataUseCase
     const kata = await this._kataRepository.getAsync(
       input.userId,
       input.excludeCompletedKatas,
-      input.previousKataId,
+      (await this.shouldIncludePreviousKataId(input))
+        ? input.previousKataId
+        : undefined,
       langs
     );
 

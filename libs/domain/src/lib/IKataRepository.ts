@@ -16,6 +16,7 @@ export interface IKataRepository {
   getProgrammingLanguageByExtAsync(
     ext: string
   ): NullOrAsync<ProgrammingLanguage>;
+  countByLanguages(languages: string[]): Promise<number>;
   generateId(): string;
 }
 

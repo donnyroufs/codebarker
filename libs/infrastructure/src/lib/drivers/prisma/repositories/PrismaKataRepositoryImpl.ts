@@ -21,6 +21,18 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
     this._logger = logger;
   }
 
+  public async countByLanguages(languages: string[]): Promise<number> {
+    return this._prismaService.kata.count({
+      where: {
+        content: {
+          programmingLanguageName: {
+            in: languages,
+          },
+        },
+      },
+    });
+  }
+
   public async getProgrammingLanguagesAsync(): Promise<ProgrammingLanguage[]> {
     const result = await this._prismaService.programmingLanguage.findMany({
       where: {
