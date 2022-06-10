@@ -1,0 +1,19 @@
+import db from 'db'
+
+async function createUser(id, firstName, lastName, email, age, country) {
+  try {
+    await db.users.create({
+      data: {
+        id,
+        firstName,
+        lastName,
+        email,
+        age,
+        country
+      }
+    })
+    return true
+  } catch(err) {
+    return false
+  }
+}

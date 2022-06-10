@@ -14,4 +14,4 @@ async function main(run: boolean): Promise<void> {
   await prisma.$transaction(queries).catch(console.error);
 }
 
-main(false);
+main(true);
