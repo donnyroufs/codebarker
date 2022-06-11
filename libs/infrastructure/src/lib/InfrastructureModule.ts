@@ -18,7 +18,7 @@ import { PrismaAnalysisRepositoryImpl } from './drivers/prisma/repositories/Pris
 export class InfrastructureModule extends ContainerModule {
   public constructor() {
     super((bind) => {
-      const isDev = process.env.NODE_ENV === 'development';
+      const isProd = process.env.NODE_ENV === 'production';
 
       bind(PrismaService).toSelf().inSingletonScope();
       bind<IKataRepository>(KataRepositoryToken)
@@ -29,7 +29,7 @@ export class InfrastructureModule extends ContainerModule {
         .inSingletonScope();
 
       bind(LoggerToken)
-        .to(isDev ? DevelopmentLoggerImpl : LoggerLogTailImpl)
+        .to(isProd ? LoggerLogTailImpl : DevelopmentLoggerImpl)
         .inSingletonScope();
 
       bind(GithubApiToken).to(GithubApi).inSingletonScope();
