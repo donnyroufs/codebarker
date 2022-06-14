@@ -37,7 +37,11 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
     const result = await this._prismaService.programmingLanguage.findMany({
       where: {
         contents: {
-          some: {},
+          some: {
+            kata: {
+              some: {},
+            },
+          },
         },
       },
       include: {
