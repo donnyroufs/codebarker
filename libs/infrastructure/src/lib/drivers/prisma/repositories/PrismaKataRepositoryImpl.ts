@@ -7,6 +7,7 @@ import { cast, isNull, NullOrAsync } from '@codebarker/shared';
 
 import { PrismaService } from '../PrismaService';
 import { KataMapper } from '../mappers/KataMapper';
+import { shuffle } from 'lodash';
 
 @injectable()
 export class PrismaKataRepositoryImpl implements IKataRepository {
@@ -85,6 +86,7 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
 
   // TODO: Abstract filters
   // TODO: Write an integration test against the filters
+  // TODO: Perhaps I should let the use-case handle making it random -- so instead return X amount
   public async getAsync(
     userId: string,
     excludeFinishedCases?: boolean,
@@ -125,7 +127,7 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
         },
       };
 
-    const result = await this._prismaService.kata.findFirst({
+    const result = await this._prismaService.kata.findMany({
       where: {
         ...excludePreviousKata,
         ...filterQuery,
@@ -140,16 +142,19 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
           },
         },
       },
+      take: 5,
       orderBy: {
         id: Math.random() > 0.5 ? 'asc' : 'desc',
       },
     });
 
-    if (isNull(result)) {
+    if (isNull(result) || result.length === 0) {
       return null;
     }
 
-    return KataMapper.toDomain(result);
+    const shuffled = shuffle(result);
+
+    return KataMapper.toDomain(shuffled.at(0)!);
   }
 
   public async getByIdAsync(id: string): NullOrAsync<Kata> {
