@@ -1,7 +1,7 @@
 import { ExcludeMethods, IEntity } from '@codebarker/shared';
 
 import { AnswerValidator } from './AnswerValidator';
-import { Smell } from './Smell';
+import { Smell } from '../Smell';
 
 export class Answer implements IEntity {
   public readonly id: string;

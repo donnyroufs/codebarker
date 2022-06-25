@@ -1,6 +1,6 @@
 import { ExcludeMethods, IEntity } from '@codebarker/shared';
 
-import { Smell } from './Smell';
+import { Smell } from '../Smell';
 import { SolutionValidator } from './SolutionValidator';
 
 export class Solution implements IEntity {

@@ -2,11 +2,11 @@ import { ValueObject } from '@codebarker/shared';
 import { AnalysisDetailsValidator } from './AnalysisDetailsValidator';
 import { AnalysisStatus } from './AnalysisStatus';
 
-import { Content } from './Content';
-import { IPaginate } from './IPaginate';
-import { ProgrammingLanguage } from './ProgrammingLanguage';
-import { Smell } from './Smell';
-import { User } from './User';
+import { Content } from '../Content';
+import { IPaginate } from '../IPaginate';
+import { ProgrammingLanguage } from '../ProgrammingLanguage';
+import { Smell } from '../Smell';
+import { User } from './user/User';
 
 export type AnalysisDetailsProps = {
   readonly analysisId: string;

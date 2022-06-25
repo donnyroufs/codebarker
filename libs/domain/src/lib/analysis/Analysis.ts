@@ -4,11 +4,11 @@ import { AnalysisStatus } from './AnalysisStatus';
 import { AnalysisType } from './AnalysisType';
 import { AnalysisValidator } from './AnalysisValidator';
 import { CannotVoteOnAnalysisException } from './CannotVoteOnAnalysisException';
-import { Content } from './Content';
+import { Content } from '../Content';
 import { HasAlreadyVotedException } from './HasAlreadyVotedException';
 import { OwnersCannotVoteOnTheirOwnAnalysisException } from './OwnersCannotVoteOnTheirOwnAnalysisException';
-import { Smell } from './Smell';
-import { Vote } from './Vote';
+import { Smell } from '../Smell';
+import { Vote } from './vote/Vote';
 
 export type AnalysisProps = {
   readonly id: string;

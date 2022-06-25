@@ -2,10 +2,10 @@ import { Validator } from '@codebarker/shared';
 
 import { AnalysisDetailsProps } from './AnalysisDetails';
 import { AnalysisStatus } from './AnalysisStatus';
-import { Content } from './Content';
-import { ProgrammingLanguage } from './ProgrammingLanguage';
-import { Smell } from './Smell';
-import { User } from './User';
+import { Content } from '../Content';
+import { ProgrammingLanguage } from '../ProgrammingLanguage';
+import { Smell } from '../Smell';
+import { User } from './user/User';
 
 export class AnalysisDetailsValidator extends Validator<AnalysisDetailsProps> {
   protected defineRules(): void {

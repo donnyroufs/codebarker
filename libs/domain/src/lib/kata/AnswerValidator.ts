@@ -1,7 +1,7 @@
 import { Validator } from '@codebarker/shared';
 
 import { AnswerProps } from './Answer';
-import { Smell } from './Smell';
+import { Smell } from '../Smell';
 
 export class AnswerValidator extends Validator<AnswerProps> {
   protected defineRules(): void {

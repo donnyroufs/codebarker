@@ -1,5 +1,5 @@
 import { Validator } from '@codebarker/shared';
-import { Content } from './Content';
+import { Content } from '../Content';
 
 import { KataProps } from './Kata';
 import { Solution } from './Solution';

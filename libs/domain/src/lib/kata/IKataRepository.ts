@@ -1,7 +1,7 @@
 import { NullOrAsync } from '@codebarker/shared';
 
 import { Kata } from './Kata';
-import { ProgrammingLanguage } from './ProgrammingLanguage';
+import { ProgrammingLanguage } from '../ProgrammingLanguage';
 
 export interface IKataRepository {
   getAsync(

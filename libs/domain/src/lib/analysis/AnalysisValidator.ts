@@ -1,8 +1,8 @@
 import { Validator } from '@codebarker/shared';
 
-import { AnalysisProps } from './Analysis';
-import { Content } from './Content';
-import { Smell } from './Smell';
+import { AnalysisProps } from '../analysis/Analysis';
+import { Content } from '../Content';
+import { Smell } from '../Smell';
 
 export class AnalysisValidator extends Validator<AnalysisProps> {
   protected defineRules(): void {

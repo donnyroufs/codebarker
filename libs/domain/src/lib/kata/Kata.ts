@@ -1,9 +1,9 @@
 import { ExcludeMethods, IEntity } from '@codebarker/shared';
 
 import { Answer } from './Answer';
-import { Content } from './Content';
+import { Content } from '../Content';
 import { KataValidator } from './KataValidator';
-import { Smell } from './Smell';
+import { Smell } from '../Smell';
 import { Solution } from './Solution';
 
 export class Kata implements IEntity {
