@@ -1,6 +1,6 @@
 import { Validator } from '@codebarker/shared';
 
-import { AnalysisType } from '../AnalysisType';
+import { AnalysisType } from '../analysis/AnalysisType';
 import { VoteProps } from './Vote';
 
 export class VoteValidator extends Validator<VoteProps> {

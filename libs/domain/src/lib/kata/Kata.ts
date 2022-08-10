@@ -4,7 +4,7 @@ import { Answer } from './Answer';
 import { Content } from '../Content';
 import { KataValidator } from './KataValidator';
 import { Smell } from '../Smell';
-import { Solution } from './Solution';
+import { Solution } from '../solution/Solution';
 
 export class Kata implements IEntity {
   public readonly id: string;

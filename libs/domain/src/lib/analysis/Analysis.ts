@@ -8,7 +8,7 @@ import { Content } from '../Content';
 import { HasAlreadyVotedException } from './HasAlreadyVotedException';
 import { OwnersCannotVoteOnTheirOwnAnalysisException } from './OwnersCannotVoteOnTheirOwnAnalysisException';
 import { Smell } from '../Smell';
-import { Vote } from './vote/Vote';
+import { Vote } from '../vote/Vote';
 
 export type AnalysisProps = {
   readonly id: string;

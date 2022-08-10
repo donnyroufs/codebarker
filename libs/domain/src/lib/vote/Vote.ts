@@ -1,6 +1,6 @@
 import { ExcludeMethods, ValueObject } from '@codebarker/shared';
 
-import { AnalysisType } from '../AnalysisType';
+import { AnalysisType } from '../analysis/AnalysisType';
 import { VoteValidator } from './VoteValidator';
 
 export class Vote extends ValueObject {

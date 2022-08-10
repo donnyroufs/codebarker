@@ -5,6 +5,6 @@ export * from './ProgrammingLanguage';
 export * from './Smell';
 export * from './analysis';
 export * from './kata';
-
-export * from './kata';
-export * from './analysis';
+export * from './solution';
+export * from './user';
+export * from './vote';

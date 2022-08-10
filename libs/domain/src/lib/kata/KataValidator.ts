@@ -2,7 +2,7 @@ import { Validator } from '@codebarker/shared';
 import { Content } from '../Content';
 
 import { KataProps } from './Kata';
-import { Solution } from './Solution';
+import { Solution } from '../solution/Solution';
 
 export class KataValidator extends Validator<KataProps> {
   protected defineRules(): void {

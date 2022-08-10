@@ -6,7 +6,7 @@ import { Content } from '../Content';
 import { IPaginate } from '../IPaginate';
 import { ProgrammingLanguage } from '../ProgrammingLanguage';
 import { Smell } from '../Smell';
-import { User } from './user/User';
+import { User } from '../user/User';
 
 export type AnalysisDetailsProps = {
   readonly analysisId: string;

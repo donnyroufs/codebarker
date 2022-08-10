@@ -5,7 +5,7 @@ import { AnalysisStatus } from './AnalysisStatus';
 import { Content } from '../Content';
 import { ProgrammingLanguage } from '../ProgrammingLanguage';
 import { Smell } from '../Smell';
-import { User } from './user/User';
+import { User } from '../user/User';
 
 export class AnalysisDetailsValidator extends Validator<AnalysisDetailsProps> {
   protected defineRules(): void {
