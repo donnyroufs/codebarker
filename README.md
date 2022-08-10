@@ -29,7 +29,7 @@ An application that allows the user to learn about code smells through community
 ### How to run
 
 - Run docker-compose up -d
-  - Run yarn migrate dev
+  - Run yarn prisma migrate dev
   - Run yarn db:seed
 - Run the app with: "yarn nx run web:serve"
   - Recommended to install nx extension in vscode or webstorm to easily start the app
