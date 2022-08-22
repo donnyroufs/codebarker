@@ -25,7 +25,7 @@ jobs:
       - run: yarn
       - run: npx nx-cloud start-ci-run
       - run: npx nx affected --target=build --parallel --max-parallel=3
-      - run: npx nx affected --target=test --parallel --max-parallel=2
+      - run: ./run-tests.sh
       - run: npx nx-cloud stop-all-agents
   pr:
     runs-on: ubuntu-latest
