@@ -6,6 +6,8 @@
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test",
+    "test:ci": "yarn test && yarn test:integration",
+    "test:integration": "NODE_ENV=test nx run infrastructure:test-integration",
     "prepare": "husky install",
     "gen:tokens": "npx @chakra-ui/cli tokens ./libs/components/src/lib/Theme.ts",
     "db:seed": "ts-node prisma/seeds.ts"
