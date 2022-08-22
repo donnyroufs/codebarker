@@ -155,6 +155,10 @@ describe('prisma kata repository impl', () => {
     });
   });
 
+  describe('get by id async', () => {
+    test.todo('returns kata by given id');
+  });
+
   describe('save async', () => {
     test('saves a new kata', async () => {
       const id = 'id';
