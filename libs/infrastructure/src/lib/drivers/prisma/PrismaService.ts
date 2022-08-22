@@ -32,6 +32,13 @@ export class PrismaService extends PrismaClient {
       });
     }
 
+      execSync(`yarn db:seed`, {
+        env: {
+          ...process.env,
+          DATABASE_URL: url,
+        } as any,
+      });
+
     return new PrismaService(url);
   }
 }

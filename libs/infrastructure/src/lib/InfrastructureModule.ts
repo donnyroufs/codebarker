@@ -21,14 +21,12 @@ export class InfrastructureModule extends ContainerModule {
     super((bind) => {
       const isProd = process.env.NODE_ENV === 'production';
 
+      bind(ConfigService).toSelf().inSingletonScope();
       bind(PrismaService)
-        .toSelf()
-        .inSingletonScope()
-        .onActivation((ctx) => {
-          const configService = ctx.container.get(ConfigService);
-
-          return PrismaService.make(configService);
-        });
+        .toDynamicValue((ctx) => {
+          return PrismaService.make(ctx.container.get(ConfigService));
+        })
+        .inSingletonScope();
 
       bind<IKataRepository>(KataRepositoryToken)
         .to(PrismaKataRepositoryImpl)
