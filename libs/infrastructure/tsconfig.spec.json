@@ -11,10 +11,13 @@
     "**/*.spec.ts",
     "**/*.test.tsx",
     "**/*.spec.tsx",
+    "**/*.integration-spec.ts",
     "**/*.test.js",
     "**/*.spec.js",
     "**/*.test.jsx",
     "**/*.spec.jsx",
     "**/*.d.ts"
-  ]
+,
+"tests/drivers/prisma/repositories/PrismaKataRepositoryImpl.integration-spec.ts"
+]
 }
