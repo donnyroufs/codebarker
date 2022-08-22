@@ -14,13 +14,22 @@ import { LoggerLogTailImpl } from './logger/LoggerLogTailImpl';
 import { DevelopmentLoggerImpl } from './logger/DevelopmentLoggerImpl';
 import { GithubApi } from './githubApi/GithubApi';
 import { PrismaAnalysisRepositoryImpl } from './drivers/prisma/repositories/PrismaAnalysisRepositoryImpl';
+import { ConfigService } from './drivers/prisma/ConfigService';
 
 export class InfrastructureModule extends ContainerModule {
   public constructor() {
     super((bind) => {
       const isProd = process.env.NODE_ENV === 'production';
 
-      bind(PrismaService).toSelf().inSingletonScope();
+      bind(PrismaService)
+        .toSelf()
+        .inSingletonScope()
+        .onActivation((ctx) => {
+          const configService = ctx.container.get(ConfigService);
+
+          return PrismaService.make(configService);
+        });
+
       bind<IKataRepository>(KataRepositoryToken)
         .to(PrismaKataRepositoryImpl)
         .inSingletonScope();
