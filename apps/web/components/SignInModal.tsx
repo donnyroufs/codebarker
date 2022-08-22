@@ -59,7 +59,9 @@ export const SignInModal = ({ isOpen, onClose }: Props): JSX.Element => {
               fontWeight="bold"
               w="full"
               variant="outline"
-              onClick={(): Promise<void> => signIn('github')}
+              onClick={async (): Promise<void> => {
+                await signIn('github');
+              }}
               bgColor="#151329"
               py={6}
               _hover={{
@@ -81,7 +83,9 @@ export const SignInModal = ({ isOpen, onClose }: Props): JSX.Element => {
               w="full"
               py={6}
               variant="outline"
-              onClick={(): Promise<void> => signIn('discord')}
+              onClick={async (): Promise<void> => {
+                await signIn('discord');
+              }}
             >
               Continue with Discord
             </Button>
@@ -97,7 +101,9 @@ export const SignInModal = ({ isOpen, onClose }: Props): JSX.Element => {
               w="full"
               py={6}
               variant="outline"
-              onClick={(): Promise<void> => signIn('google')}
+              onClick={async (): Promise<void> => {
+                await signIn('google');
+              }}
             >
               Continue with Google
             </Button>
