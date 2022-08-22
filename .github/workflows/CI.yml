@@ -44,9 +44,11 @@ jobs:
         with:
           node-version: '16'
       - run: yarn
-      - run: npx nx-cloud start-ci-run
       - run: npx nx affected --target=build --parallel --max-parallel=3
-      - run: ./run-tests.sh
+      - run: npx nx affected --target=test --parallel --max-parallel=2
+      - run: docker-compose up -d
+      - run: npx nx affected --target=test-integration 
+      - run: docker-compose down
       - run: npx nx-cloud stop-all-agents
   agents:
     runs-on: ubuntu-latest
