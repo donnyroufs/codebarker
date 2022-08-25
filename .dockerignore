@@ -1,0 +1,8 @@
+Dockerfile*
+.env
+dist
+.github
+.vscode
+coverage
+.env.local
+yarn-error.log

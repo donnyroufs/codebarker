@@ -1,10 +1,27 @@
 version: "3.6"
 services:
+  test:
+    environment:
+      - DATABASE_URL=mysql://root:root@db:3306/codebarker
+      - NODE_ENV=test
+    container_name: integration
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: test
+    depends_on:
+      db:
+        condition: service_healthy
   db:
     image: mysql
     restart: always
     environment:
       MYSQL_DATABASE: 'codebarker'
       MYSQL_ROOT_PASSWORD: 'root'
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
     ports:
-      - '3309:3306'
+      - 3306:3306
+      
