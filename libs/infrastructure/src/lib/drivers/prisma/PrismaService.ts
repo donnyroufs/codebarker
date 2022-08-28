@@ -30,7 +30,6 @@ export class PrismaService extends PrismaClient {
           DATABASE_URL: url,
         } as any,
       });
-    }
 
       execSync(`yarn db:seed`, {
         env: {
@@ -38,6 +37,8 @@ export class PrismaService extends PrismaClient {
           DATABASE_URL: url,
         } as any,
       });
+    }
+
 
     return new PrismaService(url);
   }
