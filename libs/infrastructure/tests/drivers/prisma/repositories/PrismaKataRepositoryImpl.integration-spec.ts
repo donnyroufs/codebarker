@@ -33,6 +33,23 @@ describe('prisma kata repository impl', () => {
     await prisma.user.deleteMany();
   });
 
+  describe('get programming language by extension', () => {
+    test.each([
+      ['ts', 'typescript'],
+      ['cs', 'csharp'],
+    ])(
+      'returns the programming language for the given extension',
+      async (ext, lang) => {
+        const expectedLanguage = ProgrammingLanguage.make({
+          name: lang,
+          extension: ext,
+        });
+
+        const result = await sut.getProgrammingLanguageByExtAsync(ext);
+
+        expect(result).toEqual(expectedLanguage);
+      }
+    );
   });
 
   describe('count by languages', () => {
