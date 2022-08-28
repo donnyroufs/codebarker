@@ -16,7 +16,10 @@ export class DevelopmentLoggerImpl implements ILogger {
     console.info(msg);
   }
 
-  public error(msg: string): void {
-    console.error(msg);
+  public error(msg: string, ctx: any): void {
+    console.error({
+      msg,
+      ctx,
+    });
   }
 }
