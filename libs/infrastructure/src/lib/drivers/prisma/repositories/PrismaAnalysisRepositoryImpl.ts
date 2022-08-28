@@ -156,8 +156,6 @@ export class PrismaAnalysisRepositoryImpl implements IAnalysisRepository {
     return AnalysisMapper.toDomain(model);
   }
 
-  // TODO: Check if this doesnt delete votes, and adds new votes
-  // TODO: Content is not being saved properly. Lines do not include the actual code
   public async saveAsync(analysis: Analysis): Promise<void> {
     const { content, ...model } = AnalysisMapper.toModel(analysis);
 
