@@ -179,12 +179,9 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
     return KataMapper.toDomain({ ...result, answers: [] });
   }
 
-  // TODO: Test whether this works as expected
-  // TODO: Refactor into transaction
   public async saveAsync(kata: Kata): Promise<void> {
     const { solution, answers, ...model } = KataMapper.toModel(kata);
 
-    // TODO: What about deleting answers that im not including?
     try {
       await this._prismaService.kata.upsert({
         where: {
@@ -253,7 +250,7 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
         },
       });
     } catch (err: any) {
-      this._logger.error(err.message);
+      this._logger.error(err.message, kata);
     }
   }
 
