@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 
-import { Content, Line } from '@codebarker/domain';
+import { Content, Line, ProgrammingLanguage } from '@codebarker/domain';
 import { cast } from '@codebarker/shared';
 
 import { ContentModel } from '../models/ContentModel';
@@ -12,7 +12,10 @@ export class ContentMapper {
       lines: content.lines.map((item: any) =>
         Line.make(item.line, item.content, item.isInfected)
       ),
-      programmingLanguage: content.programmingLanguage,
+      programmingLanguage: ProgrammingLanguage.make({
+        name: content.programmingLanguage.name,
+        extension: content.programmingLanguage.extension,
+      }),
     });
   }
 

@@ -110,6 +110,7 @@ describe('prisma kata repository impl', () => {
 
       expect(result).toBe(2);
     });
+
     test('returns a count of 2 when there is content with the languages TypeScript, Csharp and JavaScript', async () => {
       await sut.saveAsync(
         Kata.make({
@@ -216,6 +217,19 @@ describe('prisma kata repository impl', () => {
         },
       });
       expect(kata.answers).toEqual(confirmation);
+    });
+  });
+
+  describe('get by id async', () => {
+    test('gets kata without answers', async () => {
+      const user = await makeUserAsync(prisma);
+      const createdKata = makeKata(user.id);
+      await sut.saveAsync(createdKata);
+
+      const kata = await sut.getByIdAsync(createdKata.id);
+
+      const createdKataWithoutAnswers = makeKata(user.id, false);
+      expect(kata).toEqual(createdKataWithoutAnswers);
     });
   });
 
