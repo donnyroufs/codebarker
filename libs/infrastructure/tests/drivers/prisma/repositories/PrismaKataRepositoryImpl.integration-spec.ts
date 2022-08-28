@@ -33,11 +33,6 @@ describe('prisma kata repository impl', () => {
     await prisma.user.deleteMany();
   });
 
-  test('generates a random id', () => {
-    const first = sut.generateId();
-    const second = sut.generateId();
-
-    expect(first).not.toBe(second);
   });
 
   describe('count by languages', () => {
