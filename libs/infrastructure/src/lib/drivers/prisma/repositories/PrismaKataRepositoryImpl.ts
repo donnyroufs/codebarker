@@ -1,5 +1,6 @@
 import { v4 } from 'uuid';
 import { injectable, inject } from 'inversify';
+import { shuffle } from 'lodash';
 
 import { IKataRepository, Kata, ProgrammingLanguage } from '@codebarker/domain';
 import { ILogger, LoggerToken } from '@codebarker/application';
@@ -7,7 +8,6 @@ import { cast, isNull, NullOrAsync } from '@codebarker/shared';
 
 import { PrismaService } from '../PrismaService';
 import { KataMapper } from '../mappers/KataMapper';
-import { shuffle } from 'lodash';
 
 @injectable()
 export class PrismaKataRepositoryImpl implements IKataRepository {
