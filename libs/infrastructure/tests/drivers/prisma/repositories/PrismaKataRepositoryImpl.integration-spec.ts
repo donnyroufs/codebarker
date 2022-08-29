@@ -4,18 +4,19 @@ import {
   IKataRepository,
   Kata,
   KataRepositoryToken,
-  Line,
   ProgrammingLanguage,
   Smell,
   Solution,
 } from '@codebarker/domain';
 import { TestingFactory } from '@codebarker/shared';
-import { PrismaClient, User } from '@prisma/client';
 
 import { PrismaService } from '../../../../src/lib/drivers/prisma/PrismaService';
 import { InfrastructureModule } from '../../../../src/lib/InfrastructureModule';
+import { KataBuilder } from '../../../utils/KataBuilder';
 
 describe('prisma kata repository impl', () => {
+  const USER_ID = 'userId';
+  let builder: KataBuilder;
   let sut: IKataRepository;
   let prisma: PrismaService;
 
@@ -24,6 +25,13 @@ describe('prisma kata repository impl', () => {
 
     prisma = container.get(PrismaService);
     sut = container.get<IKataRepository>(KataRepositoryToken);
+    builder = new KataBuilder(sut, USER_ID);
+
+    await prisma.user.create({
+      data: {
+        id: USER_ID,
+      },
+    });
   });
 
   afterEach(async () => {
@@ -83,81 +91,43 @@ describe('prisma kata repository impl', () => {
     });
 
     test('returns a count of 2 when there is content with the languages TypeScript and Csharp', async () => {
-      await sut.saveAsync(
-        Kata.make({
-          id: 'id',
-          answers: [],
-          content: Content.make({
-            lines: [],
-            programmingLanguage: ProgrammingLanguage.make({
-              name: 'typescript',
-              extension: 'ts',
-            }),
-          }),
-          solution: Solution.make({
-            id: 'id',
-            type: Smell.DataClass,
+      await builder.withContent().withSolution().buildAndPersist();
+      await builder
+        .setId('id2')
+        .withContent({
+          lines: [],
+          programmingLanguage: ProgrammingLanguage.make({
+            name: 'csharp',
+            extension: 'cs',
           }),
         })
-      );
-      await sut.saveAsync(
-        Kata.make({
+        .withSolution({
           id: 'id2',
-          answers: [],
-          content: Content.make({
-            lines: [],
-            programmingLanguage: ProgrammingLanguage.make({
-              name: 'csharp',
-              extension: 'cs',
-            }),
-          }),
-          solution: Solution.make({
-            id: 'id2',
-            type: Smell.DataClass,
-          }),
+          type: Smell.DataClass,
         })
-      );
+        .buildAndPersist();
 
       const result = await sut.countByLanguages(['typescript', 'csharp']);
 
       expect(result).toBe(2);
     });
 
-    test('returns a count of 2 when there is content with the languages TypeScript, Csharp and JavaScript', async () => {
-      await sut.saveAsync(
-        Kata.make({
-          id: 'id',
-          answers: [],
-          content: Content.make({
-            lines: [],
-            programmingLanguage: ProgrammingLanguage.make({
-              name: 'typescript',
-              extension: 'ts',
-            }),
-          }),
-          solution: Solution.make({
-            id: 'id',
-            type: Smell.DataClass,
+    test('returns a count of 2 when filtered by the languages TypeScript, Csharp and JavaScript', async () => {
+      await builder.withContent().withSolution().buildAndPersist();
+      await builder
+        .setId('id2')
+        .withContent({
+          lines: [],
+          programmingLanguage: ProgrammingLanguage.make({
+            name: 'csharp',
+            extension: 'cs',
           }),
         })
-      );
-      await sut.saveAsync(
-        Kata.make({
+        .withSolution({
           id: 'id2',
-          answers: [],
-          content: Content.make({
-            lines: [],
-            programmingLanguage: ProgrammingLanguage.make({
-              name: 'csharp',
-              extension: 'cs',
-            }),
-          }),
-          solution: Solution.make({
-            id: 'id2',
-            type: Smell.DataClass,
-          }),
+          type: Smell.DataClass,
         })
-      );
+        .buildAndPersist();
 
       const result = await sut.countByLanguages([
         'typescript',
@@ -171,10 +141,11 @@ describe('prisma kata repository impl', () => {
 
   describe('save async', () => {
     test('saves a new kata', async () => {
-      const user = await makeUserAsync(prisma);
-      const kata = makeKata(user.id);
-
-      await sut.saveAsync(kata);
+      const kata = await builder
+        .withAnswer()
+        .withContent()
+        .withSolution()
+        .buildAndPersist();
 
       const savedKata = await sut.getByIdAsync(kata.id);
       const savedAnswers = await prisma.answer.findMany({
@@ -192,9 +163,11 @@ describe('prisma kata repository impl', () => {
     });
 
     test('previous answers do not get deleted when adding new ones while not including the previous ones', async () => {
-      const user = await makeUserAsync(prisma);
-      const kata = makeKata(user.id);
-      await sut.saveAsync(kata);
+      const kata = await builder
+        .withAnswer()
+        .withContent()
+        .withSolution()
+        .buildAndPersist();
 
       kata.addAnswer(
         Answer.make({
@@ -202,7 +175,7 @@ describe('prisma kata repository impl', () => {
           isCorrect: false,
           kataId: kata.id,
           smell: Smell.DataClass,
-          userId: user.id,
+          userId: USER_ID,
         })
       );
       await sut.saveAsync(kata);
@@ -216,10 +189,16 @@ describe('prisma kata repository impl', () => {
     });
 
     test('do not remove answers when none given', async () => {
-      const user = await makeUserAsync(prisma);
-      const kata = makeKata(user.id, true);
-      await sut.saveAsync(kata);
-      const sameKataWithoutAnswers = makeKata(user.id, false);
+      const kata = await builder
+        .withAnswer()
+        .withContent()
+        .withSolution()
+        .buildAndPersist();
+
+      const sameKataWithoutAnswers = await builder
+        .withContent()
+        .withSolution()
+        .buildAndPersist();
 
       await sut.saveAsync(sameKataWithoutAnswers);
 
@@ -234,13 +213,18 @@ describe('prisma kata repository impl', () => {
 
   describe('get by id async', () => {
     test('gets kata without answers', async () => {
-      const user = await makeUserAsync(prisma);
-      const createdKata = makeKata(user.id);
-      await sut.saveAsync(createdKata);
+      const createdKata = await builder
+        .withAnswer()
+        .withContent()
+        .withSolution()
+        .buildAndPersist();
 
       const kata = await sut.getByIdAsync(createdKata.id);
 
-      const createdKataWithoutAnswers = makeKata(user.id, false);
+      const createdKataWithoutAnswers = await builder
+        .withContent()
+        .withSolution()
+        .buildAndPersist();
       expect(kata).toEqual(createdKataWithoutAnswers);
     });
   });
@@ -249,49 +233,3 @@ describe('prisma kata repository impl', () => {
     await prisma.$disconnect();
   });
 });
-
-function makeKata(userId: string, withAnswers = true): Kata {
-  const id = 'id';
-  const line = Line.make(1, 'my first line', false);
-  const lineTwo = Line.make(2, 'my second line', true);
-  const content = Content.make({
-    lines: [line, lineTwo],
-    programmingLanguage: ProgrammingLanguage.make({
-      name: 'typescript',
-      extension: 'ts',
-    }),
-  });
-
-  const answers: Answer[] = [];
-
-  if (withAnswers) {
-    const answer = Answer.make({
-      id: 'answerId',
-      isCorrect: false,
-      kataId: id,
-      smell: Smell.Comments,
-      userId,
-    });
-    answers.push(answer);
-  }
-
-  const solution = Solution.make({
-    id: 'id',
-    type: Smell.DataClass,
-  });
-
-  return Kata.make({
-    id,
-    answers,
-    content,
-    solution,
-  });
-}
-
-function makeUserAsync(prisma: PrismaClient): Promise<User> {
-  return prisma.user.create({
-    data: {
-      id: 'userId',
-    },
-  });
-}
