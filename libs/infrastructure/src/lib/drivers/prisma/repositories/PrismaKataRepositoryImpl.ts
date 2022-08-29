@@ -250,7 +250,7 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
         },
       });
     } catch (err: any) {
-      this._logger.error(err.message, kata);
+      this._logger.error(err.message, { kata });
     }
   }
 

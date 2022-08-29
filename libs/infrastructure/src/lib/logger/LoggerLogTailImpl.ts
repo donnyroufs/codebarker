@@ -19,7 +19,7 @@ export class LoggerLogTailImpl implements ILogger {
     this._logTail.info(msg);
   }
 
-  public error(msg: string, ctx: any): void {
-    this._logTail.error(msg, ctx);
+  public error(msg: string, ctx: Record<string, unknown> = {}): void {
+    this._logTail.error(msg, ctx as any);
   }
 }

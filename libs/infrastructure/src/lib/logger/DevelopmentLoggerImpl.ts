@@ -16,7 +16,7 @@ export class DevelopmentLoggerImpl implements ILogger {
     console.info(msg);
   }
 
-  public error(msg: string, ctx: any): void {
+  public error(msg: string, ctx: Record<string, unknown> = {}): void {
     console.error({
       msg,
       ctx,

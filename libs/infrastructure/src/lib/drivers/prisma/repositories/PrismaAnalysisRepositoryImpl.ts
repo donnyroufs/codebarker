@@ -235,7 +235,7 @@ export class PrismaAnalysisRepositoryImpl implements IAnalysisRepository {
           },
         },
       })
-      .catch((err) => console.log(err));
+      .catch((err) => this._logger.error(err, { analysis }));
   }
 
   private hasMore(
