@@ -1,12 +1,10 @@
 import {
   Answer,
-  Content,
   IKataRepository,
   Kata,
   KataRepositoryToken,
   ProgrammingLanguage,
   Smell,
-  Solution,
 } from '@codebarker/domain';
 import { TestingFactory } from '@codebarker/shared';
 
@@ -60,25 +58,201 @@ describe('prisma kata repository impl', () => {
     );
   });
 
+  describe('get async', () => {
+    test('returns a kata', async () => {
+      // prettier-ignore
+      await builder
+        .withAnswer()
+        .withContent()
+        .withSolution()
+        .buildAndPersist()
+
+      const result = await sut.getAsync(USER_ID);
+
+      expect(result).toBeInstanceOf(Kata);
+    });
+
+    test('returns a different kata than before', async () => {
+      const previousKata = await builder
+        .withAnswer()
+        .withContent()
+        .withSolution()
+        .buildAndPersist();
+
+      // prettier-ignore
+      await builder
+        .setId('id2')
+        .withContent()
+        .withSolution({
+          id: "solutionId2"
+        })
+        .buildAndPersist()
+      // prettier-ignore
+      await builder
+          .setId('id3')
+          .withContent()
+          .withSolution({
+            id: "solutionId3"
+          })
+          .buildAndPersist();
+
+      const result = await sut.getAsync(USER_ID, false, previousKata.id);
+
+      expect(result!.id).not.toBe(previousKata.id);
+    });
+
+    test('returns a kata that has not yet been completed', async () => {
+      await builder
+        .setId('id')
+        .withContent()
+        .withSolution()
+        .asCompleted()
+        .buildAndPersist();
+
+      const expectedKata = await builder
+        .setId('id2')
+        .withContent()
+        .withSolution({
+          id: 'solutionId2',
+        })
+        .buildAndPersist();
+
+      const result = await sut.getAsync(USER_ID, true);
+
+      expect(result!.id).toBe(expectedKata.id);
+    });
+
+    test('returns a kata that is not completed', async () => {
+      const completedKata = await builder
+        .setId('id')
+        .withTypeScriptContent()
+        .withSolution()
+        .asCompleted()
+        .buildAndPersist();
+
+      await builder
+        .setId('id2')
+        .withTypeScriptContent()
+        .withAnswer({
+          id: 'answerId',
+          isCorrect: false,
+        })
+        .withSolution({
+          id: 'solutionId2',
+        })
+        .buildAndPersist();
+
+      await builder
+        .setId('id3')
+        .withTypeScriptContent()
+        .withAnswer({
+          id: 'answerId2',
+          isCorrect: false,
+        })
+        .withSolution({
+          id: 'solutionId3',
+        })
+        .buildAndPersist();
+
+      const result = await sut.getAsync(USER_ID, false, completedKata.id);
+
+      expect(result!.answers.filter((answer) => answer.isCorrect).length).toBe(
+        0
+      );
+    });
+
+    test('returns null when there is no kata available in the current language', async () => {
+      await builder
+        .setId('id')
+        .withTypeScriptContent()
+        .withSolution()
+        .asCompleted()
+        .buildAndPersist();
+
+      const result = await sut.getAsync(USER_ID, false, undefined, ['csharp']);
+
+      expect(result).toBe(null);
+    });
+
+    test('returns a kata when there is a kata for the given language', async () => {
+      const expectedKata = await builder
+        .setId('id')
+        .withTypeScriptContent()
+        .withSolution()
+        .asCompleted()
+        .buildAndPersist();
+
+      const result = await sut.getAsync(USER_ID, false, undefined, [
+        'typescript',
+      ]);
+
+      expect(result).not.toBe(null);
+      expect(result!.id).toBe(expectedKata.id);
+    });
+
+    test('returns a random kata', async () => {
+      await builder
+        .setId('id')
+        .withTypeScriptContent()
+        .withSolution()
+        .buildAndPersist();
+
+      await builder
+        .setId('id2')
+        .withTypeScriptContent()
+        .withSolution({
+          id: 'solutionId2',
+        })
+        .asCompleted()
+        .buildAndPersist();
+
+      const promises = [...new Array(30)].map(() =>
+        sut.getAsync(USER_ID, false, undefined, ['typescript'])
+      );
+
+      const katas = await Promise.all(promises);
+
+      const seen = katas.reduce(
+        (acc: any, curr: any) => {
+          if (acc[curr.id] === false) {
+            acc[curr.id] = true;
+          }
+
+          return acc;
+        },
+        {
+          id: false,
+          id2: false,
+        }
+      );
+
+      expect(seen.id).toBe(true);
+      expect(seen.id2).toBe(true);
+    });
+  });
+
   describe('count by languages', () => {
     test('returns a count of 1 when there is content with the language TypeScript', async () => {
-      await sut.saveAsync(
-        Kata.make({
-          id: 'id',
-          answers: [],
-          content: Content.make({
-            lines: [],
-            programmingLanguage: ProgrammingLanguage.make({
-              name: 'typescript',
-              extension: 'ts',
-            }),
-          }),
-          solution: Solution.make({
-            id: 'id',
-            type: Smell.DataClass,
-          }),
-        })
-      );
+      // prettier-ignore
+      await builder
+        .setId('id')
+        .withTypeScriptContent()
+        .withSolution()
+        .buildAndPersist();
+
+      await builder
+        .setId('id')
+        .withCSharpContent()
+        .withSolution()
+        .buildAndPersist();
+
+      // prettier-ignore
+      await builder
+        .setId('id')
+        .withContent()
+        .withSolution()
+        .buildAndPersist();
+
       const result = await sut.countByLanguages(['typescript']);
 
       expect(result).toBe(1);
@@ -91,7 +265,12 @@ describe('prisma kata repository impl', () => {
     });
 
     test('returns a count of 2 when there is content with the languages TypeScript and Csharp', async () => {
-      await builder.withContent().withSolution().buildAndPersist();
+      // prettier-ignore
+      await builder
+        .withContent()
+        .withSolution()
+        .buildAndPersist();
+
       await builder
         .setId('id2')
         .withContent({

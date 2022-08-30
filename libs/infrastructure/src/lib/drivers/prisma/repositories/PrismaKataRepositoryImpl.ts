@@ -84,9 +84,6 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
     });
   }
 
-  // TODO: Abstract filters
-  // TODO: Write an integration test against the filters
-  // TODO: Perhaps I should let the use-case handle making it random -- so instead return X amount
   public async getAsync(
     userId: string,
     excludeFinishedCases?: boolean,
