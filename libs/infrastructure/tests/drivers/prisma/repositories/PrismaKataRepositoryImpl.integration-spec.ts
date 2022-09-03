@@ -11,9 +11,11 @@ import { TestingFactory } from '@codebarker/shared';
 import { PrismaService } from '../../../../src/lib/drivers/prisma/PrismaService';
 import { InfrastructureModule } from '../../../../src/lib/InfrastructureModule';
 import { KataBuilder } from '../../../utils/KataBuilder';
+import { UserBuilder } from '../../../utils/UserBuilder';
+
 
 describe('prisma kata repository impl', () => {
-  const USER_ID = 'userId';
+  let userBuilder: UserBuilder
   let builder: KataBuilder;
   let sut: IKataRepository;
   let prisma: PrismaService;
@@ -23,20 +25,16 @@ describe('prisma kata repository impl', () => {
 
     prisma = container.get(PrismaService);
     sut = container.get<IKataRepository>(KataRepositoryToken);
-    builder = new KataBuilder(sut, USER_ID);
+    builder = new KataBuilder(sut, UserBuilder.USER_ID);
+    userBuilder = new UserBuilder(prisma)
 
-    await prisma.user.create({
-      data: {
-        id: USER_ID,
-      },
-    });
+    await userBuilder.buildAndPersist()
   });
 
   afterEach(async () => {
     await prisma.answer.deleteMany();
     await prisma.content.deleteMany();
     await prisma.kata.deleteMany();
-    await prisma.user.deleteMany();
   });
 
   describe('get programming language by extension', () => {
@@ -67,7 +65,7 @@ describe('prisma kata repository impl', () => {
         .withSolution()
         .buildAndPersist()
 
-      const result = await sut.getAsync(USER_ID);
+      const result = await sut.getAsync(UserBuilder.USER_ID);
 
       expect(result).toBeInstanceOf(Kata);
     });
@@ -96,7 +94,7 @@ describe('prisma kata repository impl', () => {
           })
           .buildAndPersist();
 
-      const result = await sut.getAsync(USER_ID, false, previousKata.id);
+      const result = await sut.getAsync(UserBuilder.USER_ID, false, previousKata.id);
 
       expect(result!.id).not.toBe(previousKata.id);
     });
@@ -117,7 +115,7 @@ describe('prisma kata repository impl', () => {
         })
         .buildAndPersist();
 
-      const result = await sut.getAsync(USER_ID, true);
+      const result = await sut.getAsync(UserBuilder.USER_ID, true);
 
       expect(result!.id).toBe(expectedKata.id);
     });
@@ -154,7 +152,7 @@ describe('prisma kata repository impl', () => {
         })
         .buildAndPersist();
 
-      const result = await sut.getAsync(USER_ID, false, completedKata.id);
+      const result = await sut.getAsync(UserBuilder.USER_ID, false, completedKata.id);
 
       expect(result!.answers.filter((answer) => answer.isCorrect).length).toBe(
         0
@@ -169,7 +167,7 @@ describe('prisma kata repository impl', () => {
         .asCompleted()
         .buildAndPersist();
 
-      const result = await sut.getAsync(USER_ID, false, undefined, ['csharp']);
+      const result = await sut.getAsync(UserBuilder.USER_ID, false, undefined, ['csharp']);
 
       expect(result).toBe(null);
     });
@@ -182,7 +180,7 @@ describe('prisma kata repository impl', () => {
         .asCompleted()
         .buildAndPersist();
 
-      const result = await sut.getAsync(USER_ID, false, undefined, [
+      const result = await sut.getAsync(UserBuilder.USER_ID, false, undefined, [
         'typescript',
       ]);
 
@@ -207,7 +205,7 @@ describe('prisma kata repository impl', () => {
         .buildAndPersist();
 
       const promises = [...new Array(30)].map(() =>
-        sut.getAsync(USER_ID, false, undefined, ['typescript'])
+        sut.getAsync(UserBuilder.USER_ID, false, undefined, ['typescript'])
       );
 
       const katas = await Promise.all(promises);
@@ -354,7 +352,7 @@ describe('prisma kata repository impl', () => {
           isCorrect: false,
           kataId: kata.id,
           smell: Smell.DataClass,
-          userId: USER_ID,
+          userId: UserBuilder.USER_ID,
         })
       );
       await sut.saveAsync(kata);
@@ -409,6 +407,7 @@ describe('prisma kata repository impl', () => {
   });
 
   afterAll(async () => {
+    await prisma.user.deleteMany()
     await prisma.$disconnect();
   });
 });

@@ -4,10 +4,10 @@ import { UserRole } from './UserRole';
 import { UserValidator } from './UserValidator';
 
 export type UserProps = {
-  readonly id: string;
-  readonly name: string;
-  readonly email: string;
-  readonly role: UserRole;
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
 };
 
 export class User extends BaseEntity<UserProps> {

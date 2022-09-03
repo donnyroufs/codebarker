@@ -1,4 +1,4 @@
-import { BaseEntity } from '@codebarker/shared';
+import { BaseEntity, ExcludeMethods } from '@codebarker/shared';
 
 import { AnalysisStatus } from './AnalysisStatus';
 import { AnalysisType } from './AnalysisType';
@@ -11,17 +11,17 @@ import { Smell } from '../Smell';
 import { Vote } from '../vote/Vote';
 
 export type AnalysisProps = {
-  readonly id: string;
-  readonly smell: Smell;
-  readonly reason: string;
-  readonly userId: string;
-  readonly repositoryName: string;
-  readonly author: string;
-  readonly fileDir: string;
-  readonly sha?: string;
-  readonly content: Content;
-  readonly status?: AnalysisStatus;
-  readonly votes?: Vote[];
+  id: string;
+  smell: Smell;
+  reason: string;
+  userId: string;
+  repositoryName: string;
+  author: string;
+  fileDir: string;
+  sha?: string;
+  content: Content;
+  status?: AnalysisStatus;
+  votes?: Vote[];
 };
 
 export class Analysis extends BaseEntity<AnalysisProps> {

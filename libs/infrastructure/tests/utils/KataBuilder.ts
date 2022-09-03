@@ -17,7 +17,7 @@ export class KataBuilder {
    * Static userId provided by the test suite,
    * its not part of Kata.
    */
-  private readonly userId;
+  private readonly _userId;
 
   private readonly _repo: IKataRepository;
   private _id: Kata['id'] = 'id';
@@ -27,7 +27,7 @@ export class KataBuilder {
 
   public constructor(repo: IKataRepository, userId: string) {
     this._repo = repo;
-    this.userId = userId;
+    this._userId = userId;
   }
 
   public setId(id: Kata['id']): this {
@@ -97,7 +97,7 @@ export class KataBuilder {
         isCorrect: true,
         kataId: this._id,
         smell: Smell.Comments,
-        userId: this.userId,
+        userId: this._userId,
       })
     );
 
@@ -110,7 +110,7 @@ export class KataBuilder {
       isCorrect: false,
       kataId: this._id,
       smell: Smell.Comments,
-      userId: this.userId,
+      userId: this._userId,
     });
 
     this._answers.push({ ...answer, ...props });
