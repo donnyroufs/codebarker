@@ -1,6 +1,12 @@
 import {
   Analysis,
+  AnalysisAuthor,
+  AnalysisFileDir,
+  AnalysisId,
   AnalysisProps,
+  AnalysisReason,
+  AnalysisRepositoryName,
+  AnalysisSha,
   AnalysisType,
   Content,
   ContentProps,
@@ -8,6 +14,7 @@ import {
   Line,
   ProgrammingLanguage,
   Smell,
+  UserId,
   Vote,
   VoteProps,
 } from '@codebarker/domain';
@@ -35,8 +42,16 @@ export class AnalysisBuilder {
   }
 
   public withContent(props?: Partial<ContentProps>): this {
-    const line = Line.make(1, 'my first line', false);
-    const lineTwo = Line.make(2, 'my second line', true);
+    const line = Line.make({
+      lineNumber: 1,
+      value: 'my first line',
+      isInfected: false,
+    });
+    const lineTwo = Line.make({
+      lineNumber: 2,
+      value: 'my second line',
+      isInfected: true,
+    });
     const content = Content.make({
       lines: [line, lineTwo],
       programmingLanguage: ProgrammingLanguage.make({
@@ -45,14 +60,18 @@ export class AnalysisBuilder {
       }),
     });
 
-    this._props.content = Content.make({ ...content, ...props });
+    this._props.content = Content.make({
+      lines: content.lines,
+      programmingLanguage: content.programmingLanguage,
+      ...props,
+    });
     return this;
   }
 
   public withVote(props: Partial<VoteProps> = {}): this {
     const vote = Vote.make({
       type: AnalysisType.Disagree,
-      userId: this._userId,
+      userId: UserId.make({ value: this._userId }),
       ...props,
     });
 
@@ -75,10 +94,10 @@ export class AnalysisBuilder {
 
   private initializeProps(): void {
     this._props = {
-      id: 'analysisId',
-      author: 'author',
-      fileDir: 'fileDir',
-      reason: 'reason',
+      id: AnalysisId.make({ value: 'analysisId'}),
+      author: AnalysisAuthor.make({ value: 'author'}),
+      fileDir: AnalysisFileDir.make({ value: 'fileDir'}),
+      reason: AnalysisReason.make({ value: 'reason'}),
       content: Content.make({
         lines: [],
         programmingLanguage: ProgrammingLanguage.make({
@@ -87,10 +106,10 @@ export class AnalysisBuilder {
         }),
       }),
       votes: [],
-      repositoryName: 'repositoryName',
+      repositoryName: AnalysisRepositoryName.make({ value:'repositoryName'}),
       smell: Smell.Comments,
-      userId: this._userId,
-      sha: 'sha',
+      userId: UserId.make({ value: this._userId}),
+      sha: AnalysisSha.make({ value: 'sha'}),
     };
   }
 }

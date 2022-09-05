@@ -54,9 +54,13 @@ export class KataFactory {
     highlightedLines: number[]
   ): any {
     return Content.make({
-      lines: code
-        .split('\n')
-        .map((line, i) => Line.make(i, line, highlightedLines.includes(i - 1))),
+      lines: code.split('\n').map((line, i) =>
+        Line.make({
+          lineNumber: i,
+          value: line,
+          isInfected: highlightedLines.includes(i - 1),
+        })
+      ),
       programmingLanguage: P.make({
         extension,
         name,

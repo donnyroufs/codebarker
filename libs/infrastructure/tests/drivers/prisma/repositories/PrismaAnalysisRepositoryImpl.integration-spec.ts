@@ -1,4 +1,5 @@
 import {
+  AnalysisId,
   AnalysisRepositoryToken,
   AnalysisType,
   IAnalysisRepository,
@@ -37,9 +38,18 @@ describe('prisma analysis repository impl', () => {
 
   describe('get paginated analysis details for user async', () => {
     test('has more analyses when there are more left', async () => {
-      await builder.setId('1').withContent().buildAndPersist();
-      await builder.setId('2').withContent().buildAndPersist();
-      await builder.setId('3').withContent().buildAndPersist();
+      await builder
+        .setId(AnalysisId.make({ value: '1' }))
+        .withContent()
+        .buildAndPersist();
+      await builder
+        .setId(AnalysisId.make({ value: '2' }))
+        .withContent()
+        .buildAndPersist();
+      await builder
+        .setId(AnalysisId.make({ value: '3' }))
+        .withContent()
+        .buildAndPersist();
 
       const result = await sut.getPaginatedAnalysisDetailsForUserAsync(
         USER_ID,
@@ -51,9 +61,18 @@ describe('prisma analysis repository impl', () => {
     });
 
     test('has no more left when we queried all of them', async () => {
-      await builder.setId('1').withContent().buildAndPersist();
-      await builder.setId('2').withContent().buildAndPersist();
-      await builder.setId('3').withContent().buildAndPersist();
+      await builder
+        .setId(AnalysisId.make({ value: '1' }))
+        .withContent()
+        .buildAndPersist();
+      await builder
+        .setId(AnalysisId.make({ value: '2' }))
+        .withContent()
+        .buildAndPersist();
+      await builder
+        .setId(AnalysisId.make({ value: '3' }))
+        .withContent()
+        .buildAndPersist();
 
       const result = await sut.getPaginatedAnalysisDetailsForUserAsync(
         USER_ID,
@@ -65,9 +84,18 @@ describe('prisma analysis repository impl', () => {
     });
 
     test('returns exactly 3 analyses when asking for 4 but there are only 3 available', async () => {
-      await builder.setId('1').withContent().buildAndPersist();
-      await builder.setId('2').withContent().buildAndPersist();
-      await builder.setId('3').withContent().buildAndPersist();
+      await builder
+        .setId(AnalysisId.make({ value: '1' }))
+        .withContent()
+        .buildAndPersist();
+      await builder
+        .setId(AnalysisId.make({ value: '2' }))
+        .withContent()
+        .buildAndPersist();
+      await builder
+        .setId(AnalysisId.make({ value: '3' }))
+        .withContent()
+        .buildAndPersist();
 
       const result = await sut.getPaginatedAnalysisDetailsForUserAsync(
         USER_ID,
@@ -79,10 +107,22 @@ describe('prisma analysis repository impl', () => {
     });
 
     test('skips the first two when amount is two and cursor is one', async () => {
-      await builder.setId('1').withContent().buildAndPersist();
-      await builder.setId('2').withContent().buildAndPersist();
-      await builder.setId('3').withContent().buildAndPersist();
-      await builder.setId('4').withContent().buildAndPersist();
+      await builder
+        .setId(AnalysisId.make({ value: '1' }))
+        .withContent()
+        .buildAndPersist();
+      await builder
+        .setId(AnalysisId.make({ value: '2' }))
+        .withContent()
+        .buildAndPersist();
+      await builder
+        .setId(AnalysisId.make({ value: '3' }))
+        .withContent()
+        .buildAndPersist();
+      await builder
+        .setId(AnalysisId.make({ value: '4' }))
+        .withContent()
+        .buildAndPersist();
 
       const result = await sut.getPaginatedAnalysisDetailsForUserAsync(
         USER_ID,
@@ -102,20 +142,26 @@ describe('prisma analysis repository impl', () => {
   describe('get by id async', () => {
     test('returns the specific analysis', async () => {
       const analysis = await builder
-        .setId('analysisId')
+        .setId(AnalysisId.make({ value: 'analysisId' }))
         .withContent()
         .buildAndPersist();
-      await builder.setId('analysisId2').withContent().buildAndPersist();
+      await builder
+        .setId(AnalysisId.make({ value: 'analysisId2' }))
+        .withContent()
+        .buildAndPersist();
 
       const result = await sut.getByIdAsync(analysis.id);
 
-      expect(result!.id).toBe(analysis.id);
+      expect(result!.id.value).toBe(analysis.id.value);
     });
   });
 
   describe('save async', () => {
     test('persists an analysis', async () => {
-      const analysis = builder.setId('analysisId').withContent().build();
+      const analysis = builder
+        .setId(AnalysisId.make({ value: 'analysisId' }))
+        .withContent()
+        .build();
 
       await sut.saveAsync(analysis);
 
@@ -137,7 +183,7 @@ describe('prisma analysis repository impl', () => {
         .buildAndPersist();
 
       const analysis = await builder
-        .setId('analysisId')
+        .setId(AnalysisId.make({ value: 'analysisId' }))
         .withContent()
         .withVote({ userId: UserBuilder.USER_ID })
         .withVote({ userId: user.id })
@@ -158,7 +204,7 @@ describe('prisma analysis repository impl', () => {
         })
       );
 
-      expect(analysis.votes.at(0)!.userId).toBe(userThree.id);
+      expect(analysis.votes.at(0)!.userId.value).toBe(userThree.id.value);
 
       await sut.saveAsync(analysis);
 

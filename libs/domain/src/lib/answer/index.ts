@@ -1,2 +1,2 @@
 export * from './Answer';
-export * from './AnswerValidator';
+export * from './valueObjects';

@@ -1,43 +1,47 @@
 import { ValueObject } from '../src/lib/ValueObject';
 
-class Color extends ValueObject {
-  public value = 'green';
-  public hex = '#999999';
+const enum Scale {
+  Celsius = 1,
+  Fahrenheit,
+  Kelvin,
+}
 
-  public constructor(hex?: string) {
-    super();
-    this.hex = hex ?? this.hex;
+type Props = {
+  value: number;
+  scale: Scale;
+};
+
+class Temperature extends ValueObject<Props> {
+  public static make(props: Props): Temperature {
+    return new Temperature(props);
   }
 }
 
-class ColorV2 extends ValueObject {
-  public value = 'green';
-  public hex = '#999999';
-
-  public getValue(): string {
-    return this.value;
-  }
-}
 
 describe('value object', () => {
-  test('returns true when equal in value', () => {
-    const a = new Color();
-    const b = new Color();
+  test('they are the same', () => {
+    const temp = Temperature.make({
+      scale: Scale.Celsius,
+      value: 10,
+    });
+    const tempTwo = Temperature.make({
+      scale: Scale.Celsius,
+      value: 10,
+    });
 
-    expect(a.equals(b)).toBe(true);
+    expect(temp.equals(tempTwo)).toBe(true);
   });
 
-  test('returns false when not equal in value', () => {
-    const a = new Color('#aaaaaaa');
-    const b = new Color();
+  test('they are not the same', () => {
+    const temp = Temperature.make({
+      scale: Scale.Celsius,
+      value: 12,
+    });
+    const tempTwo = Temperature.make({
+      scale: Scale.Celsius,
+      value: 10,
+    });
 
-    expect(a.equals(b)).toBe(false);
-  });
-
-  test('it ignores methods', () => {
-    const a = new Color();
-    const b = new ColorV2();
-
-    expect(a.equals(b)).toBe(true);
+    expect(temp.equals(tempTwo)).toBe(false);
   });
 });

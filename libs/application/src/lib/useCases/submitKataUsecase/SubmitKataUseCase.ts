@@ -5,7 +5,9 @@ import {
   Answer,
   IKataRepository,
   Kata,
+  KataId,
   KataRepositoryToken,
+  UserId,
 } from '@codebarker/domain';
 
 import { ISubmitKataRequest } from './ISubmitKataRequest';
@@ -38,8 +40,8 @@ export class SubmitKataUseCase
 
     const answer = Answer.make({
       id: this._kataRepository.generateId(),
-      kataId: input.kataId,
-      userId: input.userId,
+      kataId: KataId.make({ value: input.kataId }),
+      userId: UserId.make({ value: input.userId }),
       smell: input.smell,
       isCorrect,
     });
@@ -47,7 +49,10 @@ export class SubmitKataUseCase
     // TODO: Do not count rank points when already given an answer
     kata.addAnswer(answer);
 
-    this._logger.info(`Before persisting answerId: ${answer.id}`);
+    this._logger.info(`Saving answer`, {
+      kataId: kata.id,
+      answer,
+    });
 
     await this._kataRepository.saveAsync(kata);
 
@@ -55,7 +60,9 @@ export class SubmitKataUseCase
   }
 
   private async getKataOrThrowAsync(input: ISubmitKataRequest): Promise<Kata> {
-    const kata = await this._kataRepository.getByIdAsync(input.kataId);
+    const kata = await this._kataRepository.getByIdAsync(
+      KataId.make({ value: input.kataId })
+    );
 
     if (isNull(kata)) {
       throw new UnknownKataException(input.kataId);

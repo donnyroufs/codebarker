@@ -3,9 +3,16 @@ import { Container } from 'inversify';
 
 import { TestingFactory, ValidationException } from '@codebarker/shared';
 import {
+  AnalysisAuthor,
+  AnalysisFileDir,
+  AnalysisId,
+  AnalysisReason,
+  AnalysisRepositoryName,
   AnalysisRepositoryToken,
+  AnalysisSha,
   IAnalysisRepository,
   Line,
+  UserId,
 } from '@codebarker/domain';
 
 import {
@@ -51,18 +58,24 @@ describe('submit analysis', () => {
     const request = SubmitAnalysisRequestFactory.make({
       sha: 'sha',
     });
-    const { content, ...rest } = request;
+
     const analysis = AnalysisFactory.make({
-      ...rest,
-      id,
+      id: AnalysisId.make({ value: id }),
+      author: AnalysisAuthor.make({ value: request.author }),
+      fileDir: AnalysisFileDir.make({ value: request.fileDir }),
+      reason: AnalysisReason.make({ value: request.reason }),
+      repositoryName: AnalysisRepositoryName.make({
+        value: request.repositoryName,
+      }),
+      sha: AnalysisSha.make({ value: request.sha! }),
+      smell: request.smell,
+      userId: UserId.make({ value: request.userId }),
       content: ContentFactory.make({
-        lines: content.lines.map((line) =>
-          Line.make(line.lineNumber, line.value, line.isInfected)
-        ),
+        lines: request.content.lines.map(Line.make),
       }),
     });
 
-    mockedRepo.generateId.mockReturnValue(id);
+    mockedRepo.generateId.mockReturnValue(AnalysisId.make({ value: id }));
     await sut.execute(request);
 
     expect(mockedRepo.saveAsync).toHaveBeenCalledWith(analysis);

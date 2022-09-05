@@ -1,28 +1,50 @@
-import { ExcludeMethods, IEntity } from '@codebarker/shared';
+import { Guard, IEntity } from '@codebarker/shared';
 
-import { AnswerValidator } from './AnswerValidator';
+import { KataId } from '../kata';
 import { Smell } from '../Smell';
+import { UserId } from '../user';
+
+import { AnswerId } from './valueObjects';
+
+export type AnswerProps = {
+  id: AnswerId;
+  kataId: KataId;
+  userId: UserId;
+  smell: Smell;
+  isCorrect: boolean;
+};
 
 export class Answer implements IEntity {
-  public readonly id: string;
-  public readonly kataId: string;
-  public readonly userId: string;
-  public readonly smell: Smell;
-  public readonly isCorrect: boolean;
+  private _props: AnswerProps;
+
+  public get id(): AnswerId {
+    return this._props.id;
+  }
+
+  public get kataId(): KataId {
+    return this._props.kataId;
+  }
+
+  public get userId(): UserId {
+    return this._props.userId;
+  }
+
+  public get smell(): Smell {
+    return this._props.smell;
+  }
+
+  public get isCorrect(): boolean {
+    return this._props.isCorrect;
+  }
 
   private constructor(props: AnswerProps) {
-    this.id = props.id;
-    this.kataId = props.kataId;
-    this.smell = props.smell;
-    this.userId = props.userId;
-    this.isCorrect = props.isCorrect;
+    this._props = props;
   }
 
   public static make(props: AnswerProps): Answer {
-    return new AnswerValidator(props)
-      .validateOrThrow()
-      .andThen(() => new Answer(props));
+    Guard.Is.boolean<AnswerProps>('isCorrect', props.isCorrect);
+    Guard.Is.enum<AnswerProps, Smell>('smell', props.smell, Smell);
+
+    return new Answer(props);
   }
 }
-
-export type AnswerProps = ExcludeMethods<Answer>;

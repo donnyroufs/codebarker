@@ -2,9 +2,15 @@ import { v4 } from 'uuid';
 import { injectable, inject } from 'inversify';
 import { shuffle } from 'lodash';
 
-import { IKataRepository, Kata, ProgrammingLanguage } from '@codebarker/domain';
+import {
+  IKataRepository,
+  Kata,
+  KataId,
+  ProgrammingLanguage,
+  UserId,
+} from '@codebarker/domain';
 import { ILogger, LoggerToken } from '@codebarker/application';
-import { cast, isNull, NullOrAsync } from '@codebarker/shared';
+import { cast, EntityId, isNull, NullOrAsync } from '@codebarker/shared';
 
 import { PrismaService } from '../PrismaService';
 import { KataMapper } from '../mappers/KataMapper';
@@ -85,16 +91,16 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
   }
 
   public async getAsync(
-    userId: string,
+    userId: UserId,
     excludeFinishedCases?: boolean,
-    previousKataId?: string,
+    previousKataId?: KataId,
     languages?: string[]
   ): NullOrAsync<Kata> {
     const filterQuery = excludeFinishedCases
       ? {
           answers: {
             none: {
-              userId,
+              userId: userId.value,
               isCorrect: true,
             },
           },
@@ -106,7 +112,7 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
           NOT: {
             answers: {
               some: {
-                kataId: previousKataId,
+                kataId: previousKataId.value,
               },
             },
           },
@@ -154,10 +160,10 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
     return KataMapper.toDomain(shuffled.at(0)!);
   }
 
-  public async getByIdAsync(id: string): NullOrAsync<Kata> {
+  public async getByIdAsync(id: KataId): NullOrAsync<Kata> {
     const result = await this._prismaService.kata.findFirst({
       where: {
-        id,
+        id: id.value,
       },
       include: {
         solution: true,
@@ -182,7 +188,7 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
     try {
       await this._prismaService.kata.upsert({
         where: {
-          id: kata.id,
+          id: kata.id.value,
         },
         create: {
           id: model.id,
@@ -217,16 +223,11 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
             },
           },
           answers: {
-            connectOrCreate: answers.map((answer) => ({
-              where: {
-                id: answer.id,
-              },
-              create: {
-                id: answer.id,
-                smell: answer.smell,
-                userId: answer.userId,
-                isCorrect: answer.isCorrect,
-              },
+            create: answers.map((answer) => ({
+              id: answer.id,
+              smell: answer.smell,
+              userId: answer.userId,
+              isCorrect: answer.isCorrect,
             })),
           },
         },
@@ -251,7 +252,7 @@ export class PrismaKataRepositoryImpl implements IKataRepository {
     }
   }
 
-  public generateId(): string {
-    return v4();
+  public generateId(): EntityId {
+    return EntityId.make({ value: v4() });
   }
 }

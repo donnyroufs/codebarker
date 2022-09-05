@@ -2,7 +2,7 @@ import * as crypto from 'crypto';
 import { injectable } from 'inversify';
 
 import { InfraException } from '../../InfraException';
-import { ConfigService } from './ConfigService';
+import { ConfigService } from '../../ConfigService';
 import { PrismaUrlParser } from './PrismaUrlParser';
 
 @injectable()

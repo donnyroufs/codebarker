@@ -1,9 +1,6 @@
-import { NullOrAsync } from '@codebarker/shared';
-
 import { User } from './User';
+import { IRead } from '../IRead';
 
-export interface IUserRepository {
-  getByIdAsync(id: string): NullOrAsync<User>;
-}
+export interface IUserRepository extends IRead<User> {}
 
 export const UserRepositoryToken = Symbol('User Repository');

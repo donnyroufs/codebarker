@@ -1,11 +1,12 @@
-import { NullOrAsync } from '@codebarker/shared';
+import { EntityId, NullOrAsync } from '@codebarker/shared';
 
 import { Analysis } from './Analysis';
 import { AnalysisDetails, PaginatedAnalysisDetails } from './AnalysisDetails';
+import { AnalysisId } from './valueObjects';
 
 export interface IAnalysisRepository {
   saveAsync(analysis: Analysis): Promise<void>;
-  getByIdAsync(id: string): NullOrAsync<Analysis>;
+  getByIdAsync(id: AnalysisId): NullOrAsync<Analysis>;
   getDetailsAsync(id: string): NullOrAsync<AnalysisDetails>;
   getPaginatedAnalysisDetailsForUserAsync(
     userId: string,
@@ -16,7 +17,7 @@ export interface IAnalysisRepository {
     userId: string,
     languages: string[]
   ): NullOrAsync<AnalysisDetails>;
-  generateId(): string;
+  generateId(): EntityId;
 }
 
 export const AnalysisRepositoryToken = Symbol('Analysis Repository');

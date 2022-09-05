@@ -2,7 +2,6 @@ import { inject, injectable } from 'inversify';
 
 import { ILogger, LoggerToken } from '@codebarker/application';
 import { cast, NullOr } from '@codebarker/shared';
-import { InfraException } from '../../InfraException';
 
 type Configuration = {
   NODE_ENV: 'development' | 'production' | 'staging' | 'test';

@@ -3,7 +3,7 @@ import { injectable } from 'inversify';
 import * as path from 'path';
 import { execSync } from 'child_process';
 
-import { ConfigService } from './ConfigService';
+import { ConfigService } from '../../ConfigService';
 import { PrismaUrlFactory } from './PrismaUrlFactory';
 
 @injectable()

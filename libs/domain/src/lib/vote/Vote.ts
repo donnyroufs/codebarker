@@ -1,24 +1,23 @@
-import { ExcludeMethods, ValueObject } from '@codebarker/shared';
+import { ValueObject } from '@codebarker/shared';
 
 import { AnalysisType } from '../analysis/AnalysisType';
-import { VoteValidator } from './VoteValidator';
+import { UserId } from '../user';
 
-export class Vote extends ValueObject {
-  public readonly type: AnalysisType;
-  public readonly userId: string;
+export type VoteProps = {
+  type: AnalysisType;
+  userId: UserId;
+};
 
-  private constructor(props: VoteProps) {
-    super();
+export class Vote extends ValueObject<VoteProps> {
+  public get type(): AnalysisType {
+    return this.props.type;
+  }
 
-    this.type = props.type;
-    this.userId = props.userId;
+  public get userId(): UserId {
+    return this.props.userId;
   }
 
   public static make(props: VoteProps): Vote {
-    return new VoteValidator(props)
-      .validateOrThrow()
-      .andThen(() => new Vote(props));
+    return new Vote(props);
   }
 }
-
-export type VoteProps = ExcludeMethods<Vote>;

@@ -4,15 +4,16 @@ import { shuffle } from 'lodash';
 import {
   IKataRepository,
   Kata,
+  KataId,
   KataRepositoryToken,
   Smell,
+  UserId,
 } from '@codebarker/domain';
-import { isNull, IUseCase } from '@codebarker/shared';
+import { Guard, isNull, IUseCase } from '@codebarker/shared';
 
 import { IStartKataRequest } from './IStartKataRequest';
 import { NoAvailableKatasException } from './NoAvailableKatasException';
 import { StartKataResponse } from './StartKataResponse';
-import { StartKataRequestValidator } from './StartKataRequestValidator';
 
 @injectable()
 export class StartKataUseCase
@@ -75,15 +76,16 @@ export class StartKataUseCase
   }
 
   private async getKataOrThrowAsync(input: IStartKataRequest): Promise<Kata> {
-    this.validateOrThrow(input);
-
     const langs = input.languages.at(0) === 'all' ? [] : input.languages;
+    const includePreviousKataId =
+      (await this.shouldIncludePreviousKataId(input)) &&
+      input.previousKataId !== undefined;
 
     const kata = await this._kataRepository.getAsync(
-      input.userId,
+      UserId.make({ value: input.userId }),
       input.excludeCompletedKatas,
-      (await this.shouldIncludePreviousKataId(input))
-        ? input.previousKataId
+      includePreviousKataId
+        ? KataId.make({ value: input.previousKataId! })
         : undefined,
       langs
     );
@@ -95,7 +97,9 @@ export class StartKataUseCase
     return kata;
   }
 
+  // TODO: Refactor
   private validateOrThrow(input: IStartKataRequest): void {
-    new StartKataRequestValidator(input).validateOrThrow();
+    // TODO: Validate exclude completed katas and languages
+    Guard.Is.boolean('excludeCompletedKatas', input.excludeCompletedKatas);
   }
 }

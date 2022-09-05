@@ -3,10 +3,16 @@ import { inject, injectable } from 'inversify';
 import { IUseCase } from '@codebarker/shared';
 import {
   Analysis,
+  AnalysisAuthor,
+  AnalysisFileDir,
+  AnalysisReason,
+  AnalysisRepositoryName,
   AnalysisRepositoryToken,
+  AnalysisSha,
   Content,
   IAnalysisRepository,
   Line,
+  UserId,
 } from '@codebarker/domain';
 
 import { ISubmitAnalysisRequest } from './ISubmitAnalysisRequest';
@@ -41,22 +47,23 @@ export class SubmitAnalysisUseCase
 
   private makeAnalysis(input: ISubmitAnalysisRequest): Analysis {
     return Analysis.make({
-      author: input.author,
+      id: this._repo.generateId(),
+      author: AnalysisAuthor.make({ value: input.author }),
       content: Content.make({
-        lines: input.content.lines.map((line) =>
-          Line.make(line.lineNumber, line.value, line.isInfected)
-        ),
+        lines: input.content.lines.map(Line.make),
         programmingLanguage: ProgrammingLanguageDto.toDomain(
           input.content.programmingLanguage
         ),
       }),
-      fileDir: input.fileDir,
-      id: this._repo.generateId(),
-      reason: input.reason,
-      repositoryName: input.repositoryName,
+      fileDir: AnalysisFileDir.make({ value: input.fileDir }),
+      reason: AnalysisReason.make({ value: input.reason }),
+      repositoryName: AnalysisRepositoryName.make({
+        value: input.repositoryName,
+      }),
       smell: input.smell,
-      userId: input.userId,
-      sha: input.sha,
+      userId: UserId.make({ value: input.userId }),
+      sha: input.sha ? AnalysisSha.make({ value: input.sha }) : undefined,
+      votes: [],
     });
   }
 }

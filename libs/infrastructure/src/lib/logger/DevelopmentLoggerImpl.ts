@@ -12,14 +12,18 @@ export class DevelopmentLoggerImpl implements ILogger {
     console.warn(msg);
   }
 
-  public info(msg: string): void {
-    console.info(msg);
+  public info(msg: string, ctx: Record<string, unknown> = {}): void {
+    console.info(this.createEntry(msg, ctx));
   }
 
   public error(msg: string, ctx: Record<string, unknown> = {}): void {
-    console.error({
+    console.error(this.createEntry(msg, ctx));
+  }
+
+  private createEntry(msg: string, ctx: unknown): any {
+    return {
       msg,
-      ctx,
-    });
+      ctx: JSON.stringify(ctx, null, 2),
+    };
   }
 }

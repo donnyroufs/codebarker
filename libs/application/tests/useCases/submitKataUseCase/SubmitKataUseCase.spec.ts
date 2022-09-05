@@ -2,9 +2,12 @@ import { Container } from 'inversify';
 import { mock, mockReset } from 'jest-mock-extended';
 
 import {
+  AnswerId,
   IKataRepository,
+  KataId,
   KataRepositoryToken,
   Smell,
+  UserId,
 } from '@codebarker/domain';
 import { TestingFactory, ValidationException } from '@codebarker/shared';
 
@@ -34,7 +37,9 @@ describe('Submit kata', () => {
 
   beforeEach(() => {
     mockReset(mockedRepo);
-    mockedRepo.generateId.mockReturnValue('generatedId');
+    mockedRepo.generateId.mockReturnValue(
+      KataId.make({ value: 'generatedId' })
+    );
     sut = container.get(SubmitKataUseCase);
   });
 
@@ -123,9 +128,9 @@ describe('Submit kata', () => {
     });
 
     const answer = AnswerFactory.make({
-      id: 'generatedId',
-      kataId: request.kataId,
-      userId: request.userId,
+      id: AnswerId.make({ value: 'generatedId' }),
+      kataId: KataId.make({ value: request.kataId }),
+      userId: UserId.make({ value: request.userId }),
       isCorrect: true,
     });
 

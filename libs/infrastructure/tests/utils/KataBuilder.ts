@@ -5,11 +5,15 @@ import {
   ContentProps,
   IKataRepository,
   Kata,
+  KataId,
   Line,
   ProgrammingLanguage,
   Smell,
   Solution,
   SolutionProps,
+  AnswerId,
+  UserId,
+  SolutionId,
 } from '@codebarker/domain';
 
 export class KataBuilder {
@@ -20,24 +24,32 @@ export class KataBuilder {
   private readonly _userId;
 
   private readonly _repo: IKataRepository;
-  private _id: Kata['id'] = 'id';
+  private _id: KataId = KataId.make({ value: 'id' });
   private _answers: Answer[] = [];
   private _content?: Content;
   private _solution?: Solution;
 
-  public constructor(repo: IKataRepository, userId: string) {
+  public constructor(repo: IKataRepository, userId: UserId) {
     this._repo = repo;
     this._userId = userId;
   }
 
-  public setId(id: Kata['id']): this {
-    this._id = id;
+  public setId(id: string): this {
+    this._id = KataId.make({ value: id });
     return this;
   }
 
   public withTypeScriptContent(): this {
-    const line = Line.make(1, 'my first line', false);
-    const lineTwo = Line.make(2, 'my second line', true);
+    const line = Line.make({
+      lineNumber: 1,
+      value: 'my first line',
+      isInfected: false,
+    });
+    const lineTwo = Line.make({
+      lineNumber: 2,
+      value: 'my second line',
+      isInfected: true,
+    });
     const content = Content.make({
       lines: [line, lineTwo],
       programmingLanguage: ProgrammingLanguage.make({
@@ -46,13 +58,24 @@ export class KataBuilder {
       }),
     });
 
-    this._content = Content.make({ ...content });
+    this._content = Content.make({
+      lines: content.lines,
+      programmingLanguage: content.programmingLanguage,
+    });
     return this;
   }
 
   public withCSharpContent(): this {
-    const line = Line.make(1, 'my first line', false);
-    const lineTwo = Line.make(2, 'my second line', true);
+    const line = Line.make({
+      lineNumber: 1,
+      value: 'my first line',
+      isInfected: false,
+    });
+    const lineTwo = Line.make({
+      lineNumber: 2,
+      value: 'my second line',
+      isInfected: true,
+    });
     const content = Content.make({
       lines: [line, lineTwo],
       programmingLanguage: ProgrammingLanguage.make({
@@ -61,13 +84,24 @@ export class KataBuilder {
       }),
     });
 
-    this._content = Content.make({ ...content });
+    this._content = Content.make({
+      lines: content.lines,
+      programmingLanguage: content.programmingLanguage,
+    });
     return this;
   }
 
   public withContent(props?: Partial<ContentProps>): KataBuilder {
-    const line = Line.make(1, 'my first line', false);
-    const lineTwo = Line.make(2, 'my second line', true);
+    const line = Line.make({
+      lineNumber: 1,
+      value: 'my first line',
+      isInfected: false,
+    });
+    const lineTwo = Line.make({
+      lineNumber: 2,
+      value: 'my second line',
+      isInfected: true,
+    });
     const content = Content.make({
       lines: [line, lineTwo],
       programmingLanguage: ProgrammingLanguage.make({
@@ -76,13 +110,17 @@ export class KataBuilder {
       }),
     });
 
-    this._content = Content.make({ ...content, ...props });
+    this._content = Content.make({
+      lines: content.lines,
+      programmingLanguage: content.programmingLanguage,
+      ...props,
+    });
     return this;
   }
 
   public withSolution(props?: Partial<SolutionProps>): this {
     this._solution = Solution.make({
-      id: 'id',
+      id: SolutionId.make({ value: 'id' }),
       type: Smell.DataClass,
       ...props,
     });
@@ -93,7 +131,7 @@ export class KataBuilder {
   public asCompleted(): this {
     this._answers.push(
       Answer.make({
-        id: 'completedAnswerId',
+        id: AnswerId.make({ value: 'completedAnswerId' }),
         isCorrect: true,
         kataId: this._id,
         smell: Smell.Comments,
@@ -106,14 +144,15 @@ export class KataBuilder {
 
   public withAnswer(props?: Partial<AnswerProps>): this {
     const answer = Answer.make({
-      id: 'answerId',
+      id: AnswerId.make({ value: 'answerId' }),
       isCorrect: false,
       kataId: this._id,
       smell: Smell.Comments,
       userId: this._userId,
+      ...props,
     });
 
-    this._answers.push({ ...answer, ...props });
+    this._answers.push(answer);
 
     return this;
   }
@@ -147,7 +186,7 @@ export class KataBuilder {
   }
 
   private cleanup(): void {
-    this._id = 'id';
+    this._id = KataId.make({ value: 'id' });
     this._answers = [];
     this._content = undefined;
     this._solution = undefined;

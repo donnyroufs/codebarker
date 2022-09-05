@@ -33,7 +33,8 @@ export class GetFileContentFromGithubUseCase
       input.sha
     );
 
-    return GetFileContentFromGithubResponse.from(content, input);
+    const dto = GetFileContentFromGithubResponse.from(content, input);
+    return dto;
   }
 
   private validateOrThrow(input: IGetFileContentFromGithubRequest): void {

@@ -1,6 +1,7 @@
 import { Container } from 'inversify';
 import { mock, mockReset } from 'jest-mock-extended';
 
+import { toPlainObject } from '@codebarker/testing-utils';
 import { TestingFactory, ValidationException } from '@codebarker/shared';
 import {
   AnalysisRepositoryToken,
@@ -12,6 +13,11 @@ import {
   OwnersCannotVoteOnTheirOwnAnalysisException,
   IKataRepository,
   KataRepositoryToken,
+  KataId,
+  SolutionId,
+  UserId,
+  Analysis,
+  AnalysisId,
 } from '@codebarker/domain';
 
 import {
@@ -52,7 +58,9 @@ describe('vote on analysis', () => {
     mockReset(mockedRepo);
     mockReset(mockedKataRepo);
 
-    mockedKataRepo.generateId.mockReturnValue('some-generated-id');
+    mockedKataRepo.generateId.mockReturnValue(
+      KataId.make({ value: 'some-generated-id' })
+    );
     sut = container.get(VoteOnAnalysisUseCase);
   });
 
@@ -73,7 +81,9 @@ describe('vote on analysis', () => {
     const act = (): Promise<void> => sut.execute(request);
 
     expect(act).rejects.toThrowError(AnalysisDoesNotExistException);
-    expect(mockedRepo.getByIdAsync).toHaveBeenCalledWith(request.id);
+    expect(mockedRepo.getByIdAsync).toHaveBeenCalledWith(
+      AnalysisId.make({ value: request.id })
+    );
   });
 
   test.each([
@@ -94,12 +104,12 @@ describe('vote on analysis', () => {
   });
 
   test('throws an exception when trying to cast a vote when the user has already voted', async () => {
-    const userId = 'myUserId';
+    const userId = UserId.make({ value: 'myUserId' });
     const request = VoteOnAnalysisRequestFactory.make({
-      userId,
+      userId: userId.value,
     });
     const entity = AnalysisFactory.make({
-      userId: 'someUniqueUser',
+      userId: UserId.make({ value: 'someUniqueUser' }),
       status: AnalysisStatus.Pending,
       votes: [
         VoteFactory.make({
@@ -123,80 +133,91 @@ describe('vote on analysis', () => {
       type: AnalysisType.Agree,
     });
     const entity = AnalysisFactory.make({
-      userId: 'someUniqueUser',
+      userId: UserId.make({ value: 'someUniqueUser' }),
       status: AnalysisStatus.Pending,
       votes: [],
     });
+    const vote = VoteFactory.make({
+      type: request.type,
+      userId: UserId.make({ value: request.userId }),
+    });
     const expectedEntity = AnalysisFactory.make({
       ...entity,
-      votes: [
-        VoteFactory.make({
-          type: request.type,
-          userId: request.userId,
-        }),
-      ],
+      userId: UserId.make({ value: 'someUniqueUser' }),
+      votes: [vote],
     });
 
     mockedRepo.getByIdAsync.mockResolvedValueOnce(entity);
 
     await sut.execute(request);
 
-    expect(mockedRepo.saveAsync).toHaveBeenCalledWith(expectedEntity);
+    expect(mockedRepo.saveAsync).toHaveBeenCalledWith({
+      _props: toPlainObject(Analysis, expectedEntity),
+    });
   });
 
   test.each([
-    ['accepted', VoteFactory.make({ userId: '10', type: AnalysisType.Agree })],
+    [
+      'accepted',
+      VoteFactory.make({
+        userId: UserId.make({ value: '10' }),
+        type: AnalysisType.Agree,
+      }),
+    ],
     [
       'declined',
-      VoteFactory.make({ userId: '10', type: AnalysisType.Disagree }),
+      VoteFactory.make({
+        userId: UserId.make({ value: '10' }),
+        type: AnalysisType.Disagree,
+      }),
     ],
   ])(
     'changes status to %s when above given threshold',
     async (_, decidingVote) => {
       const request = VoteOnAnalysisRequestFactory.make({
-        userId: decidingVote.userId,
+        userId: decidingVote.userId.value,
         type: decidingVote.type,
       });
       const votes = [
         VoteFactory.make({
           type: AnalysisType.Agree,
-          userId: '1',
+          userId: UserId.make({ value: '1' }),
         }),
         VoteFactory.make({
           type: AnalysisType.Agree,
-          userId: '2',
+          userId: UserId.make({ value: '2' }),
         }),
         VoteFactory.make({
           type: AnalysisType.Agree,
-          userId: '3',
+          userId: UserId.make({ value: '3' }),
         }),
         VoteFactory.make({
           type: AnalysisType.Agree,
-          userId: '4',
+          userId: UserId.make({ value: '4' }),
         }),
         VoteFactory.make({
           type: AnalysisType.Agree,
-          userId: '5',
+          userId: UserId.make({ value: '5' }),
         }),
         VoteFactory.make({
           type: AnalysisType.Agree,
-          userId: '6',
+          userId: UserId.make({ value: '6' }),
         }),
         VoteFactory.make({
           type: AnalysisType.Agree,
-          userId: '7',
+          userId: UserId.make({ value: '7' }),
         }),
         VoteFactory.make({
           type: AnalysisType.Disagree,
-          userId: '8',
+          userId: UserId.make({ value: '8' }),
         }),
         VoteFactory.make({
           type: AnalysisType.Disagree,
-          userId: '9',
+          userId: UserId.make({ value: '9' }),
         }),
       ];
       const entity = AnalysisFactory.make({
-        userId: 'userId',
+        userId: UserId.make({ value: 'userId' }),
         status: AnalysisStatus.Pending,
         votes: votes,
       });
@@ -210,7 +231,9 @@ describe('vote on analysis', () => {
 
       await sut.execute(request);
 
-      expect(mockedRepo.saveAsync).toHaveBeenCalledWith(expectedEntity);
+      expect(mockedRepo.saveAsync).toHaveBeenCalledWith({
+        _props: toPlainObject(Analysis, expectedEntity),
+      });
     }
   );
 
@@ -221,7 +244,7 @@ describe('vote on analysis', () => {
       type: AnalysisType.Agree,
     });
     const entity = AnalysisFactory.make({
-      userId,
+      userId: UserId.make({ value: userId }),
       status: AnalysisStatus.Pending,
       votes: [],
     });
@@ -244,18 +267,20 @@ describe('vote on analysis', () => {
       type: AnalysisType.Agree,
     });
     const entity = AnalysisFactory.make({
-      userId: 'someUniqueUser',
+      userId: UserId.make({ value: 'someUniqueUser' }),
       status: AnalysisStatus.Pending,
       votes,
     });
-    mockedKataRepo.generateId.mockReturnValue('generated-id');
+    mockedKataRepo.generateId.mockReturnValue(
+      KataId.make({ value: 'generated-id' })
+    );
 
     const kata = KataFactory.make({
-      id: 'generated-id',
+      id: KataId.make({ value: 'generated-id' }),
       content: entity.content,
       answers: [],
       solution: SolutionFactory.make({
-        id: 'generated-id',
+        id: SolutionId.make({ value: 'generated-id' }),
         type: entity.smell,
       }),
     });

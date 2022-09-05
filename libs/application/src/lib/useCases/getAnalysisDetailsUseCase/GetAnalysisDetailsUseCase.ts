@@ -11,7 +11,6 @@ import { IGetAnalysisDetailsRequest } from './IGetAnalysisDetailsRequest';
 import { GetAnalysisDetailsRequestValidator } from './GetAnalysisDetailsRequestValidator';
 import { NoAvailableAnalysisForUserException } from './NoAvailableAnalysisForUserException';
 
-// TODO: Fix tests, since I changed implementation
 @injectable()
 export class GetAnalysisDetailsUseCase
   implements IUseCase<IGetAnalysisDetailsRequest, GetAnalysisDetailsResponse>

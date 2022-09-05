@@ -1,9 +1,16 @@
-import { User, UserProps, UserRole } from '@codebarker/domain';
+import {
+  User,
+  UserEmail,
+  UserId,
+  UserName,
+  UserProps,
+  UserRole,
+} from '@codebarker/domain';
 
 import { PrismaService } from '../../src';
 
 export class UserBuilder {
-  public static USER_ID = 'userId';
+  public static USER_ID = UserId.make({ value: 'userId' });
   private readonly _prisma: PrismaService;
   private _props: Partial<UserProps> = {};
 
@@ -12,27 +19,27 @@ export class UserBuilder {
   }
 
   public setId(id: string): this {
-    this._props.id = id;
+    this._props.id = UserId.make({ value: id });
 
     return this;
   }
 
   public setEmail(email: string): this {
-    this._props.email = email;
+    this._props.email = UserEmail.make(email);
     return this;
   }
 
   public setName(name: string): this {
-    this._props.name = name;
+    this._props.name = UserName.make(name);
     return this;
   }
 
   public build(): User {
     return User.make({
-      id: 'userId',
-      email: 'foo@gmail.com',
-      name: 'foo',
-      role: UserRole.USER,
+      id: UserId.make({ value: 'userId' }),
+      email: UserEmail.make('foo@gmail.com'),
+      name: UserName.make('foo'),
+      role: UserRole.User,
       ...this._props,
     });
   }
@@ -41,12 +48,12 @@ export class UserBuilder {
     const user = this.build();
     await this._prisma.user.upsert({
       where: {
-        id: UserBuilder.USER_ID,
+        id: UserBuilder.USER_ID.value,
       },
       create: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
+        id: user.id.value,
+        name: user.name.value,
+        email: user.email.value,
         role: user.role,
       },
       update: {},
