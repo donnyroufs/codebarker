@@ -20,9 +20,9 @@ export class UserDto {
 
   public static from(user: User): UserDto {
     return new UserDto({
-      email: user.email,
-      id: user.id,
-      name: user.name,
+      email: user.email.value,
+      id: user.id.value,
+      name: user.name.value,
       role: user.role,
     });
   }

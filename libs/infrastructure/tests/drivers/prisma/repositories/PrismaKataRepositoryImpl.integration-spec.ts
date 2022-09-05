@@ -1,21 +1,27 @@
 import {
   Answer,
+  AnswerId,
+  Content,
   IKataRepository,
   Kata,
+  KataId,
   KataRepositoryToken,
   ProgrammingLanguage,
   Smell,
+  Solution,
+  SolutionId,
+  UserId,
 } from '@codebarker/domain';
 import { TestingFactory } from '@codebarker/shared';
 
+import { AnswerMapper } from '../../../../src/lib/drivers/prisma/mappers/AnswerMapper';
 import { PrismaService } from '../../../../src/lib/drivers/prisma/PrismaService';
 import { InfrastructureModule } from '../../../../src/lib/InfrastructureModule';
 import { KataBuilder } from '../../../utils/KataBuilder';
 import { UserBuilder } from '../../../utils/UserBuilder';
 
-
 describe('prisma kata repository impl', () => {
-  let userBuilder: UserBuilder
+  let userBuilder: UserBuilder;
   let builder: KataBuilder;
   let sut: IKataRepository;
   let prisma: PrismaService;
@@ -26,9 +32,9 @@ describe('prisma kata repository impl', () => {
     prisma = container.get(PrismaService);
     sut = container.get<IKataRepository>(KataRepositoryToken);
     builder = new KataBuilder(sut, UserBuilder.USER_ID);
-    userBuilder = new UserBuilder(prisma)
+    userBuilder = new UserBuilder(prisma);
 
-    await userBuilder.buildAndPersist()
+    await userBuilder.buildAndPersist();
   });
 
   afterEach(async () => {
@@ -82,7 +88,7 @@ describe('prisma kata repository impl', () => {
         .setId('id2')
         .withContent()
         .withSolution({
-          id: "solutionId2"
+          id: SolutionId.make({ value: "solutionId2" })
         })
         .buildAndPersist()
       // prettier-ignore
@@ -90,13 +96,17 @@ describe('prisma kata repository impl', () => {
           .setId('id3')
           .withContent()
           .withSolution({
-            id: "solutionId3"
+            id: SolutionId.make({ value: "solutionId3" })
           })
           .buildAndPersist();
 
-      const result = await sut.getAsync(UserBuilder.USER_ID, false, previousKata.id);
+      const result = await sut.getAsync(
+        UserBuilder.USER_ID,
+        false,
+        previousKata.id
+      );
 
-      expect(result!.id).not.toBe(previousKata.id);
+      expect(result!.id).not.toBe(previousKata.id.value);
     });
 
     test('returns a kata that has not yet been completed', async () => {
@@ -111,13 +121,13 @@ describe('prisma kata repository impl', () => {
         .setId('id2')
         .withContent()
         .withSolution({
-          id: 'solutionId2',
+          id: SolutionId.make({ value: 'solutionId2' }),
         })
         .buildAndPersist();
 
       const result = await sut.getAsync(UserBuilder.USER_ID, true);
 
-      expect(result!.id).toBe(expectedKata.id);
+      expect(result!.id.value).toBe(expectedKata.id.value);
     });
 
     test('returns a kata that is not completed', async () => {
@@ -132,11 +142,11 @@ describe('prisma kata repository impl', () => {
         .setId('id2')
         .withTypeScriptContent()
         .withAnswer({
-          id: 'answerId',
+          id: AnswerId.make({ value: 'answerId' }),
           isCorrect: false,
         })
         .withSolution({
-          id: 'solutionId2',
+          id: SolutionId.make({ value: 'solutionId2' }),
         })
         .buildAndPersist();
 
@@ -144,15 +154,19 @@ describe('prisma kata repository impl', () => {
         .setId('id3')
         .withTypeScriptContent()
         .withAnswer({
-          id: 'answerId2',
+          id: AnswerId.make({ value: 'answerId2' }),
           isCorrect: false,
         })
         .withSolution({
-          id: 'solutionId3',
+          id: SolutionId.make({ value: 'solutionId3' }),
         })
         .buildAndPersist();
 
-      const result = await sut.getAsync(UserBuilder.USER_ID, false, completedKata.id);
+      const result = await sut.getAsync(
+        UserBuilder.USER_ID,
+        false,
+        completedKata.id
+      );
 
       expect(result!.answers.filter((answer) => answer.isCorrect).length).toBe(
         0
@@ -167,7 +181,9 @@ describe('prisma kata repository impl', () => {
         .asCompleted()
         .buildAndPersist();
 
-      const result = await sut.getAsync(UserBuilder.USER_ID, false, undefined, ['csharp']);
+      const result = await sut.getAsync(UserBuilder.USER_ID, false, undefined, [
+        'csharp',
+      ]);
 
       expect(result).toBe(null);
     });
@@ -185,7 +201,7 @@ describe('prisma kata repository impl', () => {
       ]);
 
       expect(result).not.toBe(null);
-      expect(result!.id).toBe(expectedKata.id);
+      expect(result!.id.value).toBe(expectedKata.id.value);
     });
 
     test('returns a random kata', async () => {
@@ -199,7 +215,7 @@ describe('prisma kata repository impl', () => {
         .setId('id2')
         .withTypeScriptContent()
         .withSolution({
-          id: 'solutionId2',
+          id: SolutionId.make({ value: 'solutionId2' }),
         })
         .asCompleted()
         .buildAndPersist();
@@ -212,8 +228,8 @@ describe('prisma kata repository impl', () => {
 
       const seen = katas.reduce(
         (acc: any, curr: any) => {
-          if (acc[curr.id] === false) {
-            acc[curr.id] = true;
+          if (acc[curr.id.value] === false) {
+            acc[curr.id.value] = true;
           }
 
           return acc;
@@ -279,7 +295,7 @@ describe('prisma kata repository impl', () => {
           }),
         })
         .withSolution({
-          id: 'id2',
+          id: SolutionId.make({ value: 'id2' }),
           type: Smell.DataClass,
         })
         .buildAndPersist();
@@ -301,7 +317,7 @@ describe('prisma kata repository impl', () => {
           }),
         })
         .withSolution({
-          id: 'id2',
+          id: SolutionId.make({ value: 'id2' }),
           type: Smell.DataClass,
         })
         .buildAndPersist();
@@ -324,18 +340,26 @@ describe('prisma kata repository impl', () => {
         .withSolution()
         .buildAndPersist();
 
+      await sut.saveAsync(kata);
       const savedKata = await sut.getByIdAsync(kata.id);
       const savedAnswers = await prisma.answer.findMany({
         where: {
-          kataId: kata.id,
+          kataId: kata.id.value,
         },
       });
 
-      expect(savedKata).toBeDefined();
       expect(savedKata).toBeInstanceOf(Kata);
-      expect(savedKata!.id).toBe(kata.id);
+      expect(savedKata!.id.value).toBe(kata.id.value);
       expect(savedKata!.content.equals(kata.content));
-      expect(savedAnswers).toEqual(kata.answers);
+      savedAnswers.forEach((a) => {
+        const b = kata.answers.find((x) => x.id.value === a.id)!;
+
+        expect(a.id).toBe(b.id.value);
+        expect(a.isCorrect).toBe(b.isCorrect);
+        expect(a.kataId).toBe(b.kataId.value);
+        expect(a.smell).toBe(b.smell);
+        expect(a.userId).toBe(b.userId.value);
+      });
       expect(savedKata!.solution.type).toBe(kata.solution.type);
     });
 
@@ -348,7 +372,7 @@ describe('prisma kata repository impl', () => {
 
       kata.addAnswer(
         Answer.make({
-          id: 'answerId2',
+          id: AnswerId.make({ value: 'answerId2' }),
           isCorrect: false,
           kataId: kata.id,
           smell: Smell.DataClass,
@@ -359,10 +383,18 @@ describe('prisma kata repository impl', () => {
 
       const confirmation = await prisma.answer.findMany({
         where: {
-          kataId: kata.id,
+          kataId: kata.id.value,
         },
       });
-      expect(confirmation).toEqual(kata.answers);
+      confirmation.forEach((a) => {
+        const b = kata.answers.find((x) => x.id.value === a.id)!;
+
+        expect(a.id).toBe(b.id.value);
+        expect(a.isCorrect).toBe(b.isCorrect);
+        expect(a.kataId).toBe(b.kataId.value);
+        expect(a.smell).toBe(b.smell);
+        expect(a.userId).toBe(b.userId.value);
+      });
     });
 
     test('do not remove answers when none given', async () => {
@@ -381,10 +413,13 @@ describe('prisma kata repository impl', () => {
 
       const confirmation = await prisma.answer.findMany({
         where: {
-          kataId: kata.id,
+          kataId: kata.id.value,
         },
       });
-      expect(kata.answers).toEqual(confirmation);
+
+      const answers = AnswerMapper.toDomainMany(confirmation);
+
+      expect(kata.answers).toEqual(answers);
     });
   });
 
@@ -407,7 +442,7 @@ describe('prisma kata repository impl', () => {
   });
 
   afterAll(async () => {
-    await prisma.user.deleteMany()
+    await prisma.user.deleteMany();
     await prisma.$disconnect();
   });
 });

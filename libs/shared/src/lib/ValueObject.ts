@@ -1,9 +1,16 @@
 import { shallowEqual } from 'shallow-equal-object';
 
-// TODO: Check if it works with arrays as values
-// TODO: Add toJSON method
-export abstract class ValueObject {
-  public equals(valueObject: ValueObject): boolean {
-    return shallowEqual(Object.values(this), Object.values(valueObject));
+export abstract class ValueObject<TProps extends Record<string, unknown>> {
+  protected props: TProps;
+
+  protected constructor(props: TProps) {
+    this.props = props;
+  }
+
+  public equals(valueObject: ValueObject<TProps>): boolean {
+    return shallowEqual(
+      Object.values(this.props),
+      Object.values(valueObject.props)
+    );
   }
 }

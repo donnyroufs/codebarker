@@ -1,22 +1,23 @@
-import { ExcludeMethods, ValueObject } from '@codebarker/shared';
+import { ValueObject } from '@codebarker/shared';
 
 import { Line } from './Line';
 import { ProgrammingLanguage } from './ProgrammingLanguage';
 
-export class Content extends ValueObject {
-  public readonly lines: Line[] = [];
-  public readonly programmingLanguage: ProgrammingLanguage;
+export type ContentProps = {
+  lines: Line[];
+  programmingLanguage: ProgrammingLanguage;
+};
 
-  private constructor(props: ContentProps) {
-    super();
+export class Content extends ValueObject<ContentProps> {
+  public get lines(): Line[] {
+    return this.props.lines;
+  }
 
-    this.lines = props.lines;
-    this.programmingLanguage = props.programmingLanguage;
+  public get programmingLanguage(): ProgrammingLanguage {
+    return this.props.programmingLanguage;
   }
 
   public static make(props: ContentProps): Content {
     return new Content(props);
   }
 }
-
-export type ContentProps = ExcludeMethods<Content>;

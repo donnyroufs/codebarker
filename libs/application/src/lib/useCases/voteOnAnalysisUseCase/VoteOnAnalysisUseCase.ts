@@ -4,6 +4,7 @@ import { isNull } from 'lodash';
 import { IUseCase } from '@codebarker/shared';
 import {
   Analysis,
+  AnalysisId,
   AnalysisRepositoryToken,
   AnalysisStatus,
   IAnalysisRepository,
@@ -11,6 +12,7 @@ import {
   Kata,
   KataRepositoryToken,
   Solution,
+  UserId,
   Vote,
 } from '@codebarker/domain';
 
@@ -36,16 +38,18 @@ export class VoteOnAnalysisUseCase
   public async execute(input: IVoteOnAnalysisRequest): Promise<void> {
     this.validateOrThrow(input);
 
-    const analysis = await this._analysisRepository.getByIdAsync(input.id);
+    const id = AnalysisId.make({ value: input.id });
+
+    const analysis = await this._analysisRepository.getByIdAsync(id);
 
     if (isNull(analysis)) {
-      throw new AnalysisDoesNotExistException(input.id);
+      throw new AnalysisDoesNotExistException(id.value);
     }
 
     analysis.addVote(
       Vote.make({
         type: input.type,
-        userId: input.userId,
+        userId: UserId.make({ value: input.userId }),
       })
     );
 

@@ -1,8 +1,15 @@
 import {
   Analysis,
+  AnalysisAuthor,
+  AnalysisFileDir,
+  AnalysisId,
   AnalysisProps,
+  AnalysisReason,
+  AnalysisRepositoryName,
+  AnalysisSha,
   AnalysisStatus,
   Smell,
+  UserId,
 } from '@codebarker/domain';
 
 import { ContentFactory } from './ContentFactory';
@@ -10,15 +17,15 @@ import { ContentFactory } from './ContentFactory';
 export class AnalysisFactory {
   public static make(props?: Partial<AnalysisProps>): Analysis {
     return Analysis.make({
-      author: 'author',
+      id: AnalysisId.make({ value: 'id' }),
+      author: AnalysisAuthor.make({ value: 'author' }),
       content: ContentFactory.make(),
-      fileDir: 'fileDir',
-      id: 'id',
-      reason: 'reason',
-      repositoryName: 'repositoryName',
+      fileDir: AnalysisFileDir.make({ value: 'fileDir' }),
+      reason: AnalysisReason.make({ value: 'reason' }),
+      repositoryName: AnalysisRepositoryName.make({ value: 'repositoryName' }),
       smell: Smell.Comments,
-      userId: 'userId',
-      sha: 'sha',
+      userId: UserId.make({ value: 'userId' }),
+      sha: AnalysisSha.make({ value: 'sha' }),
       status: AnalysisStatus.Pending,
       votes: [],
       ...props,

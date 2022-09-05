@@ -14,7 +14,7 @@ import { LoggerLogTailImpl } from './logger/LoggerLogTailImpl';
 import { DevelopmentLoggerImpl } from './logger/DevelopmentLoggerImpl';
 import { GithubApi } from './githubApi/GithubApi';
 import { PrismaAnalysisRepositoryImpl } from './drivers/prisma/repositories/PrismaAnalysisRepositoryImpl';
-import { ConfigService } from './drivers/prisma/ConfigService';
+import { ConfigService } from './ConfigService';
 
 export class InfrastructureModule extends ContainerModule {
   public constructor() {

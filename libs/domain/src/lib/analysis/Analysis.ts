@@ -1,61 +1,93 @@
-import { BaseEntity, ExcludeMethods } from '@codebarker/shared';
+import { IEntity } from '@codebarker/shared';
 
 import { AnalysisStatus } from './AnalysisStatus';
 import { AnalysisType } from './AnalysisType';
-import { AnalysisValidator } from './AnalysisValidator';
 import { CannotVoteOnAnalysisException } from './CannotVoteOnAnalysisException';
 import { Content } from '../Content';
 import { HasAlreadyVotedException } from './HasAlreadyVotedException';
 import { OwnersCannotVoteOnTheirOwnAnalysisException } from './OwnersCannotVoteOnTheirOwnAnalysisException';
 import { Smell } from '../Smell';
 import { Vote } from '../vote/Vote';
+import { UserId } from '../user';
+import {
+  AnalysisAuthor,
+  AnalysisFileDir,
+  AnalysisId,
+  AnalysisReason,
+  AnalysisRepositoryName,
+  AnalysisSha,
+} from './valueObjects';
 
 export type AnalysisProps = {
-  id: string;
+  id: AnalysisId;
   smell: Smell;
-  reason: string;
-  userId: string;
-  repositoryName: string;
-  author: string;
-  fileDir: string;
-  sha?: string;
+  reason: AnalysisReason;
+  userId: UserId;
+  repositoryName: AnalysisRepositoryName;
+  author: AnalysisAuthor;
+  fileDir: AnalysisFileDir;
+  sha?: AnalysisSha;
   content: Content;
   status?: AnalysisStatus;
-  votes?: Vote[];
+  votes: Vote[];
 };
 
-export class Analysis extends BaseEntity<AnalysisProps> {
+export class Analysis implements IEntity {
   public static MINIMUM_REQUIRED_VOTES = 10;
   public static MINIMUM_PERCENTAGE = 70;
 
-  public readonly id: string;
-  public readonly smell: Smell;
-  public readonly reason: string;
-  public readonly userId: string;
+  private readonly _props: AnalysisProps;
 
-  public readonly repositoryName: string;
-  public readonly author: string;
-  public readonly fileDir: string;
-  public readonly sha?: string;
+  public get id(): AnalysisId {
+    return this._props.id
+  }
 
-  public readonly content: Content;
-  public readonly status: AnalysisStatus = AnalysisStatus.Pending;
-  public readonly votes: Vote[] = [];
+  public get smell(): Smell {
+    return this._props.smell;
+  }
 
-  public constructor(props: AnalysisProps) {
-    super(props);
+  public get reason(): AnalysisReason {
+    return this._props.reason;
+  }
 
-    this.id = props.id;
-    this.smell = props.smell;
-    this.reason = props.reason;
-    this.userId = props.userId;
-    this.repositoryName = props.repositoryName;
-    this.author = props.author;
-    this.fileDir = props.fileDir;
-    this.content = props.content;
-    this.sha = props.sha;
-    this.status = props.status ?? this.status;
-    this.votes = props.votes ?? this.votes;
+  public get userId(): UserId {
+    return this._props.userId;
+  }
+
+  public get repositoryName(): AnalysisRepositoryName {
+    return this._props.repositoryName;
+  }
+
+  public get author(): AnalysisAuthor {
+    return this._props.author;
+  }
+
+  public get fileDir(): AnalysisFileDir {
+    return this._props.fileDir;
+  }
+
+  public get content(): Content {
+    return this._props.content;
+  }
+
+  public get sha(): AnalysisSha | undefined {
+    return this._props.sha;
+  }
+
+  public get status(): AnalysisStatus {
+    return this._props.status ?? AnalysisStatus.Pending;
+  }
+
+  public get votes(): Vote[] {
+    return this._props.votes ?? [];
+  }
+
+  protected constructor(props: AnalysisProps) {
+    this._props = {
+      ...props,
+      votes: props.votes ?? [],
+      status: props.status ?? AnalysisStatus.Pending,
+    };
   }
 
   public addVote(vote: Vote): void {
@@ -71,47 +103,45 @@ export class Analysis extends BaseEntity<AnalysisProps> {
       throw new HasAlreadyVotedException();
     }
 
-    this.votes.push(vote);
+    this._props.votes.push(vote);
 
     this.setStatusWhenApplicable();
   }
 
-  private isOwner(userId: string): boolean {
-    return this.userId === userId;
+  private isOwner(userId: UserId): boolean {
+    return this._props.userId.equals(userId);
   }
 
   // TODO: Refactor, using policies and events
   private setStatusWhenApplicable(): void {
-    const totalVotes = this.votes.length;
+    const totalVotes = this._props.votes.length;
 
     if (totalVotes < Analysis.MINIMUM_REQUIRED_VOTES) {
       return;
     }
 
-    const agreedVotesCount = this.votes.filter(
+    const agreedVotesCount = this._props.votes.filter(
       (vote) => vote.type === AnalysisType.Agree
     ).length;
 
     const percentage = Math.floor((agreedVotesCount / totalVotes) * 100);
 
     if (percentage < Analysis.MINIMUM_PERCENTAGE) {
-      this.$set('status', AnalysisStatus.Declined);
+      this._props.status = AnalysisStatus.Declined;
     }
 
-    this.$set('status', AnalysisStatus.Accepted);
+    this._props.status = AnalysisStatus.Accepted;
   }
 
-  private hasAlreadyVoted(userId: string): boolean {
-    return this.votes.some((vote) => vote.userId === userId);
+  private hasAlreadyVoted(userId: UserId): boolean {
+    return this._props.votes.some((vote) => vote.userId.equals(userId));
   }
 
   private isPending(): boolean {
-    return this.status === AnalysisStatus.Pending;
+    return this._props.status === AnalysisStatus.Pending;
   }
 
   public static make(props: AnalysisProps): Analysis {
-    return new AnalysisValidator(props)
-      .validateOrThrow()
-      .andThen(() => new Analysis(props));
+    return new Analysis(props);
   }
 }

@@ -1,19 +1,20 @@
-import { ExcludeMethods, ValueObject } from '@codebarker/shared';
+import { ValueObject } from '@codebarker/shared';
 
-export class ProgrammingLanguage extends ValueObject {
-  public readonly name: string;
-  public readonly extension: string;
+export type ProgrammingLanguageProps = {
+  name: string;
+  extension: string;
+};
 
-  private constructor(props: ProgrammingLanguageProps) {
-    super();
+export class ProgrammingLanguage extends ValueObject<ProgrammingLanguageProps> {
+  public get name(): string {
+    return this.props.name;
+  }
 
-    this.name = props.name;
-    this.extension = props.extension;
+  public get extension(): string {
+    return this.props.extension;
   }
 
   public static make(props: ProgrammingLanguageProps): ProgrammingLanguage {
     return new ProgrammingLanguage(props);
   }
 }
-
-export type ProgrammingLanguageProps = ExcludeMethods<ProgrammingLanguage>;

@@ -15,7 +15,7 @@ export class StartKataResponse {
 
   public static from(kata: Kata, options: Smell[]): StartKataResponse {
     return new StartKataResponse(
-      kata.id,
+      kata.id.value,
       ContentDto.from(kata.content),
       options
     );

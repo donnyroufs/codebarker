@@ -1,13 +1,13 @@
-import { Answer } from '@codebarker/domain';
+import { Answer, AnswerId, KataId, UserId } from '@codebarker/domain';
 
 import { AnswerModel } from '../models/AnswerModel';
 
 export class AnswerMapper {
   public static toDomain(model: AnswerModel): Answer {
     return Answer.make({
-      id: model.id,
-      kataId: model.kataId,
-      userId: model.userId,
+      id: AnswerId.make({ value: model.id }),
+      kataId: KataId.make({ value: model.kataId }),
+      userId: UserId.make({ value: model.userId }),
       smell: model.smell,
       isCorrect: model.isCorrect,
     });
@@ -19,9 +19,9 @@ export class AnswerMapper {
 
   public static toModel(entity: Answer): AnswerModel {
     return {
-      id: entity.id,
-      kataId: entity.kataId,
-      userId: entity.userId,
+      id: entity.id.value,
+      kataId: entity.kataId.value,
+      userId: entity.userId.value,
       smell: entity.smell,
       isCorrect: entity.isCorrect,
     };

@@ -1,12 +1,19 @@
-import { User, UserProps, UserRole } from '@codebarker/domain';
+import {
+  User,
+  UserEmail,
+  UserId,
+  UserName,
+  UserProps,
+  UserRole,
+} from '@codebarker/domain';
 
 export class UserFactory {
   public static make(props?: Partial<UserProps>): User {
     return User.make({
-      email: 'john@test.com',
-      id: 'id',
-      name: 'name',
-      role: UserRole.USER,
+      email: UserEmail.make('john@test.com'),
+      id: UserId.make({ value: 'id' }),
+      name: UserName.make('name'),
+      role: UserRole.User,
       ...props,
     });
   }

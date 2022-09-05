@@ -16,6 +16,9 @@ export class ContentDto {
   }
 
   public static from(props: Content): ContentDto {
-    return new ContentDto(props.lines, props.programmingLanguage);
+    return new ContentDto(
+      props.lines.map(LineDto.from),
+      ProgrammingLanguageDto.make(props.programmingLanguage)
+    );
   }
 }

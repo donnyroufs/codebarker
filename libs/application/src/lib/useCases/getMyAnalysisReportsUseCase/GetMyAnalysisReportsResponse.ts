@@ -16,7 +16,11 @@ export class GetMyAnalysisReportsResponse {
   public static from(
     data: PaginatedAnalysisDetails
   ): GetMyAnalysisReportsResponse {
-    return new GetMyAnalysisReportsResponse(data);
+    return new GetMyAnalysisReportsResponse({
+      count: data.count,
+      details: data.details.map(AnalysisDetailsDto.from),
+      hasMore: data.hasMore,
+    });
   }
 }
 

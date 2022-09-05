@@ -1,7 +1,7 @@
 import { ValueObject } from '@codebarker/shared';
+
 import { AnalysisDetailsValidator } from './AnalysisDetailsValidator';
 import { AnalysisStatus } from './AnalysisStatus';
-
 import { Content } from '../Content';
 import { IPaginate } from '../IPaginate';
 import { ProgrammingLanguage } from '../ProgrammingLanguage';
@@ -20,8 +20,9 @@ export type AnalysisDetailsProps = {
   readonly status: AnalysisStatus;
 };
 
+// TODO: push out of domain and refactor to be a read model
 // - analysis count that user has not voted on?
-export class AnalysisDetails extends ValueObject {
+export class AnalysisDetails extends ValueObject<AnalysisDetailsProps> {
   public readonly analysisId: string;
   public readonly programmingLanguage: ProgrammingLanguage;
   public readonly smell: Smell;
@@ -33,7 +34,7 @@ export class AnalysisDetails extends ValueObject {
   public readonly status: AnalysisStatus;
 
   private constructor(props: AnalysisDetailsProps) {
-    super();
+    super(props);
 
     this.analysisId = props.analysisId;
     this.programmingLanguage = props.programmingLanguage;

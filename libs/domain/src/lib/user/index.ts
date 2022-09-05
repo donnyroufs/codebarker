@@ -1,4 +1,4 @@
 export * from './IUserRepository';
 export * from './User';
-export * from './UserRole';
-export * from './UserValidator';
+export * from './enums';
+export * from './valueObjects';

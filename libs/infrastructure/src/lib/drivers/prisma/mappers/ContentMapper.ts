@@ -10,7 +10,11 @@ export class ContentMapper {
   public static toDomain(content: any): Content {
     return Content.make({
       lines: content.lines.map((item: any) =>
-        Line.make(item.line, item.content, item.isInfected)
+        Line.make({
+          value: item.content,
+          lineNumber: item.line,
+          isInfected: item.isInfected,
+        })
       ),
       programmingLanguage: ProgrammingLanguage.make({
         name: content.programmingLanguage.name,

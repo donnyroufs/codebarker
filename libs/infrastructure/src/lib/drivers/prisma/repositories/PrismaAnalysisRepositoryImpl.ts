@@ -1,11 +1,12 @@
 import { inject, injectable } from 'inversify';
 import { v4 } from 'uuid';
 
-import { cast, NullOrAsync } from '@codebarker/shared';
+import { cast, EntityId, NullOrAsync } from '@codebarker/shared';
 import { ILogger, LoggerToken } from '@codebarker/application';
 import {
   Analysis,
   AnalysisDetails,
+  AnalysisId,
   AnalysisStatus,
   IAnalysisRepository,
   PaginatedAnalysisDetails,
@@ -135,10 +136,10 @@ export class PrismaAnalysisRepositoryImpl implements IAnalysisRepository {
     return AnalysisDetailsMapper.toDomain(analysis);
   }
 
-  public async getByIdAsync(id: string): NullOrAsync<Analysis> {
+  public async getByIdAsync(id: AnalysisId): NullOrAsync<Analysis> {
     const model = await this._prismaService.analysis.findFirst({
       where: {
-        id,
+        id: id.value,
       },
       include: {
         content: {
@@ -240,7 +241,7 @@ export class PrismaAnalysisRepositoryImpl implements IAnalysisRepository {
     return (offset + 1) * amountToFetch;
   }
 
-  public generateId(): string {
-    return v4();
+  public generateId(): EntityId {
+    return EntityId.make({ value: v4() });
   }
 }
