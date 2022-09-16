@@ -97,21 +97,6 @@ describe('Submit kata', () => {
     expect(act).rejects.toThrowError(UnknownKataException);
   });
 
-  test.each(inputData())(
-    'throws a validation exception when the input is invalid',
-    async (smell: Smell, kataId: string, userId: string) => {
-      const request: ISubmitKataRequest = {
-        kataId,
-        userId,
-        smell,
-      };
-
-      const act = (): Promise<SubmitKataResponse> => sut.execute(request);
-
-      expect(act).rejects.toThrowError(ValidationException);
-    }
-  );
-
   test('saves the given answer', async () => {
     const request: ISubmitKataRequest = {
       kataId: 'kataId',
@@ -146,11 +131,3 @@ describe('Submit kata', () => {
     expect(mockedRepo.saveAsync).toHaveBeenCalledWith(kataToBePersisted);
   });
 });
-
-function inputData(): any[] {
-  return [
-    [999, 'kataId', 'userId'],
-    [Smell.Comments, 1, 'userId'],
-    [Smell.FeatureEnvy, 'kataId', 1],
-  ];
-}

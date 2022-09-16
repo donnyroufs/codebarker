@@ -13,7 +13,6 @@ import {
 import { ISubmitKataRequest } from './ISubmitKataRequest';
 import { SubmitKataResponse } from './SubmitKataResponse';
 import { UnknownKataException } from './UnknownKataException';
-import { SubmitKataRequestValidator } from './SubmitKataRequestValidator';
 import { ILogger, LoggerToken } from '../../interfaces';
 
 @injectable()
@@ -32,8 +31,6 @@ export class SubmitKataUseCase
   }
 
   public async execute(input: ISubmitKataRequest): Promise<SubmitKataResponse> {
-    this.validateOrThrow(input);
-
     const kata = await this.getKataOrThrowAsync(input);
 
     const isCorrect = kata.isCorrectAnswer(input.smell);
@@ -69,9 +66,5 @@ export class SubmitKataUseCase
     }
 
     return kata;
-  }
-
-  private validateOrThrow(input: ISubmitKataRequest): void {
-    new SubmitKataRequestValidator(input).validateOrThrow();
   }
 }
