@@ -10,17 +10,4 @@ export class GetMyAnalysisReportsRequestFactory {
       ...props,
     };
   }
-
-  public static makeBadInput(): IGetMyAnalysisReportsRequest[] {
-    return [
-      {
-        userId: 1 as any,
-        offset: 0,
-      },
-      {
-        userId: 'userId',
-        offset: 'cursor' as any,
-      },
-    ];
-  }
 }

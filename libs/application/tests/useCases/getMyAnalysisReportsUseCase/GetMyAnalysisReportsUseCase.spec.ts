@@ -1,12 +1,13 @@
 import { Container } from 'inversify';
 import { mock, mockReset } from 'jest-mock-extended';
 
-import { TestingFactory, ValidationException } from '@codebarker/shared';
-import { ApplicationModule } from '../../../src/lib/ApplicationModule';
+import { TestingFactory } from '@codebarker/shared';
 import {
   AnalysisRepositoryToken,
   IAnalysisRepository,
 } from '@codebarker/domain';
+
+import { ApplicationModule } from '../../../src/lib/ApplicationModule';
 import {
   AnalysisDetailsFactory,
   GetMyAnalysisReportsRequestFactory,
@@ -38,16 +39,6 @@ describe('get my analysis reports', () => {
 
     sut = container.get(GetMyAnalysisReportsUseCase);
   });
-
-  test.each(GetMyAnalysisReportsRequestFactory.makeBadInput())(
-    'throws an exception when the input is invalid',
-    (request) => {
-      const act = (): Promise<GetMyAnalysisReportsResponse> =>
-        sut.execute(request);
-
-      expect(act).rejects.toThrowError(ValidationException);
-    }
-  );
 
   test('should return the response dto', async () => {
     const request = GetMyAnalysisReportsRequestFactory.make();

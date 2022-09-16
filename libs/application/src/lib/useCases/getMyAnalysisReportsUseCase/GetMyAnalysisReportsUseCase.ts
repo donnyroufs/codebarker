@@ -7,7 +7,6 @@ import {
 } from '@codebarker/domain';
 
 import { IGetMyAnalysisReportsRequest } from './IGetMyAnalysisReportsRequest';
-import { GetMyAnalysisReportsRequestValidator } from './GetMyAnalysisReportsRequestValidator';
 import { GetMyAnalysisReportsResponse } from './GetMyAnalysisReportsResponse';
 
 // TODO: Response should exclude a couple things in the future,
@@ -29,8 +28,6 @@ export class GetMyAnalysisReportsUseCase
   public async execute(
     input: IGetMyAnalysisReportsRequest
   ): Promise<GetMyAnalysisReportsResponse> {
-    this.validateOrThrow(input);
-
     const data =
       await this._analysisRepository.getPaginatedAnalysisDetailsForUserAsync(
         input.userId,
@@ -39,9 +36,5 @@ export class GetMyAnalysisReportsUseCase
       );
 
     return GetMyAnalysisReportsResponse.from(data);
-  }
-
-  private validateOrThrow(input: IGetMyAnalysisReportsRequest): void {
-    new GetMyAnalysisReportsRequestValidator(input).validateOrThrow();
   }
 }
