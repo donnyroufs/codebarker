@@ -13,14 +13,4 @@ export class VoteOnAnalysisRequestFactory {
       ...props,
     };
   }
-
-  public static makeBadInput(): IVoteOnAnalysisRequest[] {
-    return [
-      this.make({
-        id: 1 as any,
-      }),
-      this.make({ type: 9999 }),
-      this.make({ userId: 1 as any }),
-    ];
-  }
 }

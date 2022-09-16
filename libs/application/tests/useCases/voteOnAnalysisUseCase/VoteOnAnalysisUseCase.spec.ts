@@ -64,16 +64,6 @@ describe('vote on analysis', () => {
     sut = container.get(VoteOnAnalysisUseCase);
   });
 
-  test.each(VoteOnAnalysisRequestFactory.makeBadInput())(
-    'throws a validation exception when the input is invalid',
-    async (request) => {
-      mockedRepo.getByIdAsync.mockResolvedValue(AnalysisFactory.make());
-      const act = (): Promise<void> => sut.execute(request);
-
-      expect(act).rejects.toThrowError(ValidationException);
-    }
-  );
-
   test('throws an exception when the analysis does not exist', async () => {
     const request = VoteOnAnalysisRequestFactory.make();
 
