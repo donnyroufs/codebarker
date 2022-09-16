@@ -1,6 +1,5 @@
 import { ValueObject } from '@codebarker/shared';
 
-import { AnalysisDetailsValidator } from './AnalysisDetailsValidator';
 import { AnalysisStatus } from './AnalysisStatus';
 import { Content } from '../Content';
 import { IPaginate } from '../IPaginate';
@@ -47,10 +46,9 @@ export class AnalysisDetails extends ValueObject<AnalysisDetailsProps> {
     this.status = props.status;
   }
 
+  // TODO: Validation
   public static make(props: AnalysisDetailsProps): AnalysisDetails {
-    return new AnalysisDetailsValidator(props)
-      .validateOrThrow()
-      .andThen(() => new AnalysisDetails(props));
+    return new AnalysisDetails(props);
   }
 }
 

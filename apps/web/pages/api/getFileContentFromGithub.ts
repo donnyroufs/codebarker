@@ -1,3 +1,5 @@
+import z from 'zod';
+
 import {
   GetFileContentFromGithubResponse,
   GetFileContentFromGithubUseCase,
@@ -12,7 +14,14 @@ export const config = {
   wrapMethod: ensureAuthenticated,
 };
 
+const schema = z.object({
+  author: z.string(),
+  repositoryName: z.string(),
+  fileDir: z.string(),
+  sha: z.string().optional(),
+});
+
 export const getFileContentFromGithub = async (
   request: IGetFileContentFromGithubRequest
 ): Promise<GetFileContentFromGithubResponse> =>
-  container.get(GetFileContentFromGithubUseCase).execute(request);
+  container.get(GetFileContentFromGithubUseCase).execute(schema.parse(request));

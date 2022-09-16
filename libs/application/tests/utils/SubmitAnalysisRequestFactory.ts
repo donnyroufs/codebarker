@@ -19,30 +19,4 @@ export class SubmitAnalysisRequestFactory {
       ...props,
     };
   }
-
-  public static getBadInputData(): ISubmitAnalysisRequest[] {
-    return [
-      SubmitAnalysisRequestFactory.make({
-        author: 1 as any,
-      }),
-      SubmitAnalysisRequestFactory.make({
-        content: 1 as any,
-      }),
-      SubmitAnalysisRequestFactory.make({
-        fileDir: 1 as any,
-      }),
-      SubmitAnalysisRequestFactory.make({
-        reason: 1 as any,
-      }),
-      SubmitAnalysisRequestFactory.make({
-        repositoryName: 1 as any,
-      }),
-      SubmitAnalysisRequestFactory.make({
-        smell: true as any,
-      }),
-      SubmitAnalysisRequestFactory.make({
-        userId: 1 as any,
-      }),
-    ];
-  }
 }

@@ -17,7 +17,6 @@ import {
 } from '@codebarker/domain';
 
 import { IVoteOnAnalysisRequest } from './IVoteOnAnalysisRequest';
-import { VoteOnAnalysisValidator } from './VoteOnAnalysisRequestValidator';
 import { AnalysisDoesNotExistException } from './AnalysisDoesNotExistException';
 
 @injectable()
@@ -36,8 +35,6 @@ export class VoteOnAnalysisUseCase
   }
 
   public async execute(input: IVoteOnAnalysisRequest): Promise<void> {
-    this.validateOrThrow(input);
-
     const id = AnalysisId.make({ value: input.id });
 
     const analysis = await this._analysisRepository.getByIdAsync(id);
@@ -73,9 +70,5 @@ export class VoteOnAnalysisUseCase
     });
 
     this._kataRepository.saveAsync(kata);
-  }
-
-  private validateOrThrow(input: IVoteOnAnalysisRequest): void {
-    new VoteOnAnalysisValidator(input).validateOrThrow();
   }
 }

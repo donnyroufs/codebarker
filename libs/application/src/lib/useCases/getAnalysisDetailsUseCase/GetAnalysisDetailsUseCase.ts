@@ -8,7 +8,6 @@ import { isNull, IUseCase } from '@codebarker/shared';
 
 import { GetAnalysisDetailsResponse } from './GetAnalysisDetailsResponse';
 import { IGetAnalysisDetailsRequest } from './IGetAnalysisDetailsRequest';
-import { GetAnalysisDetailsRequestValidator } from './GetAnalysisDetailsRequestValidator';
 import { NoAvailableAnalysisForUserException } from './NoAvailableAnalysisForUserException';
 
 @injectable()
@@ -26,8 +25,6 @@ export class GetAnalysisDetailsUseCase
   public async execute(
     input: IGetAnalysisDetailsRequest
   ): Promise<GetAnalysisDetailsResponse> {
-    this.validateOrThrow(input);
-
     const langs = input.languages.at(0) === 'all' ? [] : input.languages;
 
     const details =
@@ -41,9 +38,5 @@ export class GetAnalysisDetailsUseCase
     }
 
     return GetAnalysisDetailsResponse.from(details);
-  }
-
-  private validateOrThrow(input: IGetAnalysisDetailsRequest): void {
-    new GetAnalysisDetailsRequestValidator(input).validateOrThrow();
   }
 }

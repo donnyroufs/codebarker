@@ -1,3 +1,6 @@
+import z from 'zod';
+
+import { Smell } from '@codebarker/domain';
 import {
   ISubmitAnalysisRequest,
   SubmitAnalysisUseCase,
@@ -5,11 +8,23 @@ import {
 
 import { ensureAuthenticated, withSession } from '../../rpc';
 import { container } from '../../container';
+import { contentDtoSchema } from '../../schemas/ContentDtoSchema';
 
 export const config = {
   rpc: true,
   wrapMethod: ensureAuthenticated,
 };
+
+const schema = z.object({
+  sha: z.string().optional(),
+  smell: z.nativeEnum(Smell),
+  reason: z.string(),
+  userId: z.string(),
+  repositoryName: z.string(),
+  author: z.string(),
+  fileDir: z.string(),
+  content: contentDtoSchema,
+});
 
 export const submitAnalysis = async (
   request: ISubmitAnalysisRequest
@@ -18,9 +33,8 @@ export const submitAnalysis = async (
     const userId = session!.user!.id;
 
     if (userId !== request.userId) {
-      // TODO: How to propogate to client
       throw new Error('You are not authorized to access this resource');
     }
 
-    return container.get(SubmitAnalysisUseCase).execute(request);
+    return container.get(SubmitAnalysisUseCase).execute(schema.parse(request));
   });

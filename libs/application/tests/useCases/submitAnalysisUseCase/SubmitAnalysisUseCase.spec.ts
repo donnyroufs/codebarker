@@ -1,7 +1,7 @@
 import { mock, mockReset } from 'jest-mock-extended';
 import { Container } from 'inversify';
 
-import { TestingFactory, ValidationException } from '@codebarker/shared';
+import { TestingFactory } from '@codebarker/shared';
 import {
   AnalysisAuthor,
   AnalysisFileDir,
@@ -18,7 +18,6 @@ import {
 import {
   ApplicationModule,
   ILogger,
-  ISubmitAnalysisRequest,
   LoggerToken,
   SubmitAnalysisUseCase,
 } from '../../../src';
@@ -42,15 +41,6 @@ describe('submit analysis', () => {
     mockReset(mockedRepo);
     sut = container.get(SubmitAnalysisUseCase);
   });
-
-  test.each(SubmitAnalysisRequestFactory.getBadInputData())(
-    'throws a validation exception when the input is invalids defined',
-    (request: ISubmitAnalysisRequest) => {
-      const act = (): Promise<void> => sut.execute(request);
-
-      expect(act).rejects.toThrowError(ValidationException);
-    }
-  );
 
   test('persists the analysis and resolves', async () => {
     const id = 'generatedId';

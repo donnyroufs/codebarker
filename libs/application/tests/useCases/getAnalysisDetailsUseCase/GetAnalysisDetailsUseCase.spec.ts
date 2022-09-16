@@ -1,7 +1,7 @@
 import { Container } from 'inversify';
 import { mock, mockReset } from 'jest-mock-extended';
 
-import { TestingFactory, ValidationException } from '@codebarker/shared';
+import { TestingFactory } from '@codebarker/shared';
 import {
   AnalysisRepositoryToken,
   IAnalysisRepository,
@@ -37,18 +37,6 @@ describe('get analysis details', () => {
     mockReset(mockedRepo);
 
     sut = container.get(GetAnalysisDetailsUseCase);
-  });
-
-  // TODO: Handle languages input validation
-  test('throws a validation exception when the input is invalid', () => {
-    const request: IGetAnalysisDetailsRequest = {
-      userId: 1 as any,
-      languages: ['all'],
-    };
-
-    const act = (): Promise<GetAnalysisDetailsResponse> => sut.execute(request);
-
-    expect(act).rejects.toThrowError(ValidationException);
   });
 
   test('throws an exception when the analysis is not found', () => {
