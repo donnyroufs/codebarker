@@ -8,7 +8,7 @@ import {
   Smell,
   UserId,
 } from '@codebarker/domain';
-import { TestingFactory, InvalidArgumentException } from '@codebarker/shared';
+import { TestingFactory } from '@codebarker/shared';
 
 import { ApplicationModule } from '../../../src/lib/ApplicationModule';
 import {
@@ -39,21 +39,6 @@ describe('start kata', () => {
 
     sut = container.get(StartKataUseCase);
   });
-
-  test.each(inputData())(
-    'throws a validation exception when the input is invalid',
-    async (userId: string, excludeCompletedKatas: boolean) => {
-      const request: IStartKataRequest = {
-        userId,
-        excludeCompletedKatas,
-        languages: ['all'],
-      };
-
-      const act = (): Promise<StartKataResponse> => sut.execute(request);
-
-      expect(act).rejects.toThrowError(InvalidArgumentException);
-    }
-  );
 
   test.each([[true], [false]])(
     'returns a kata that has not yet been completed by the user',
@@ -264,12 +249,3 @@ describe('start kata', () => {
 
   test.todo('all');
 });
-
-function inputData(): any[] {
-  return [
-    [10, 'true'],
-    ['userId', 'true'],
-    [10, true],
-    [10, false, 'previousKataId'],
-  ];
-}

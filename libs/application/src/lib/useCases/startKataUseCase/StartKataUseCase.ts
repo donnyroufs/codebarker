@@ -9,7 +9,7 @@ import {
   Smell,
   UserId,
 } from '@codebarker/domain';
-import { Guard, isNull, IUseCase } from '@codebarker/shared';
+import { isNull, IUseCase } from '@codebarker/shared';
 
 import { IStartKataRequest } from './IStartKataRequest';
 import { NoAvailableKatasException } from './NoAvailableKatasException';
@@ -28,8 +28,6 @@ export class StartKataUseCase
   }
 
   public async execute(input: IStartKataRequest): Promise<StartKataResponse> {
-    this.validateOrThrow(input);
-
     const kata = await this.getKataOrThrowAsync(input);
 
     const options = this.getOptions(kata);
@@ -95,11 +93,5 @@ export class StartKataUseCase
     }
 
     return kata;
-  }
-
-  // TODO: Refactor
-  private validateOrThrow(input: IStartKataRequest): void {
-    // TODO: Validate exclude completed katas and languages
-    Guard.Is.boolean('excludeCompletedKatas', input.excludeCompletedKatas);
   }
 }

@@ -1,3 +1,5 @@
+import z from 'zod';
+
 import {
   IStartKataRequest,
   StartKataResponse,
@@ -12,6 +14,13 @@ export const config = {
   wrapMethod: ensureAuthenticated,
 };
 
+const schema = z.object({
+  userId: z.string(),
+  excludeCompletedKatas: z.boolean(),
+  previousKataId: z.string().optional(),
+  languages: z.array(z.string()),
+});
+
 export const startKata = async (
   request: IStartKataRequest
 ): Promise<StartKataResponse> =>
@@ -19,9 +28,8 @@ export const startKata = async (
     const userId = session!.user!.id;
 
     if (userId !== request.userId) {
-      // TODO: How to propogate to client
       throw new Error('You are not authorized to access this');
     }
 
-    return container.get(StartKataUseCase).execute(request);
+    return container.get(StartKataUseCase).execute(schema.parse(request));
   });
