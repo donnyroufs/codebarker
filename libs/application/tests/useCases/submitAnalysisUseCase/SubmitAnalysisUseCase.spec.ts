@@ -1,7 +1,7 @@
 import { mock, mockReset } from 'jest-mock-extended';
 import { Container } from 'inversify';
 
-import { TestingFactory, ValidationException } from '@codebarker/shared';
+import { TestingFactory } from '@codebarker/shared';
 import {
   AnalysisAuthor,
   AnalysisFileDir,

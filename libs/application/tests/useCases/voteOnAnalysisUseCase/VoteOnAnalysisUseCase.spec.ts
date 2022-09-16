@@ -2,7 +2,7 @@ import { Container } from 'inversify';
 import { mock, mockReset } from 'jest-mock-extended';
 
 import { toPlainObject } from '@codebarker/testing-utils';
-import { TestingFactory, ValidationException } from '@codebarker/shared';
+import { TestingFactory } from '@codebarker/shared';
 import {
   AnalysisRepositoryToken,
   AnalysisStatus,

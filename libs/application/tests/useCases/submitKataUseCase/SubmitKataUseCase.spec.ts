@@ -9,7 +9,7 @@ import {
   Smell,
   UserId,
 } from '@codebarker/domain';
-import { TestingFactory, ValidationException } from '@codebarker/shared';
+import { TestingFactory } from '@codebarker/shared';
 
 import { KataFactory, AnswerFactory, SolutionFactory } from '../../utils';
 import { ILogger, LoggerToken } from '../../../src/lib/interfaces';
