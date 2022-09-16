@@ -16,7 +16,6 @@ import {
 } from '@codebarker/domain';
 
 import { ISubmitAnalysisRequest } from './ISubmitAnalysisRequest';
-import { SubmitAnalysisRequestValidator } from './SubmitAnalysisRequestValidator';
 import { ProgrammingLanguageDto } from '../../dtos';
 
 // TODO: Check if user is applicable, based on rank.
@@ -33,16 +32,10 @@ export class SubmitAnalysisUseCase
   }
 
   public async execute(input: ISubmitAnalysisRequest): Promise<void> {
-    this.validateOrThrow(input);
-
     const analysis = this.makeAnalysis(input);
 
     // TODO: Add points
     await this._repo.saveAsync(analysis);
-  }
-
-  private validateOrThrow(input: ISubmitAnalysisRequest): void {
-    new SubmitAnalysisRequestValidator(input).validateOrThrow();
   }
 
   private makeAnalysis(input: ISubmitAnalysisRequest): Analysis {
