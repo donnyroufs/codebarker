@@ -59,7 +59,7 @@ export class FetchMyAnalysisReportsPrismaFetcherImpl
 
     return GetMyAnalysisReportsResponse.from({
       count,
-      hasMore: false,
+      hasMore: this.hasMore(result.length, amount, offset, count),
       reports: result.map((x) => {
         const totalVotes = x.votes.length;
         const agreed = x.votes.filter(
@@ -87,5 +87,20 @@ export class FetchMyAnalysisReportsPrismaFetcherImpl
       1: 'declined',
       2: 'approved',
     }[status];
+  }
+  private hasMore(
+    fetchedCount: number,
+    amountToFetch: number,
+    offset: number,
+    totalCount: number
+  ): boolean {
+    if (fetchedCount < amountToFetch) return false;
+    if (this.getTotalFetched(offset, amountToFetch) >= totalCount) return false;
+
+    return true;
+  }
+
+  private getTotalFetched(offset: number, amountToFetch: number): number {
+    return (offset + 1) * amountToFetch;
   }
 }
