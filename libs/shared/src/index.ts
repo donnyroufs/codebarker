@@ -10,3 +10,4 @@ export * from './lib/ValueObject';
 export * from './lib/github';
 export * from './lib/EntityId';
 export * from './lib/guard/Guard';
+export * from './lib/interfaces/IFetcher';

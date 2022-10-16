@@ -7,6 +7,7 @@ export class GetMyAnalysisReportsRequestFactory {
     return {
       offset: 0,
       userId: 'userId',
+      amount: 0,
       ...props,
     };
   }

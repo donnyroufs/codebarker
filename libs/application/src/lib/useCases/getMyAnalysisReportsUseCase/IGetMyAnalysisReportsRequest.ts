@@ -1,5 +1,7 @@
+import { UserId } from '@codebarker/domain';
+
 export interface IGetMyAnalysisReportsRequest {
-  userId: string;
+  userId: UserId;
   offset: number;
-  amount?: number;
+  amount: number;
 }

@@ -1,40 +1,30 @@
 import { inject, injectable } from 'inversify';
 
 import { IUseCase } from '@codebarker/shared';
-import {
-  AnalysisRepositoryToken,
-  IAnalysisRepository,
-} from '@codebarker/domain';
 
 import { IGetMyAnalysisReportsRequest } from './IGetMyAnalysisReportsRequest';
 import { GetMyAnalysisReportsResponse } from './GetMyAnalysisReportsResponse';
+import {
+  FetchMyAnalysisReportsToken,
+  IFetchMyAnalysisReports,
+} from './IFetchMyAnalysisReports';
 
-// TODO: Response should exclude a couple things in the future,
-// we are querying data that we do not need.
 @injectable()
 export class GetMyAnalysisReportsUseCase
   implements
     IUseCase<IGetMyAnalysisReportsRequest, GetMyAnalysisReportsResponse>
 {
   public static AMOUNT_TO_FETCH = 10;
-  private readonly _analysisRepository: IAnalysisRepository;
+  private readonly _fetchMyAnalysisReports: IFetchMyAnalysisReports;
 
   public constructor(
-    @inject(AnalysisRepositoryToken) analysisRepository: IAnalysisRepository
+    @inject(FetchMyAnalysisReportsToken) fetcher: IFetchMyAnalysisReports
   ) {
-    this._analysisRepository = analysisRepository;
+    this._fetchMyAnalysisReports = fetcher;
   }
 
-  public async execute(
+  public execute = (
     input: IGetMyAnalysisReportsRequest
-  ): Promise<GetMyAnalysisReportsResponse> {
-    const data =
-      await this._analysisRepository.getPaginatedAnalysisDetailsForUserAsync(
-        input.userId,
-        input.offset,
-        input.amount ?? GetMyAnalysisReportsUseCase.AMOUNT_TO_FETCH
-      );
-
-    return GetMyAnalysisReportsResponse.from(data);
-  }
+  ): Promise<GetMyAnalysisReportsResponse> =>
+    this._fetchMyAnalysisReports.fetch(input);
 }

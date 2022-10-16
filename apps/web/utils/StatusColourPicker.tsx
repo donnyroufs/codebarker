@@ -1,12 +1,10 @@
-import { AnalysisStatus } from '@codebarker/domain';
-
 export class StatusColourPickerUtil {
-  public static getColour(status: AnalysisStatus): string {
-    if (status === AnalysisStatus.Pending) {
+  public static getColour(status: string): string {
+    if (status === 'pending') {
       return '#615c94';
     }
 
-    if (status === AnalysisStatus.Declined) {
+    if (status === 'declined') {
       return '#945c7b';
     }
 

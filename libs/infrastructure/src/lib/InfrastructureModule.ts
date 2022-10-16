@@ -6,7 +6,11 @@ import {
   IKataRepository,
   KataRepositoryToken,
 } from '@codebarker/domain';
-import { GithubApiToken, LoggerToken } from '@codebarker/application';
+import {
+  FetchMyAnalysisReportsToken,
+  GithubApiToken,
+  LoggerToken,
+} from '@codebarker/application';
 
 import { PrismaService } from './drivers/prisma/PrismaService';
 import { PrismaKataRepositoryImpl } from './drivers/prisma/repositories/PrismaKataRepositoryImpl';
@@ -15,6 +19,7 @@ import { DevelopmentLoggerImpl } from './logger/DevelopmentLoggerImpl';
 import { GithubApi } from './githubApi/GithubApi';
 import { PrismaAnalysisRepositoryImpl } from './drivers/prisma/repositories/PrismaAnalysisRepositoryImpl';
 import { ConfigService } from './ConfigService';
+import { FetchMyAnalysisReportsPrismaFetcherImpl } from './drivers/prisma/fetchers/FetchMyAnalysisReportsPrismaFetcherImpl';
 
 export class InfrastructureModule extends ContainerModule {
   public constructor() {
@@ -37,6 +42,10 @@ export class InfrastructureModule extends ContainerModule {
 
       bind(LoggerToken)
         .to(isProd ? LoggerLogTailImpl : DevelopmentLoggerImpl)
+        .inSingletonScope();
+      
+      bind(FetchMyAnalysisReportsToken)
+        .to(FetchMyAnalysisReportsPrismaFetcherImpl)
         .inSingletonScope();
 
       bind(GithubApiToken).to(GithubApi).inSingletonScope();

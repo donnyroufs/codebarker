@@ -2,25 +2,24 @@ import { Container } from 'inversify';
 import { mock, mockReset } from 'jest-mock-extended';
 
 import { TestingFactory } from '@codebarker/shared';
-import {
-  AnalysisRepositoryToken,
-  IAnalysisRepository,
-} from '@codebarker/domain';
+
 
 import { ApplicationModule } from '../../../src/lib/ApplicationModule';
-import {
-  AnalysisDetailsFactory,
-  GetMyAnalysisReportsRequestFactory,
-} from '../../utils';
 import {
   GetMyAnalysisReportsUseCase,
   LoggerToken,
   ILogger,
+  IGetMyAnalysisReportsRequest,
   GetMyAnalysisReportsResponse,
 } from '../../../src';
+import {
+  FetchMyAnalysisReportsToken,
+  IFetchMyAnalysisReports,
+} from '../../../src/lib/useCases/getMyAnalysisReportsUseCase/IFetchMyAnalysisReports';
+import { UserId } from '@codebarker/domain';
 
 describe('get my analysis reports', () => {
-  const mockedRepo = mock<IAnalysisRepository>();
+  const mockedFetcher = mock<IFetchMyAnalysisReports>();
 
   let container: Container;
   let sut: GetMyAnalysisReportsUseCase;
@@ -30,57 +29,43 @@ describe('get my analysis reports', () => {
     container = TestingFactory.createContainer(ApplicationModule);
     container.bind(LoggerToken).toConstantValue(mockedLogger);
     container
-      .bind<IAnalysisRepository>(AnalysisRepositoryToken)
-      .toConstantValue(mockedRepo);
+      .bind<IFetchMyAnalysisReports>(FetchMyAnalysisReportsToken)
+      .toConstantValue(mockedFetcher);
   });
 
   beforeEach(() => {
-    mockReset(mockedRepo);
+    mockReset(mockedFetcher);
 
     sut = container.get(GetMyAnalysisReportsUseCase);
   });
 
-  test('should return the response dto', async () => {
-    const request = GetMyAnalysisReportsRequestFactory.make();
-    const details = AnalysisDetailsFactory.make();
-    const expectedResult = GetMyAnalysisReportsResponse.from({
-      details: [details],
-      hasMore: false,
-      count: 0,
-    });
+  test('calls the fetcher with the request object', async () => {
+    const request: IGetMyAnalysisReportsRequest = {
+      amount: 5,
+      offset: 0,
+      userId: UserId.make({ value: 'userId' }),
+    };
 
-    mockedRepo.getPaginatedAnalysisDetailsForUserAsync.mockResolvedValueOnce({
-      details: [details],
-      hasMore: false,
+    await sut.execute(request);
+
+    expect(mockedFetcher.fetch).toHaveBeenCalledWith(request);
+  });
+
+  test('returns the read model from the fetcher', async () => {
+    const request: IGetMyAnalysisReportsRequest = {
+      amount: 5,
+      offset: 0,
+      userId: UserId.make({ value: 'userId' }),
+    };
+    const expectedResult = GetMyAnalysisReportsResponse.from({
       count: 0,
+      hasMore: false,
+      reports: [],
     });
+    mockedFetcher.fetch.mockResolvedValueOnce(expectedResult);
 
     const result = await sut.execute(request);
 
     expect(result).toEqual(expectedResult);
-    expect(
-      mockedRepo.getPaginatedAnalysisDetailsForUserAsync
-    ).toHaveBeenCalledWith(
-      request.userId,
-      request.offset,
-      GetMyAnalysisReportsUseCase.AMOUNT_TO_FETCH
-    );
-  });
-
-  test('should use the given amount to fetch', async () => {
-    const request = GetMyAnalysisReportsRequestFactory.make({ amount: 20 });
-    const details = AnalysisDetailsFactory.make();
-
-    mockedRepo.getPaginatedAnalysisDetailsForUserAsync.mockResolvedValueOnce({
-      details: [details],
-      hasMore: false,
-      count: 0,
-    });
-
-    await sut.execute(request);
-
-    expect(
-      mockedRepo.getPaginatedAnalysisDetailsForUserAsync
-    ).toHaveBeenCalledWith(request.userId, request.offset, request.amount);
   });
 });

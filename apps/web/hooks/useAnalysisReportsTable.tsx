@@ -3,8 +3,6 @@ import { Tag } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
 import { Column } from 'react-table';
 
-import { AnalysisStatus, Smell } from '@codebarker/domain';
-
 import { getMyAnalysisReports } from '../pages/api/getMyAnalysisReports';
 import { CamelCaseUtil, StatusColourPickerUtil } from '../utils';
 import { useAuth } from './useAuth';
@@ -54,23 +52,15 @@ export function useAnalysisReportsTable(pageSize = 10): Props {
       return [];
     }
 
-    return data.details.map<AnalysisReportsTableData>((item) => {
-      const totalVotes = item.agreedVotesCount + item.disagreedVotesAcount;
-
-      const hasVotes = totalVotes > 0;
-
-      const percentageAgreedVotes = hasVotes
-        ? (item.agreedVotesCount / totalVotes) * 100
-        : 0;
-
+    return data.reports.map<AnalysisReportsTableData>((item) => {
       return {
-        id: item.analysisId,
-        agreedVotesCount: item.agreedVotesCount,
-        disagreedVotesCount: item.disagreedVotesAcount,
-        percentage: `${percentageAgreedVotes.toFixed(1)}%`,
-        languageName: item.programmingLanguage.name,
-        smellType: CamelCaseUtil.toReadableString(Smell[item.smell]),
-        status: AnalysisStatus[item.status],
+        id: item.id,
+        agreedVotesCount: item.agreed,
+        disagreedVotesCount: item.disagreed,
+        percentage: `${item.percentage}%`,
+        languageName: item.language,
+        smellType: CamelCaseUtil.toReadableString(item.smell),
+        status: item.status,
       };
     });
   }, [data]);
@@ -83,9 +73,7 @@ export function useAnalysisReportsTable(pageSize = 10): Props {
         Cell: ({ value }): JSX.Element => (
           <Tag
             variant="subtle"
-            bgColor={StatusColourPickerUtil.getColour(
-              AnalysisStatus[value as any] as any
-            )}
+            bgColor={StatusColourPickerUtil.getColour(value)}
             color="white"
           >
             {value}

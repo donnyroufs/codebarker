@@ -1,31 +1,29 @@
-import { PaginatedAnalysisDetails } from '@codebarker/domain';
+import {  AnalysisReportDto } from '../../dtos';
 
-import { AnalysisDetailsDto } from '../../dtos';
+type Props = {
+  reports: AnalysisReportDto[];
+  hasMore: boolean;
+  count: number;
+};
 
 export class GetMyAnalysisReportsResponse {
-  public readonly details: AnalysisDetailsDto[];
+  public readonly reports: AnalysisReportDto[];
   public readonly hasMore: boolean;
   public readonly count: number;
 
   private constructor(props: Props) {
-    this.details = props.details;
+    this.reports = props.reports;
     this.hasMore = props.hasMore;
     this.count = props.count;
   }
 
   public static from(
-    data: PaginatedAnalysisDetails
+    data: GetMyAnalysisReportsResponse
   ): GetMyAnalysisReportsResponse {
     return new GetMyAnalysisReportsResponse({
       count: data.count,
-      details: data.details.map(AnalysisDetailsDto.from),
+      reports: data.reports,
       hasMore: data.hasMore,
     });
   }
 }
-
-type Props = {
-  details: AnalysisDetailsDto[];
-  hasMore: boolean;
-  count: number;
-};
