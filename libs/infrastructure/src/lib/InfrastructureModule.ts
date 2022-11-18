@@ -43,7 +43,7 @@ export class InfrastructureModule extends ContainerModule {
       bind(LoggerToken)
         .to(isProd ? LoggerLogTailImpl : DevelopmentLoggerImpl)
         .inSingletonScope();
-      
+
       bind(FetchMyAnalysisReportsToken)
         .to(FetchMyAnalysisReportsPrismaFetcherImpl)
         .inSingletonScope();

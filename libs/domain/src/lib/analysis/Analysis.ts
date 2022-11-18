@@ -39,7 +39,7 @@ export class Analysis implements IEntity {
   private readonly _props: AnalysisProps;
 
   public get id(): AnalysisId {
-    return this._props.id
+    return this._props.id;
   }
 
   public get smell(): Smell {

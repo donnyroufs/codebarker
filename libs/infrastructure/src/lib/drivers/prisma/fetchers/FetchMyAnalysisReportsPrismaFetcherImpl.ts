@@ -88,6 +88,7 @@ export class FetchMyAnalysisReportsPrismaFetcherImpl
       2: 'approved',
     }[status];
   }
+
   private hasMore(
     fetchedCount: number,
     amountToFetch: number,
