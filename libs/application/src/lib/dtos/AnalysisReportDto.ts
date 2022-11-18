@@ -16,6 +16,7 @@ export class AnalysisReportDto implements AnalysisReportDtoProps {
   public readonly agreed: number;
   public readonly disagreed: number;
   public readonly status: string;
+  public readonly userId!: string;
 
   private constructor({
     id,
