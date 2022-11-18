@@ -15,6 +15,7 @@ export class PrismaService extends PrismaClient {
           url,
         },
       },
+      // log: ['query'],
     });
   }
 
